@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - Online (Test)</title>
+    <title>Minifig Who - Online</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
             flex: 1;
         }
 
-        /* --- NOWY HEADER GRY --- */
+        /* --- NOWY UKŁAD HEADER-BAR (logo lewo, postać środek, foto prawo) --- */
         .game-header-bar {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
@@ -47,18 +47,18 @@
             backdrop-filter: blur(15px);
             border-bottom: 3px solid var(--lego-yellow);
             border-radius: 0 0 25px 25px;
-            max-width: 1100px;
-            margin: 0 auto 30px;
+            max-width: 1200px;
+            margin: -40px auto 30px; /* -40px niweluje padding kontenera */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .header-left { display: flex; justify-content: flex-start; }
-        .header-center { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .header-center { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .header-right { display: flex; justify-content: flex-end; }
 
         .game-logo-small {
             font-weight: 700;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--lego-yellow);
             text-shadow: 2px 2px 0px #B45309;
             cursor: pointer;
@@ -68,24 +68,24 @@
 
         #target-name-display {
             color: var(--lego-yellow);
-            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
             margin: 0;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
 
         .target-preview-img {
-            width: 85px;
-            height: 85px;
+            width: 75px;
+            height: 75px;
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             object-fit: contain;
             padding: 5px;
-            border: 3px solid var(--lego-yellow);
+            border: 2px solid var(--lego-yellow);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* --- RESZTA STYLI --- */
+        /* --- TWOJE ORYGINALNE STYLE --- */
         h1.main-title {
             font-weight: 700;
             font-size: clamp(2.5rem, 8vw, 4rem);
@@ -96,17 +96,10 @@
         }
         h1.main-title span { color: var(--lego-red); text-shadow: 3px 3px 0px #900; }
 
-        .start-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
         .brickle-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 30px;
             cursor: pointer;
@@ -114,21 +107,24 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .brickle-card:hover { transform: translateY(-5px); border: 2px solid var(--lego-yellow); }
-
         .cat-btn, .action-btn, .exit-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px);
             color: white;
             cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
-            border: 2px solid var(--lego-yellow);
+            border: 2px solid rgba(255, 213, 0, 0.4);
             padding: 10px 20px;
             border-radius: 12px;
-            transition: 0.3s;
+            transition: all 0.3s;
         }
 
-        .exit-btn:hover { background: var(--lego-red); border-color: white; }
+        .exit-btn:hover {
+            background: rgba(227, 0, 11, 0.2);
+            border-color: var(--lego-red);
+            transform: scale(1.05);
+        }
 
         .character-grid {
             display: grid;
@@ -143,36 +139,40 @@
             border-radius: 15px;
             padding: 10px;
             cursor: pointer;
-            transition: all 0.2s;
-            color: black;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .card.eliminated { opacity: 0.2; filter: grayscale(100%); }
-        .card img { max-width: 100%; height: 140px; object-fit: contain; }
 
-        .lego-footer { padding: 20px; font-size: 10px; color: grey; }
+        .card.eliminated { opacity: 0.15; filter: grayscale(100%); transform: scale(0.92); }
+        .card-img-container { width: 100%; height: 160px; background: #f3f4f6; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .main-img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .card-name { color: #111; font-size: 11px; font-weight: 700; margin-top: 10px; text-transform: uppercase; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="menu">
     <h1 class="main-title" onclick="location.reload()">Minifig <span>Who</span></h1>
-    <p style="color: #9CA3AF;">Zgadnij postać przeciwnika</p>
+    <p class="subtitle">Zgadnij postać przeciwnika</p>
     
     <div id="setup-view">
-        <div class="start-grid">
+        <div class="start-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 800px; margin: 0 auto;">
             <div class="brickle-card" onclick="createGame()">
-                <div class="card-title">Stwórz grę</div>
+                <div class="card-title" style="font-weight:700;">STWÓRZ GRĘ</div>
             </div>
             <div class="brickle-card">
-                <input type="text" id="room-input" placeholder="Kod pokoju">
-                <button class="action-btn" onclick="joinGame()">Dołącz</button>
+                <input type="text" id="room-input" placeholder="KOD POKOJU" style="width: 80%; padding: 10px; border-radius: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.3); color: white; border: 1px solid grey;">
+                <button class="action-btn" onclick="joinGame()" style="width: 85%;">DOŁĄCZ</button>
             </div>
         </div>
     </div>
 
     <div id="lobby-view" style="display: none;">
-        <h2>Kod: <span id="display-code">---</span></h2>
-        <div id="category-buttons"></div>
+        <h2 id="display-code">---</h2>
+        <div id="category-buttons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;"></div>
     </div>
 </div>
 
@@ -181,13 +181,11 @@
         <div class="header-left">
             <div class="game-logo-small" onclick="location.reload()">M<span>W</span></div>
         </div>
-
         <div class="header-center">
-            <p style="margin:0; font-size: 10px; color: #9CA3AF; letter-spacing: 1px;">TWOJA POSTAĆ:</p>
+            <p style="margin: 0; color: #9CA3AF; font-size: 10px; text-transform: uppercase;">Twoja Postać:</p>
             <h2 id="target-name-display">---</h2>
-            <button onclick="backToLobby()" class="exit-btn">Zmień kategorię</button>
+            <button onclick="backToLobby()" class="exit-btn">Powrót do kategorii</button>
         </div>
-
         <div class="header-right">
             <img id="target-image" class="target-preview-img" src="" alt="?">
         </div>
@@ -197,9 +195,13 @@
 </div>
 
 <script>
-    const githubConfig = { user: "k47alizator", repo: "Minifig-Who", folder: "img" };
-    
-    // Uproszczona baza dla przykładu - wklej tutaj swoją pełną db
+    const githubConfig = {
+        user: "k47alizator",
+        repo: "Minifig-Who",
+        folder: "img"
+    };
+
+    // TU WKLEJ SWOJĄ PEŁNĄ BAZĘ DANYCH (db)
     const db = {
         "LEGO STAR WARS": [
             {n:"Luke Skywalker (z Tatooine)"}, {n:"Luke Skywalker (Pilot X-Wing)"}, {n:"Luke Skywalker (z Bespin)"}, {n:"Luke Skywalker (z Dagobah)"}, {n:"Luke Skywalker (Rycerz Jedi)"}, {n:"Luke Skywalker (z Endor)"}, {n:"Luke Skywalker (Szturmowiec)"}, {n:"Luke Skywalker (z Hoth)"}, {n:"Luke Skywalker (Ceremonia)"}, {n:"Luke Skywalker (Stary Luke)"}, {n:"Luke Skywalker (z Crait)"}, {n:"Luke Skywalker (Zbiornik Bacta)"}, {n:"Luke Skywalker (Pilot Śmigacza)"},
@@ -350,11 +352,12 @@
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
         ]
 };
+const getFolderName = (catName) => {
+        return catName.replace('LEGO ', '').toLowerCase().trim().replace(/\s+\/\s+/g, '-').replace(/\s+/g, '-');
+    };
 
-    function createGame() { 
-        let code = Math.floor(1000 + Math.random() * 9000);
-        enterLobby(code); 
-    }
+    function createGame() { enterLobby(Math.floor(1000 + Math.random() * 9000)); }
+    function joinGame() { enterLobby(document.getElementById('room-input').value); }
 
     function enterLobby(code) {
         document.getElementById('setup-view').style.display = 'none';
@@ -369,34 +372,48 @@
         Object.keys(db).forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'cat-btn';
-            btn.style.margin = "5px";
-            btn.innerText = cat;
+            btn.innerText = cat.replace('LEGO ', '');
             btn.onclick = () => initGame(cat);
             container.appendChild(btn);
         });
     }
 
     function initGame(category) {
-        const pool = db[category];
+        const folder = getFolderName(category);
+        const pool = db[category].map(char => ({ ...char, folder: folder }));
         const target = pool[Math.floor(Math.random() * pool.length)];
-        const folder = category.replace('LEGO ', '').toLowerCase().replace(/\s+/g, '-');
 
-        // Ustawianie tekstów
         document.getElementById('target-name-display').innerText = target.n;
-        
-        // Logika zdjęcia (Góra)
-        const targetImg = document.getElementById('target-image');
-        const imgUrl = `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/img/${folder}/${encodeURIComponent(target.n)}.png`;
-        targetImg.src = imgUrl;
-        targetImg.onerror = () => { targetImg.src = "https://tse2.mm.bing.net/th?q=lego+" + target.n + "+minifigure&w=100"; };
 
-        // Generowanie planszy
+        // Logika obrazków (Z Twojego oryginału)
+        const extensions = ['jpg', 'png', 'webp', 'jpeg'];
+        
+        const setImgSrc = (element, name, folderPath) => {
+            let extIdx = 0;
+            const getUrl = (ext) => `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${folderPath}/${encodeURIComponent(name)}.${ext}`;
+            const bing = `https://tse2.mm.bing.net/th?q=lego+${encodeURIComponent(name)}+minifigure&w=200`;
+
+            element.src = getUrl(extensions[0]);
+            element.onerror = function() {
+                if (++extIdx < extensions.length) this.src = getUrl(extensions[extIdx]);
+                else if (this.src !== bing) this.src = bing;
+            };
+        };
+
+        setImgSrc(document.getElementById('target-image'), target.n, folder);
+
         const grid = document.getElementById('character-grid');
         grid.innerHTML = '';
         pool.forEach(char => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<img src="https://tse2.mm.bing.net/th?q=lego+${char.n}+minifigure&w=150"><div>${char.n}</div>`;
+            card.innerHTML = `
+                <div class="card-img-container">
+                    <img class="main-img" src="">
+                </div>
+                <div class="card-name">${char.n}</div>
+            `;
+            setImgSrc(card.querySelector('.main-img'), char.n, folder);
             card.onclick = () => card.classList.toggle('eliminated');
             grid.appendChild(card);
         });
