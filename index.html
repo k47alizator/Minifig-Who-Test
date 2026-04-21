@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('img/tlo.jpg');
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('img/tlo.webp');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -479,7 +479,7 @@
 
 <div id="menu">
     <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')" title="Dołącz do Discorda">
-        <img src="img/Discord.png" alt="Discord">
+        <img src="img/Discord.webp" alt="Discord">
     </div>
 
     <h1 class="main-title" onclick="window.location.href = window.location.pathname;" title="Powrót do menu start">Minifig <span>Who</span></h1>
@@ -515,7 +515,7 @@
             </div>
             
             <div style="display: flex; align-items: center; gap: 12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">
-                <img src="img/Share symbol.png" class="share-icon-btn" onclick="copyRoomLink()" title="Skopiuj link do pokoju" alt="Udostępnij">
+                <img src="img/Share symbol.webp" class="share-icon-btn" onclick="copyRoomLink()" title="Skopiuj link do pokoju" alt="Udostępnij">
             </div>
         </div>
         
@@ -825,7 +825,7 @@
         document.getElementById('target-name').innerText = target.n;
         
         const targetImgEl = document.getElementById('target-img');
-        const targetExtensions = ['jpg', 'png', 'webp', 'jpeg'];
+        const targetExtensions = ['webp'];
         let targetExtIdx = 0;
 
         const getTargetGithubUrl = (ext) => `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${target.folder}/${encodeURIComponent(target.n)}.${ext}`;
@@ -852,7 +852,7 @@
                 card.className = 'card';
             }
 
-            const extensions = ['jpg', 'png', 'webp', 'jpeg'];
+            const extensions = ['webp'];
             let extIdx = 0;
 
             const getGithubUrl = (ext) => `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${char.folder}/${encodeURIComponent(char.n)}.${ext}`;
