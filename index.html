@@ -470,19 +470,18 @@
             line-height: 1.4;
         }
 
-        /* ----- STYLE DLA NOWEGO CZATU ----- */
         #chat-widget {
             position: fixed;
             bottom: 25px;
             right: 25px;
             z-index: 9999;
-            display: none; /* Schowany w menu głównym */
+            display: none;
             flex-direction: column;
             align-items: flex-end;
         }
 
         #chat-panel {
-            display: none; /* Schowany do momentu kliknięcia */
+            display: none;
             width: 320px;
             height: 400px;
             background: var(--card-bg);
@@ -702,7 +701,6 @@
 </div>
 
 <script>
-    // --- KONFIGURACJA FIREBASE ---
     const firebaseConfig = {
       apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
       authDomain: "minifig-who-test.firebaseapp.com",
@@ -716,13 +714,12 @@
     firebase.initializeApp(firebaseConfig);
     const fireDb = firebase.database();
 
-    // --- TWOJE ZMIENNE ---
     const githubConfig = {
         user: "k47alizator",
         repo: "Minifig-Who-Test",
         folder: "img"
     };
-    // --- BAZA DANYCH POSTACI (TUTAJ WKLEJ SWOJĄ PEŁNĄ BAZĘ) ---
+
     const db = {
         "LEGO STAR WARS": [
             {n:"Luke Skywalker (z Tatooine)"}, {n:"Luke Skywalker (Pilot X-Wing)"}, {n:"Luke Skywalker (z Bespin)"}, {n:"Luke Skywalker (z Dagobah)"}, {n:"Luke Skywalker (Rycerz Jedi)"}, {n:"Luke Skywalker (z Endor)"}, {n:"Luke Skywalker (Szturmowiec)"}, {n:"Luke Skywalker (z Hoth)"}, {n:"Luke Skywalker (Ceremonia)"}, {n:"Luke Skywalker (Stary Luke)"}, {n:"Luke Skywalker (z Crait)"}, {n:"Luke Skywalker (Zbiornik Bacta)"}, {n:"Luke Skywalker (Pilot Śmigacza)"},
@@ -874,15 +871,13 @@
         ]
 };
 
- let currentBoardSize = 28;
+let currentBoardSize = 28;
     let currentRoomCode = null;
     
-    // Generowanie unikalnego ID dla każdego gracza (żeby wiedzieć, czyja to wiadomość na czacie)
     const myPlayerId = Math.random().toString(36).substring(2, 10);
     let isChatOpen = false;
     let unreadMessages = 0;
 
-    // --- LOGIKA CZATU ---
     function toggleChat() {
         const panel = document.getElementById('chat-panel');
         const badge = document.getElementById('chat-badge');
@@ -892,7 +887,6 @@
             panel.style.display = 'flex';
             badge.style.display = 'none';
             unreadMessages = 0;
-            // Przewijanie na sam dół po otwarciu
             const chatBox = document.getElementById('chat-messages');
             chatBox.scrollTop = chatBox.scrollHeight;
         } else {
@@ -915,21 +909,17 @@
 
     function listenToChat(code) {
         const chatBox = document.getElementById('chat-messages');
-        chatBox.innerHTML = ''; // Czyści stary czat po zmianie pokoju
+        chatBox.innerHTML = ''; 
         
-        // Zabezpieczenie przed podwójnym nasłuchiwaniem
         fireDb.ref('rooms/' + code + '/chat').off();
-        
         fireDb.ref('rooms/' + code + '/chat').on('child_added', (snapshot) => {
             const data = snapshot.val();
             const msgDiv = document.createElement('div');
             
-            // Sprawdza, czy to nasza wiadomość, czy kogoś innego
             if(data.sender === myPlayerId) {
                 msgDiv.className = 'chat-msg my-msg';
             } else {
                 msgDiv.className = 'chat-msg other-msg';
-                // Powiadomienie (czerwona kropka) jeśli czat jest schowany
                 if(!isChatOpen) {
                     unreadMessages++;
                     const badge = document.getElementById('chat-badge');
@@ -944,9 +934,6 @@
         });
     }
 
-
-    // --- TWOJA LOGIKA GRY (Z drobnymi modyfikacjami dla czatu) ---
-
     const getFolderName = (catName) => {
         return catName.replace('LEGO ', '').toLowerCase().trim().replace(/\s+\/\s+/g, '-').replace(/\s+/g, '-');
     };
@@ -955,7 +942,13 @@
         currentBoardSize = size;
         const buttons = document.querySelectorAll('.size-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
+        if (element) element.classList.add('active');
+
+        if (currentRoomCode) {
+            fireDb.ref('rooms/' + currentRoomCode + '/config').update({
+                size: size
+            });
+        }
     }
 
     function createGame() {
@@ -967,6 +960,11 @@
         const url = new URL(window.location);
         url.searchParams.set('room', code);
         window.history.pushState({}, '', url);
+
+        fireDb.ref('rooms/' + code + '/config').set({
+            size: currentBoardSize,
+            status: 'lobby'
+        });
 
         enterLobby(code);
     }
@@ -994,14 +992,39 @@
         document.getElementById('display-code').innerText = code;
         generateCategoryButtons();
         
-        // Pokaż widget czatu i zacznij nasłuchiwać!
         document.getElementById('chat-widget').style.display = 'flex';
         listenToChat(code);
+
+        fireDb.ref('rooms/' + code + '/config').on('value', (snapshot) => {
+            const config = snapshot.val();
+            if (!config) return;
+
+            if (config.size && config.size !== currentBoardSize) {
+                currentBoardSize = config.size;
+                const buttons = document.querySelectorAll('.size-btn');
+                buttons.forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.innerText) === config.size);
+                });
+            }
+
+            if (config.status === 'playing' && config.category) {
+                runActualGame(config.category);
+            }
+            
+            if (config.status === 'lobby') {
+                document.getElementById('game-area').style.display = 'none';
+                document.getElementById('menu').style.display = 'block';
+            }
+        });
     }
 
     function backToLobby() {
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('menu').style.display = 'block';
+        if (currentRoomCode) {
+            fireDb.ref('rooms/' + currentRoomCode + '/config').update({
+                status: 'lobby'
+            });
+            fireDb.ref('rooms/' + currentRoomCode + '/winner').remove();
+        }
     }
 
     function generateCategoryButtons() {
@@ -1024,7 +1047,18 @@
     }
 
     function initGame(category) {
-        const roomCode = document.getElementById('display-code').innerText;
+        if (!currentRoomCode) return;
+        
+        fireDb.ref('rooms/' + currentRoomCode + '/config').update({
+            category: category,
+            size: currentBoardSize,
+            status: 'playing',
+            startTime: Date.now()
+        });
+    }
+
+    function runActualGame(category) {
+        const roomCode = currentRoomCode;
         let pool = [];
 
         if (category === 'MIX') {
@@ -1058,6 +1092,21 @@
         const target = selected[Math.floor(Math.random() * selected.length)];
         document.getElementById('target-name').innerText = target.n;
         
+        fireDb.ref('rooms/' + currentRoomCode + '/targets/' + myPlayerId).set(target.n);
+
+        fireDb.ref('rooms/' + currentRoomCode + '/winner').off(); 
+        fireDb.ref('rooms/' + currentRoomCode + '/winner').on('value', (snapshot) => {
+            const winnerId = snapshot.val();
+            if (winnerId) {
+                if (winnerId === myPlayerId) {
+                    alert("🎉 WYGRAŁEŚ! Zgadłeś postać przeciwnika!");
+                } else {
+                    alert("💀 PRZEGRAŁEŚ! Przeciwnik zgadł Twoją postać (lub Ty źle trafiłeś).");
+                }
+                backToLobby();
+            }
+        });
+
         const targetImgEl = document.getElementById('target-img');
         const targetExtensions = ['webp'];
         let targetExtIdx = 0;
@@ -1100,6 +1149,21 @@
                 <div class="card-name">${char.n}</div>
             `;
 
+            const guessBtn = document.createElement('button');
+            guessBtn.innerText = "ZGADUJĘ";
+            guessBtn.className = "action-btn";
+            guessBtn.style.fontSize = "10px";
+            guessBtn.style.padding = "6px 12px";
+            guessBtn.style.marginTop = "8px";
+            
+            guessBtn.onclick = (e) => {
+                e.stopPropagation();
+                if(confirm("Czy na pewno chcesz strzelić, że to: " + char.n + "?")) {
+                    checkWin(char.n);
+                }
+            };
+            card.appendChild(guessBtn);
+
             const img = card.querySelector('.main-img');
             img.onerror = function() {
                 if (++extIdx < extensions.length) this.src = getGithubUrl(extensions[extIdx]);
@@ -1112,6 +1176,26 @@
 
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game-area').style.display = 'block';
+    }
+
+    function checkWin(guessedName) {
+        fireDb.ref('rooms/' + currentRoomCode + '/targets').once('value', (snapshot) => {
+            const targets = snapshot.val();
+            if (!targets) return;
+
+            const opponentId = Object.keys(targets).find(id => id !== myPlayerId);
+            
+            if (!opponentId) {
+                alert("Przeciwnik jeszcze się nie załadował!");
+                return;
+            }
+
+            if (targets[opponentId] === guessedName) {
+                fireDb.ref('rooms/' + currentRoomCode + '/winner').set(myPlayerId);
+            } else {
+                alert("❌ Pudło! To nie ta postać. Grasz dalej!");
+            }
+        });
     }
 
     function copyRoomLink() {
