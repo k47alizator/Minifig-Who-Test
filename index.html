@@ -16,6 +16,7 @@
             --lego-yellow: #FFD500;
             --lego-red: #E3000B;
             --lego-blue: #006CB7;
+            --discord-blurple: #5865F2;
             --glass: rgba(30, 41, 59, 0.9);
         }
 
@@ -31,6 +32,27 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
+        /* PRZYCISK DISCORD */
+        .discord-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--discord-blurple);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .discord-btn:hover { transform: scale(1.1); background: #4752c4; }
 
         h1.main-title {
             font-weight: 700;
@@ -125,10 +147,15 @@
 
         @media (max-width: 800px) {
             #chat-container { position: relative; width: 90%; margin: 10px auto; height: 180px; bottom: 0; right: 0; }
+            .discord-btn { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 20px; }
         }
     </style>
 </head>
 <body>
+
+<a href="https://discord.gg/yourlink" target="_blank" class="discord-btn">
+    <i class="fab fa-discord"></i>
+</a>
 
 <div id="menu">
     <h1 class="main-title">Minifig <span>Who</span></h1>
@@ -197,6 +224,7 @@
 </div>
 
 <script>
+    // Konfiguracja Firebase (pozostaje bez zmian)
     const firebaseConfig = {
       apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
       databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
