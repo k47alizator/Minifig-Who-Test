@@ -168,7 +168,10 @@
         <div style="width: 60px; height: 60px; background: white; border-radius: 10px; padding: 5px;">
             <img id="target-img" src="" style="width:100%; height:100%; object-fit:contain;">
         </div>
-        <button id="guess-btn" class="action-btn" onclick="toggleGuessMode()" style="font-size:10px;">ZGADNIJ PRZECIWNIKA</button>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <button class="action-btn" onclick="backToLobby()" style="font-size: 9px; padding: 5px 10px; border-color: rgba(255,255,255,0.3);">POWRÓT DO LOBBY</button>
+            <button id="guess-btn" class="action-btn" onclick="toggleGuessMode()" style="font-size:10px;">ZGADNIJ PRZECIWNIKA</button>
+        </div>
     </div>
     <div id="character-grid" class="character-grid"></div>
 </div>
@@ -352,7 +355,7 @@
         ]
 };
 
-let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999); // ID zawsze 4-cyfrowe dla stabilnego ziarna
+let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999); 
     let currentRoomCode = null;
     let chosenSize = 28;
     let isGuessing = false;
@@ -452,7 +455,6 @@ let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999); // ID zawsze 4-c
         
         let selected = [...pool].sort(() => rng() - 0.5).slice(0, boardSize);
         
-        // POPRAWKA LOSOWANIA: używamy unikalnego ID gracza do wyboru postaci
         let playerSeed = parseInt(myPlayerId.replace('u', ''));
         let targetIndex = (Math.floor(rng() * selected.length) + playerSeed) % selected.length;
         
