@@ -59,7 +59,7 @@
             height: 350px;
             background: var(--glass);
             border-radius: 20px;
-            display: none; /* Pokazywany po wejściu do pokoju */
+            display: none;
             flex-direction: column;
             border: 2px solid var(--lego-blue);
             position: fixed;
@@ -80,7 +80,7 @@
         .msg.opp { background: rgba(255,255,255,0.1); align-self: flex-start; }
         
         .chat-input-area { display: flex; padding: 10px; gap: 5px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .chat-input-area input { flex-grow: 1; border-radius: 8px; border: none; padding: 8px; background: rgba(255,255,255,0.9); }
+        .chat-input-area input { flex-grow: 1; border-radius: 8px; border: none; padding: 8px; background: rgba(255,255,255,0.9); color: #111; }
 
         /* GRA */
         .character-grid {
@@ -194,7 +194,6 @@
 </div>
 
 <script>
-    // Konfiguracja Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
       databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
@@ -353,7 +352,7 @@
         ]
 };
 
-let myPlayerId = 'u' + Math.floor(Math.random()*9999);
+let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999); // ID zawsze 4-cyfrowe dla stabilnego ziarna
     let currentRoomCode = null;
     let chosenSize = 28;
     let isGuessing = false;
@@ -376,7 +375,6 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
         document.getElementById('chat-container').style.display = 'flex';
         document.getElementById('display-code').innerText = code;
         
-        // Generuj przyciski kategorii
         const container = document.getElementById('category-buttons');
         container.innerHTML = '';
         Object.keys(db).forEach(cat => {
@@ -387,7 +385,6 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
             container.appendChild(btn);
         });
 
-        // Sync Rozmiaru
         fireDb.ref(`rooms/${code}/settings/size`).on('value', snap => {
             if(snap.val()) {
                 chosenSize = snap.val();
@@ -397,8 +394,7 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
             }
         });
 
-        // Chat
-        fireDb.ref(`rooms/${code}/chat`).off(); // Czyść stare nasłuchy
+        fireDb.ref(`rooms/${code}/chat`).off();
         fireDb.ref(`rooms/${code}/chat`).on('child_added', snap => {
             const data = snap.val();
             const msgDiv = document.createElement('div');
@@ -408,7 +404,6 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
             document.getElementById('chat-messages').scrollTop = 9999;
         });
 
-        // Nasłuch startu
         fireDb.ref(`rooms/${code}/gameStart`).on('value', snap => {
             if(snap.val() && snap.val().ts > lastStartTs) {
                 lastStartTs = snap.val().ts;
@@ -416,7 +411,6 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
             }
         });
 
-        // Nasłuch końca
         fireDb.ref(`rooms/${code}/gameOver`).on('value', snap => {
             if(snap.val()) showEndScreen(snap.val());
             else document.getElementById('end-modal').style.display = 'none';
@@ -457,7 +451,12 @@ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
         const rng = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
         
         let selected = [...pool].sort(() => rng() - 0.5).slice(0, boardSize);
-        const myTarget = selected[Math.floor(rng() * selected.length)];
+        
+        // POPRAWKA LOSOWANIA: używamy unikalnego ID gracza do wyboru postaci
+        let playerSeed = parseInt(myPlayerId.replace('u', ''));
+        let targetIndex = (Math.floor(rng() * selected.length) + playerSeed) % selected.length;
+        
+        const myTarget = selected[targetIndex];
         const myImg = `https://raw.githubusercontent.com/k47alizator/Minifig-Who-Test/main/img/${myTarget.folder}/${encodeURIComponent(myTarget.n)}.webp`;
 
         document.getElementById('target-name').innerText = myTarget.n;
