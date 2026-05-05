@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Firebase Compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -29,52 +30,23 @@
             margin: 0;
             text-align: center;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        #menu, #game-area { 
-            padding: 40px 20px; 
-            position: relative; 
-            flex: 1;
-        }
-
+        /* Twój oryginalny styl nagłówka */
         h1.main-title {
             font-weight: 700;
             font-size: clamp(2.5rem, 8vw, 4rem);
-            letter-spacing: 2px;
-            text-transform: uppercase;
             color: var(--lego-yellow);
             text-shadow: 3px 3px 0px #B45309;
             margin-bottom: 5px;
             cursor: pointer;
-            transition: transform 0.2s ease, text-shadow 0.2s ease;
-            display: inline-block;
-        }
-
-        h1.main-title:hover {
-            transform: scale(1.03);
-            text-shadow: 3px 5px 15px rgba(255, 213, 0, 0.4), 3px 3px 0px #B45309;
-        }
-
-        h1.main-title span { 
-            color: var(--lego-red); 
-            text-shadow: 3px 3px 0px #900;
-            transition: text-shadow 0.2s ease;
-        }
-
-        h1.main-title:hover span {
-            text-shadow: 3px 5px 15px rgba(227, 0, 11, 0.5), 3px 3px 0px #900;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: #9CA3AF;
-            margin-bottom: 40px;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
+        h1.main-title span { color: var(--lego-red); text-shadow: 3px 3px 0px #900; }
 
+        /* Układ menu i kart */
+        #menu, #game-area { padding: 40px 20px; }
+        
         .start-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -86,183 +58,15 @@
         .brickle-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .brickle-card.create-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--lego-yellow);
-            box-shadow: 0 15px 35px rgba(255, 213, 0, 0.2), 0 0 15px rgba(255, 213, 0, 0.1);
-        }
+        .brickle-card:hover { transform: translateY(-5px); border-color: var(--lego-yellow); }
 
-        .brickle-card.join-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--lego-red);
-            box-shadow: 0 15px 35px rgba(227, 0, 11, 0.2), 0 0 15px rgba(227, 0, 11, 0.1);
-        }
-
-        .brickle-card:active {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        .icon-box {
-            width: 65px;
-            height: 65px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-        }
-
-        .icon-yellow { background: var(--lego-yellow); color: #000; }
-        .icon-red { background: var(--lego-red); color: #fff; }
-
-        .card-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-        .card-desc { font-size: 0.95rem; color: #9CA3AF; line-height: 1.4; }
-
-        input {
-            padding: 12px;
-            font-size: 16px;
-            font-family: 'Fredoka', sans-serif;
-            border-radius: 12px;
-            border: 2px solid rgba(255,255,255,0.1);
-            width: 80%;
-            text-align: center;
-            background: rgba(0,0,0,0.4);
-            color: white;
-            margin-top: 20px;
-            transition: all 0.3s;
-        }
-        input:focus {
-            border-color: var(--lego-yellow);
-            outline: none;
-            box-shadow: 0 0 10px rgba(255,213,0,0.2);
-        }
-
-        .cat-btn, .action-btn, .exit-btn {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #category-buttons .cat-btn, .action-btn {
-            border: 2px solid rgba(255, 213, 0, 0.4);
-            box-shadow: 
-                0 4px 15px rgba(0, 0, 0, 0.3),
-                0 0 10px rgba(255, 213, 0, 0.15),
-                inset 0 0 10px rgba(255, 255, 255, 0.05);
-            padding: 12px 20px;
-            border-radius: 12px;
-        }
-
-        #category-buttons .cat-btn:hover, .action-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(227, 0, 11, 0.7);
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(227, 0, 11, 0.4), 
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-
-        #category-buttons .cat-btn-mix {
-            border: 2px solid rgba(227, 0, 11, 0.5) !important;
-            box-shadow: 
-                0 4px 15px rgba(0, 0, 0, 0.3),
-                0 0 10px rgba(227, 0, 11, 0.2),
-                inset 0 0 10px rgba(255, 255, 255, 0.05) !important;
-        }
-
-        #category-buttons .cat-btn-mix:hover {
-            border-color: rgba(255, 213, 0, 0.8) !important;
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(255, 213, 0, 0.4), 
-                inset 0 0 15px rgba(255, 255, 255, 0.1) !important;
-        }
-
-        .exit-btn {
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 13px;
-            letter-spacing: 1px;
-            border: 2px solid rgba(255, 213, 0, 0.4);
-            box-shadow: 
-                0 4px 15px rgba(0, 0, 0, 0.3),
-                0 0 10px rgba(255, 213, 0, 0.15),
-                inset 0 0 10px rgba(255, 255, 255, 0.05);
-        }
-
-        .exit-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(227, 0, 11, 0.7);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(227, 0, 11, 0.4), 
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-
-        .cat-btn:active, .action-btn:active, .exit-btn:active {
-            transform: translateY(1px) scale(0.98);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .size-selector {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 15px 0 35px;
-        }
-
-        .size-btn {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: #9CA3AF;
-            padding: 12px 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-family: 'Fredoka', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .size-btn:hover {
-            border-color: rgba(255, 213, 0, 0.5);
-            color: white;
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .size-btn.active {
-            background: rgba(227, 0, 11, 0.15);
-            border-color: var(--lego-red);
-            color: white;
-            box-shadow: 
-                0 8px 25px rgba(227, 0, 11, 0.4),
-                0 0 15px rgba(227, 0, 11, 0.2);
-        }
-
+        /* Styl kart postaci */
         .character-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -278,480 +82,148 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            position: relative;
-            border: 3px solid transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            color: #111;
         }
-
-        .card:hover { transform: translateY(-3px); border-color: var(--lego-yellow); }
-
-        .card.target-character {
-            border-color: var(--lego-red) !important;
-            box-shadow: 
-                0 8px 25px rgba(227, 0, 11, 0.5), 
-                inset 0 0 15px rgba(227, 0, 11, 0.3) !important;
-            background: linear-gradient(135deg, white 0%, #fff0f0 100%) !important;
-        }
-
-        .card.eliminated {
-            opacity: 0.15;
-            filter: grayscale(100%);
-            transform: scale(0.92);
-        }
-
+        .card.eliminated { opacity: 0.15; filter: grayscale(100%); transform: scale(0.92); }
+        
+        /* Nowy efekt dla trybu zgadywania */
         .guessing-mode .card:not(.eliminated):hover {
-            border-color: var(--lego-red);
-            box-shadow: 0 8px 25px rgba(227, 0, 11, 0.6);
+            border: 3px solid var(--lego-red) !important;
             transform: scale(1.05);
         }
 
-        .card-img-container {
-            width: 100%;
-            height: 180px;
-            background: transparent;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .main-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover .main-img {
-            transform: scale(1.08);
-        }
-
-        .card-name {
-            color: #111;
-            font-size: 13px;
-            font-weight: 700;
-            margin-top: 10px; 
-            text-transform: uppercase;
-            white-space: normal; 
-            overflow: visible;
-            text-align: center;
-            line-height: 1.2;
-            padding: 0 5px;
-        }
-
-        .bing-badge {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: var(--lego-blue);
+        /* Przyciski */
+        .cat-btn, .action-btn {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px);
             color: white;
-            font-size: 8px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 213, 0, 0.4);
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 5px;
         }
+        .cat-btn:hover, .action-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--lego-red); }
 
+        .size-btn.active { background: var(--lego-red); border-color: white; }
+
+        /* Okno Twojej postaci */
         .target-box {
             background: var(--card-bg);
-            padding: 15px 30px;
+            padding: 20px;
             border-radius: 20px;
             border: 3px solid var(--lego-yellow);
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
             align-items: center;
-            gap: 20px;
-            width: 100%;
+            justify-content: space-around;
             max-width: 900px;
-            margin: 0 auto 30px auto;
-            backdrop-filter: blur(10px);
-            box-sizing: border-box;
+            margin: 0 auto 30px;
         }
 
-        @media (max-width: 600px) {
-            .target-box {
-                flex-direction: column;
-                text-align: center;
-            }
-            .target-box > div {
-                text-align: center !important;
-                align-items: center !important;
-            }
-        }
-        
-        .target-img-frame {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border: 3px solid var(--lego-red);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px rgba(227, 0, 11, 0.3);
-        }
+        .target-img-frame { width: 100px; height: 100px; background: white; border-radius: 12px; padding: 5px; }
+        .target-img-frame img { width: 100%; height: 100%; object-fit: contain; }
 
-        .target-img-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-            padding: 5px; 
-        }
+        /* Czat */
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; display: none; flex-direction: column; align-items: flex-end; }
+        #chat-panel { display: none; width: 300px; height: 400px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; margin-bottom: 10px; flex-direction: column; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
+        .chat-msg { padding: 8px 12px; border-radius: 10px; max-width: 80%; font-size: 14px; }
+        .my-msg { align-self: flex-end; background: var(--lego-blue); }
+        .other-msg { align-self: flex-start; background: var(--lego-red); }
 
-        .share-icon-btn {
-            width: 26px;
-            height: 26px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            vertical-align: middle;
-        }
-
-        .share-icon-btn:hover {
-            transform: scale(1.15);
-            opacity: 0.8;
-        }
-
-        .discord-corner {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 55px;
-            height: 55px;
-            background: #5865F2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .discord-corner img { width: 60%; height: 60%; object-fit: contain; pointer-events: none; }
-
-        .game-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 700;
-            font-size: 1.6rem;
-            color: var(--lego-yellow);
-            text-shadow: 2px 2px 0px #B45309;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: transform 0.2s;
-        }
-        
-        .game-logo:hover {
-            transform: scale(1.1);
-        }
-
-        .game-logo span {
-            color: var(--lego-red);
-            text-shadow: 2px 2px 0px #900;
-        }
-
-        .lego-footer {
-            width: 100%;
-            padding: 15px 10px;
-            font-size: 10px;
-            color: rgba(156, 163, 175, 0.4);
-            text-align: center;
-            background: rgba(15, 23, 42, 0.5);
-            box-sizing: border-box;
-        }
-
-        .lego-footer p {
-            margin: 3px 0;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.4;
-        }
-
-        #chat-widget {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        #chat-panel {
-            display: none;
-            width: 320px;
-            height: 400px;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            margin-bottom: 15px;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
-
-        #chat-header {
-            background: rgba(0,0,0,0.4);
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            border-bottom: 2px solid var(--lego-blue);
-            color: white;
-        }
-
-        #chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .chat-msg {
-            padding: 10px 14px;
-            border-radius: 15px;
-            font-size: 14px;
-            line-height: 1.4;
-            max-width: 85%;
-            word-wrap: break-word;
-            text-align: left;
-        }
-
-        .chat-msg.my-msg {
-            background: rgba(0, 108, 183, 0.6);
-            border: 1px solid var(--lego-blue);
-            border-bottom-right-radius: 4px;
-            align-self: flex-end;
-            color: white;
-        }
-
-        .chat-msg.other-msg {
-            background: rgba(227, 0, 11, 0.6);
-            border: 1px solid var(--lego-red);
-            border-bottom-left-radius: 4px;
-            align-self: flex-start;
-            color: white;
-        }
-
-        #chat-input-area {
-            padding: 12px;
-            display: flex;
-            gap: 10px;
-            background: rgba(0,0,0,0.3);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        #chat-input-area input {
-            margin: 0;
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 10px;
-        }
-
-        #chat-toggle-btn {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background: var(--lego-blue);
-            color: white;
-            border: 3px solid rgba(255,255,255,0.2);
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #chat-toggle-btn:hover {
-            transform: scale(1.1);
-            background: #0080d6;
-            border-color: var(--lego-yellow);
-        }
-
-        #chat-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--lego-red);
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-size: 13px;
-            font-weight: bold;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            border: 2px solid white;
-        }
-
+        /* Ekran Końca Gry */
         #end-modal {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            z-index: 10000; 
-            justify-content: center; 
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        @media (max-width: 600px) {
-            #chat-panel { width: calc(100vw - 50px); height: 50vh; }
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center;
         }
     </style>
 </head>
 <body>
 
 <div id="menu">
-    <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')" title="Dołącz do Discorda">
-        <img src="img/Discord.webp" alt="Discord">
-    </div>
-
-    <h1 class="main-title" onclick="window.location.href = window.location.pathname;" title="Powrót do menu start">Minifig <span>Who</span></h1>
-    <p class="subtitle">Zgadnij postać przeciwnika</p>
+    <h1 class="main-title">Minifig <span>Who</span></h1>
     
     <div id="setup-view">
         <div class="start-grid">
-            <div class="brickle-card create-card" onclick="createGame()">
-                <div class="icon-box icon-yellow"><i class="fa-solid fa-plus"></i></div>
-                <div class="card-title">Stwórz grę</div>
-                <div class="card-desc">Załóż nowy pokój i zaproś znajomego.</div>
+            <div class="brickle-card" onclick="createGame()">
+                <h2>Stwórz grę</h2>
+                <p>Nowy pokój dla dwóch osób</p>
             </div>
-
-            <div class="brickle-card join-card" style="cursor: default;">
-                <div class="icon-box icon-red"><i class="fa-solid fa-right-to-bracket"></i></div>
-                <div class="card-title">Dołącz</div>
-                <div class="card-desc">Wpisz kod i wejdź do wspólnej zabawy.</div>
-                <input type="text" id="room-input" placeholder="np. 1234" 
-                       onclick="event.stopPropagation()" 
-                       onkeypress="if(event.key === 'Enter') joinGame()">
-                
-                <button class="action-btn" style="margin-top: 15px; width: 80%; padding: 12px; font-weight: 600; border-radius: 12px; cursor: pointer; text-transform: uppercase;" onclick="joinGame()">WEJDŹ</button>
+            <div class="brickle-card">
+                <h2>Dołącz</h2>
+                <input type="text" id="room-input" placeholder="Kod pokoju">
+                <button class="action-btn" onclick="joinGame()">Graj</button>
             </div>
         </div>
     </div>
 
     <div id="lobby-view" style="display: none;">
-        <div style="background: var(--card-bg); padding: 12px 25px; border-radius: 15px; border: 2px solid var(--lego-red); display: inline-flex; align-items: center; gap: 20px; backdrop-filter: blur(10px); position: relative;">
-            
-            <div style="text-align: left;">
-                <p style="margin: 0; color: #9CA3AF; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">KOD POKOJU:</p>
-                <h2 id="display-code" style="margin: 0; font-size: 32px; letter-spacing: 3px; color: white; line-height: 1;">---</h2>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">
-                <img src="img/Share symbol.webp" class="share-icon-btn" onclick="copyRoomLink()" title="Skopiuj link do pokoju" alt="Udostępnij">
-            </div>
-        </div>
-        
-        <h3 style="margin: 30px 0 10px; text-transform: uppercase; font-size: 14px; color: #9CA3AF; letter-spacing: 1px;">Liczba kart na planszy:</h3>
+        <h2>KOD POKOJU: <span id="display-code" style="color: var(--lego-yellow)">----</span></h2>
         <div class="size-selector">
-             <button class="size-btn" onclick="setBoardSize(21, this)">21 kart</button>
-            <button class="size-btn active" onclick="setBoardSize(28, this)">28 kart</button>
-            <button class="size-btn" onclick="setBoardSize(35, this)">35 kart</button>
+            <button class="size-btn" onclick="setBoardSize(21, this)">21</button>
+            <button class="size-btn active" onclick="setBoardSize(28, this)">28</button>
+            <button class="size-btn" onclick="setBoardSize(35, this)">35</button>
         </div>
-
-        <h3 style="margin: 20px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Wybierz kategorię (Gra wystartuje u obu graczy):</h3>
-        <div id="category-buttons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 900px; margin: 0 auto;"></div>
+        <h3>Wybierz kategorię (Gra wystartuje u obu graczy):</h3>
+        <div id="category-buttons"></div>
     </div>
 </div>
 
 <div id="game-area" style="display: none;">
-    <div class="game-logo" onclick="window.location.href = window.location.pathname;" title="Powrót do menu start">M<span>W</span></div>
-
     <div class="target-box">
-        <div style="text-align: left; flex: 1;">
-            <p style="margin: 0; color: #9CA3AF; font-size: 12px; text-transform: uppercase;">Twoja Postać:</p>
-            <h2 id="target-name" style="margin: 5px 0; color: var(--lego-yellow); font-size: 24px;">---</h2>
+        <div>
+            <p>Twoja postać:</p>
+            <h2 id="target-name">---</h2>
         </div>
-        
         <div class="target-img-frame">
-            <img id="target-img" src="" alt="Postać">
+            <img id="target-img" src="">
         </div>
-        
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
-            <button onclick="backToLobby()" class="exit-btn" style="width: 100%; max-width: 220px;">Powrót do kategorii</button>
-            <button id="guess-btn" onclick="toggleGuessMode()" class="action-btn" style="width: 100%; max-width: 220px; padding: 10px; font-size: 13px; border-color: var(--lego-blue);">ZGADNIJ PRZECIWNIKA</button>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="action-btn" onclick="backToLobby()">Wyjdź</button>
+            <button id="guess-btn" class="action-btn" onclick="toggleGuessMode()" style="border-color: var(--lego-blue);">ZGADNIJ PRZECIWNIKA</button>
         </div>
     </div>
-    
     <div id="character-grid" class="character-grid"></div>
 </div>
 
 <div id="chat-widget">
     <div id="chat-panel">
-        <div id="chat-header">
-            <span><i class="fa-solid fa-comments"></i> Czat</span>
-            <i class="fa-solid fa-xmark" onclick="toggleChat()" style="cursor: pointer; font-size: 20px;"></i>
-        </div>
         <div id="chat-messages"></div>
-        <div id="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Zadaj pytanie..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
-            <button class="action-btn" onclick="sendChatMessage()" style="width: auto; padding: 0 15px;"><i class="fa-solid fa-paper-plane"></i></button>
+        <div style="padding: 10px; display: flex;">
+            <input type="text" id="chat-input" style="flex:1" onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()">OK</button>
         </div>
     </div>
-    <button id="chat-toggle-btn" onclick="toggleChat()">
-        <i class="fa-solid fa-message"></i>
-        <span id="chat-badge">1</span>
+    <button onclick="toggleChat()" style="width: 50px; height: 50px; border-radius: 50%; cursor: pointer;">
+        💬 <span id="chat-badge" style="display:none; color:red">!</span>
     </button>
 </div>
 
 <div id="end-modal">
-    <div class="brickle-card" style="max-width: 450px; text-align: center;">
-        <h2 id="end-title" style="color:var(--lego-yellow); font-size: 2.5rem; margin-top: 0; text-transform: uppercase; text-shadow: 2px 2px 0px #000;">WYGRAŁEŚ!</h2>
-        <p id="end-desc" style="font-size: 1.1rem; color: #E5E7EB;">Zgadłeś poprawnie.</p>
-        <div style="background: white; border: 3px solid var(--lego-red); border-radius: 12px; display: inline-block; padding: 10px; margin: 15px 0; box-shadow: 0 0 15px rgba(227,0,11,0.3);">
-            <img id="end-img" src="" style="width:140px; height:140px; object-fit:contain;">
+    <div class="brickle-card" style="text-align: center; border: 3px solid var(--lego-yellow);">
+        <h1 id="end-title">WYGRANA!</h1>
+        <p id="end-desc"></p>
+        <div style="background: white; border-radius: 15px; padding: 10px; margin: 20px auto; width: 150px;">
+            <img id="end-img" src="" style="width: 100%;">
         </div>
-        <button class="action-btn" onclick="backToLobby()" style="width:100%; margin-top: 10px; font-size: 16px;">WRÓĆ DO LOBBY</button>
+        <button class="action-btn" onclick="location.reload()">Zagraj ponownie</button>
     </div>
 </div>
 
-<div class="lego-footer">
-    <p>Niniejsza strona jest projektem fanowskim o charakterze niekomercyjnym. Gra nie jest w żaden sposób powiązana, wspierana ani sponsorowana przez Grupę LEGO. Wszelkie znaki towarowe, nazwy oraz wizerunki postaci należą do ich prawowitych właścicieli.</p>
-</div>
-
 <script>
+    // --- KONFIGURACJA ---
     const firebaseConfig = {
       apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
-      authDomain: "minifig-who-test.firebaseapp.com",
       databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "minifig-who-test",
-      storageBucket: "minifig-who-test.firebasestorage.app",
-      messagingSenderId: "315026622753",
-      appId: "1:315026622753:web:952f2a67e9360d3f0d1660"
     };
-
     firebase.initializeApp(firebaseConfig);
     const fireDb = firebase.database();
 
-    const githubConfig = {
-        user: "k47alizator",
-        repo: "Minifig-Who-Test",
-        folder: "img"
-    };
+    const githubConfig = { user: "k47alizator", repo: "Minifig-Who-Test", folder: "img" };
+
     const db = {
         "LEGO STAR WARS": [
             {n:"Luke Skywalker (z Tatooine)"}, {n:"Luke Skywalker (Pilot X-Wing)"}, {n:"Luke Skywalker (z Bespin)"}, {n:"Luke Skywalker (z Dagobah)"}, {n:"Luke Skywalker (Rycerz Jedi)"}, {n:"Luke Skywalker (z Endor)"}, {n:"Luke Skywalker (Szturmowiec)"}, {n:"Luke Skywalker (z Hoth)"}, {n:"Luke Skywalker (Ceremonia)"}, {n:"Luke Skywalker (Stary Luke)"}, {n:"Luke Skywalker (z Crait)"}, {n:"Luke Skywalker (Zbiornik Bacta)"}, {n:"Luke Skywalker (Pilot Śmigacza)"},
@@ -902,125 +374,25 @@
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
         ]
 };
+
 let currentBoardSize = 28;
     let currentRoomCode = null;
-    const myPlayerId = Math.random().toString(36).substring(2, 10);
-    
-    let isChatOpen = false;
-    let unreadMessages = 0;
-    
     let isGuessMode = false;
+    let myPlayerId = Math.random().toString(36).substring(2, 10);
+    let isChatOpen = false;
+    let lastStartTs = 0;
+    let lastOverTs = 0;
 
-    function toggleChat() {
-        const panel = document.getElementById('chat-panel');
-        const badge = document.getElementById('chat-badge');
-        isChatOpen = !isChatOpen;
-        
-        if(isChatOpen) {
-            panel.style.display = 'flex';
-            badge.style.display = 'none';
-            unreadMessages = 0;
-            const chatBox = document.getElementById('chat-messages');
-            chatBox.scrollTop = chatBox.scrollHeight;
-        } else {
-            panel.style.display = 'none';
-        }
-    }
-
-    function sendChatMessage() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if (text && currentRoomCode) {
-            fireDb.ref('rooms/' + currentRoomCode + '/chat').push({
-                text: text,
-                sender: myPlayerId,
-                timestamp: Date.now()
-            });
-            input.value = '';
-        }
-    }
-
-    function listenToChat(code) {
-        const chatBox = document.getElementById('chat-messages');
-        chatBox.innerHTML = '';
-        fireDb.ref('rooms/' + code + '/chat').off();
-        
-        fireDb.ref('rooms/' + code + '/chat').on('child_added', (snapshot) => {
-            const data = snapshot.val();
-            const msgDiv = document.createElement('div');
-            
-            if(data.sender === myPlayerId) {
-                msgDiv.className = 'chat-msg my-msg';
-            } else {
-                msgDiv.className = 'chat-msg other-msg';
-                if(!isChatOpen) {
-                    unreadMessages++;
-                    const badge = document.getElementById('chat-badge');
-                    badge.innerText = unreadMessages > 9 ? '9+' : unreadMessages;
-                    badge.style.display = 'flex';
-                }
-            }
-            
-            msgDiv.innerText = data.text;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    }
-
-    function listenToGameState(code) {
-        fireDb.ref('rooms/' + code + '/gameStart').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if(data && data.ts > (window.lastStartTs || 0)) {
-                window.lastStartTs = data.ts;
-                currentBoardSize = data.size;
-                startLocalGame(data.category); 
-            }
-        });
-
-        fireDb.ref('rooms/' + code + '/gameOver').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if(data && data.ts > (window.lastOverTs || 0)) {
-                window.lastOverTs = data.ts;
-                showEndScreen(data);
-            }
-        });
-    }
-
-    const getFolderName = (catName) => {
-        return catName.replace('LEGO ', '').toLowerCase().trim().replace(/\s+\/\s+/g, '-').replace(/\s+/g, '-');
-    };
-
-    function setBoardSize(size, element) {
-        currentBoardSize = size;
-        const buttons = document.querySelectorAll('.size-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
-    }
+    // --- LOGIKA POKOJU I SYNC ---
 
     function createGame() {
-        let code = "";
-        for(let i=0; i<4; i++) {
-            code += Math.floor(Math.random() * 10).toString();
-        }
-        const url = new URL(window.location);
-        url.searchParams.set('room', code);
-        window.history.pushState({}, '', url);
+        let code = Math.floor(1000 + Math.random() * 9000).toString();
         enterLobby(code);
     }
 
     function joinGame() {
-        const input = document.getElementById('room-input');
-        let code = input ? input.value.trim().replace(/\s+/g, '') : "";
-        
-        if (code.length < 1) {
-            createGame();
-            return;
-        }
-
-        const url = new URL(window.location);
-        url.searchParams.set('room', code);
-        window.history.pushState({}, '', url);
-        enterLobby(code);
+        let code = document.getElementById('room-input').value.trim();
+        if(code) enterLobby(code);
     }
 
     function enterLobby(code) {
@@ -1028,47 +400,36 @@ let currentBoardSize = 28;
         document.getElementById('setup-view').style.display = 'none';
         document.getElementById('lobby-view').style.display = 'block';
         document.getElementById('display-code').innerText = code;
-        document.getElementById('end-modal').style.display = 'none';
+        document.getElementById('chat-widget').style.display = 'flex';
         
         generateCategoryButtons();
-        document.getElementById('chat-widget').style.display = 'flex';
         listenToChat(code);
         listenToGameState(code);
-    }
-
-    function backToLobby() {
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('end-modal').style.display = 'none';
-        document.getElementById('menu').style.display = 'block';
-        isGuessMode = false;
-        document.getElementById('character-grid').classList.remove('guessing-mode');
-        document.getElementById('guess-btn').style.background = '';
-        document.getElementById('guess-btn').innerText = 'ZGADNIJ PRZECIWNIKA';
     }
 
     function generateCategoryButtons() {
         const container = document.getElementById('category-buttons');
         container.innerHTML = '';
-        
         Object.keys(db).forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'cat-btn';
-            btn.innerText = cat.replace('LEGO ', '');
-            btn.onclick = (e) => { e.stopPropagation(); triggerGameStart(cat); };
+            btn.innerText = cat;
+            btn.onclick = () => triggerGameStart(cat);
             container.appendChild(btn);
         });
-
-        const mixBtn = document.createElement('button');
-        mixBtn.className = 'cat-btn cat-btn-mix';
-        mixBtn.innerHTML = '<i class="fa-solid fa-fire"></i> Tryb Mix';
-        mixBtn.onclick = () => triggerGameStart('MIX');
-        container.appendChild(mixBtn);
     }
+
+    function setBoardSize(size, element) {
+        currentBoardSize = size;
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    // --- SYNCHRONIZACJA FIREBASE ---
 
     function triggerGameStart(category) {
         fireDb.ref('rooms/' + currentRoomCode + '/gameOver').remove();
         fireDb.ref('rooms/' + currentRoomCode + '/players').remove();
-        
         fireDb.ref('rooms/' + currentRoomCode + '/gameStart').set({
             category: category,
             size: currentBoardSize,
@@ -1076,204 +437,136 @@ let currentBoardSize = 28;
         });
     }
 
-    function startLocalGame(category) {
-        const roomCode = document.getElementById('display-code').innerText;
-        let pool = [];
-
-        if (category === 'MIX') {
-            Object.keys(db).forEach(cat => {
-                const folder = getFolderName(cat);
-                db[cat].forEach(char => pool.push({ ...char, folder: folder }));
-            });
-        } else {
-            const folder = getFolderName(category);
-            pool = db[category].map(char => ({ ...char, folder: folder }));
-        }
-
-        let seed = 0;
-        for (let i = 0; i < roomCode.length; i++) seed = ((seed << 5) - seed) + roomCode.charCodeAt(i);
-        
-        const mulberry32 = (a) => () => {
-            var t = a += 0x6D2B79F5;
-            t = Math.imul(t ^ t >>> 15, t | 1);
-            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-            return ((t ^ t >>> 14) >>> 0) / 4294967296;
-        };
-        const rand = mulberry32(seed);
-
-        for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(rand() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
-        }
-
-        const selected = pool.slice(0, currentBoardSize);
-
-        const target = selected[Math.floor(Math.random() * selected.length)];
-        document.getElementById('target-name').innerText = target.n;
-        
-        const targetImgEl = document.getElementById('target-img');
-        const targetExtensions = ['webp'];
-        let targetExtIdx = 0;
-
-        const getTargetGithubUrl = (ext) => `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${target.folder}/${encodeURIComponent(target.n)}.${ext}`;
-        const targetBingUrl = `https://tse2.mm.bing.net/th?q=lego+${encodeURIComponent(target.n.replace(/\(.*\)/, ''))}+minifigure&w=200&h=300&c=7`;
-
-        targetImgEl.src = getTargetGithubUrl(targetExtensions[0]);
-        targetImgEl.onerror = function() {
-            if (++targetExtIdx < targetExtensions.length) {
-                this.src = getTargetGithubUrl(targetExtensions[targetExtIdx]);
-            } else if (this.src !== targetBingUrl) {
-                this.src = targetBingUrl;
+    function listenToGameState(code) {
+        fireDb.ref('rooms/' + code + '/gameStart').on('value', (snap) => {
+            const data = snap.val();
+            if(data && data.ts > lastStartTs) {
+                lastStartTs = data.ts;
+                currentBoardSize = data.size;
+                initGame(data.category);
             }
-        };
-
-        fireDb.ref('rooms/' + currentRoomCode + '/players/' + myPlayerId).set({
-            target: target.n,
-            targetImgUrl: getTargetGithubUrl('webp')
         });
 
+        fireDb.ref('rooms/' + code + '/gameOver').on('value', (snap) => {
+            const data = snap.val();
+            if(data && data.ts > lastOverTs) {
+                lastOverTs = data.ts;
+                showEndScreen(data);
+            }
+        });
+    }
+
+    // --- LOGIKA GRY ---
+
+    function initGame(category) {
+        let pool = [];
+        const folder = category.replace('LEGO ', '').toLowerCase().replace(/\s+/g, '-');
+        pool = db[category].map(char => ({ ...char, folder: folder }));
+
+        // Deterministyczne losowanie planszy na podstawie kodu pokoju
+        let seed = 0;
+        for (let i = 0; i < currentRoomCode.length; i++) seed += currentRoomCode.charCodeAt(i);
+        const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+        let selected = [...pool].sort(() => rand() - 0.5).slice(0, currentBoardSize);
+        
+        // Każdy losuje swoją postać lokalnie
+        const target = selected[Math.floor(Math.random() * selected.length)];
+        document.getElementById('target-name').innerText = target.n;
+        const imgUrl = `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${target.folder}/${encodeURIComponent(target.n)}.webp`;
+        document.getElementById('target-img').src = imgUrl;
+
+        // Wyślij swoją postać do bazy (aby przeciwnik mógł ją "zgadnąć")
+        fireDb.ref('rooms/' + currentRoomCode + '/players/' + myPlayerId).set({
+            target: target.n,
+            img: imgUrl
+        });
+
+        // Generowanie planszy
         const grid = document.getElementById('character-grid');
         grid.innerHTML = '';
-        grid.classList.remove('guessing-mode');
-        isGuessMode = false;
-
         selected.forEach(char => {
             const card = document.createElement('div');
+            card.className = 'card';
+            const charImg = `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${char.folder}/${encodeURIComponent(char.n)}.webp`;
+            card.innerHTML = `<img src="${charImg}" style="width:100%; height:120px; object-fit:contain;"><p style="font-weight:bold">${char.n}</p>`;
             
-            if (char.n === target.n) {
-                card.className = 'card target-character';
-            } else {
-                card.className = 'card';
-            }
-
-            const extensions = ['webp'];
-            let extIdx = 0;
-
-            const getGithubUrl = (ext) => `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/${githubConfig.folder}/${char.folder}/${encodeURIComponent(char.n)}.${ext}`;
-            const bingUrl = `https://tse2.mm.bing.net/th?q=lego+${encodeURIComponent(char.n.replace(/\(.*\)/, ''))}+minifigure&w=200&h=300&c=7`;
-
-            card.innerHTML = `
-                <div class="card-img-container">
-                    <img class="main-img" src="${getGithubUrl(extensions[0])}">
-                    <div class="bing-badge"><i class="fa-solid fa-globe"></i> BING</div>
-                </div>
-                <div class="card-name">${char.n}</div>
-            `;
-
-            const img = card.querySelector('.main-img');
-            img.onerror = function() {
-                if (++extIdx < extensions.length) this.src = getGithubUrl(extensions[extIdx]);
-                else if (this.src !== bingUrl) { this.src = bingUrl; card.querySelector('.bing-badge').style.display = "block"; }
-            };
-
             card.onclick = () => {
-                if (isGuessMode) {
-                    if(!card.classList.contains('eliminated')) {
-                        makeGuess(char);
-                        toggleGuessMode(); 
-                    }
+                if(isGuessMode) {
+                    if(!card.classList.contains('eliminated')) makeGuess(char);
                 } else {
                     card.classList.toggle('eliminated');
                 }
             };
-            
             grid.appendChild(card);
         });
 
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game-area').style.display = 'block';
+        document.getElementById('end-modal').style.display = 'none';
     }
 
     function toggleGuessMode() {
         isGuessMode = !isGuessMode;
         const btn = document.getElementById('guess-btn');
         const grid = document.getElementById('character-grid');
-        
-        if (isGuessMode) {
-            btn.style.background = 'var(--lego-red)';
-            btn.style.color = 'white';
-            btn.innerText = 'ANULUJ (KLIKNIJ KARTĘ NA PLANSZY)';
+        if(isGuessMode) {
+            btn.innerText = "ANULUJ ZGADYWANIE";
+            btn.style.background = "var(--lego-red)";
             grid.classList.add('guessing-mode');
         } else {
-            btn.style.background = '';
-            btn.innerText = 'ZGADNIJ PRZECIWNIKA';
+            btn.innerText = "ZGADNIJ PRZECIWNIKA";
+            btn.style.background = "";
             grid.classList.remove('guessing-mode');
         }
     }
 
-    function makeGuess(guessedChar) {
-        fireDb.ref('rooms/' + currentRoomCode + '/players').once('value').then((snapshot) => {
-            const players = snapshot.val();
-            if (!players) return;
-            
-            let opponentTarget = null;
-            let opponentTargetImg = null;
-            let opponentId = null;
-            
-            for (let id in players) {
-                if (id !== myPlayerId) {
-                    opponentId = id;
-                    opponentTarget = players[id].target;
-                    opponentTargetImg = players[id].targetImgUrl;
-                }
-            }
-            
-            if (!opponentTarget) {
-                alert("Przeciwnik jeszcze nie dołączył do gry lub nie wylosował postaci!");
-                return;
-            }
-            
-            if (guessedChar.n === opponentTarget) {
-                fireDb.ref('rooms/' + currentRoomCode + '/gameOver').set({
-                    winnerId: myPlayerId,
-                    correctChar: opponentTarget,
-                    charImg: opponentTargetImg,
-                    ts: Date.now()
-                });
-            } else {
-                fireDb.ref('rooms/' + currentRoomCode + '/gameOver').set({
-                    winnerId: opponentId,
-                    correctChar: opponentTarget,
-                    charImg: opponentTargetImg,
-                    ts: Date.now()
-                });
-            }
+    function makeGuess(char) {
+        fireDb.ref('rooms/' + currentRoomCode + '/players').once('value', (snap) => {
+            const players = snap.val();
+            let opponentId = Object.keys(players).find(id => id !== myPlayerId);
+            if(!opponentId) return alert("Czekaj na przeciwnika!");
+
+            const correct = players[opponentId].target === char.n;
+            fireDb.ref('rooms/' + currentRoomCode + '/gameOver').set({
+                winnerId: correct ? myPlayerId : opponentId,
+                correctChar: players[opponentId].target,
+                charImg: players[opponentId].img,
+                ts: Date.now()
+            });
         });
     }
 
     function showEndScreen(data) {
-        const modal = document.getElementById('end-modal');
-        const title = document.getElementById('end-title');
-        const desc = document.getElementById('end-desc');
-        const img = document.getElementById('end-img');
-        
-        modal.style.display = 'flex';
-        img.src = data.charImg || '';
-        
-        if (data.winnerId === myPlayerId) {
-            title.innerText = 'WYGRAŁEŚ!';
-            title.style.color = 'var(--lego-yellow)';
-            title.style.textShadow = '3px 3px 0px #B45309';
-            desc.innerText = 'Zgadłeś! Postać przeciwnika to ' + data.correctChar + '.';
+        document.getElementById('end-modal').style.display = 'flex';
+        document.getElementById('end-img').src = data.charImg;
+        if(data.winnerId === myPlayerId) {
+            document.getElementById('end-title').innerText = "WYGRAŁEŚ!";
+            document.getElementById('end-desc').innerText = "Brawo! Przeciwnik miał: " + data.correctChar;
         } else {
-            title.innerText = 'PRZEGRAŁEŚ!';
-            title.style.color = 'var(--lego-red)';
-            title.style.textShadow = '3px 3px 0px #900';
-            desc.innerText = 'Koniec gry! Prawdziwa postać przeciwnika to ' + data.correctChar + '.';
+            document.getElementById('end-title').innerText = "PRZEGRAŁEŚ!";
+            document.getElementById('end-desc').innerText = "Niestety! Przeciwnik miał: " + data.correctChar;
         }
     }
 
-    function copyRoomLink() {
-        navigator.clipboard.writeText(window.location.href).then(() => alert("Skopiowano link do pokoju!"));
+    // --- CZAT ---
+    function toggleChat() { isChatOpen = !isChatOpen; document.getElementById('chat-panel').style.display = isChatOpen ? 'flex' : 'none'; }
+    function sendChatMessage() {
+        const val = document.getElementById('chat-input').value;
+        if(val) fireDb.ref('rooms/' + currentRoomCode + '/chat').push({ text: val, sender: myPlayerId });
+        document.getElementById('chat-input').value = '';
+    }
+    function listenToChat(code) {
+        fireDb.ref('rooms/' + code + '/chat').on('child_added', (snap) => {
+            const d = snap.val();
+            const m = document.createElement('div');
+            m.className = 'chat-msg ' + (d.sender === myPlayerId ? 'my-msg' : 'other-msg');
+            m.innerText = d.text;
+            document.getElementById('chat-messages').appendChild(m);
+        });
     }
 
-    window.addEventListener('load', () => {
-        const params = new URLSearchParams(window.location.search);
-        const room = params.get('room');
-        if (room) {
-            enterLobby(room);
-        }
-    });
+    function backToLobby() { location.reload(); }
 </script>
 </body>
 </html>
