@@ -178,7 +178,7 @@
             <img id="end-img" src="" style="width:100%; height:100%; object-fit:contain;">
         </div>
         <h3 id="end-char-name" style="color:var(--lego-yellow); margin-bottom:20px;">---</h3>
-        <button class="action-btn" onclick="location.reload()" style="width:100%;">ZAGRAJ PONOWNIE</button>
+        <button class="action-btn" onclick="backToLobby()" style="width:100%;">ZAGRAJ PONOWNIE</button>
     </div>
 </div>
 
@@ -190,6 +190,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const fireDb = firebase.database();
+    
     const db = {
         "LEGO STAR WARS": [
             {n:"Luke Skywalker (z Tatooine)"}, {n:"Luke Skywalker (Pilot X-Wing)"}, {n:"Luke Skywalker (z Bespin)"}, {n:"Luke Skywalker (z Dagobah)"}, {n:"Luke Skywalker (Rycerz Jedi)"}, {n:"Luke Skywalker (z Endor)"}, {n:"Luke Skywalker (Szturmowiec)"}, {n:"Luke Skywalker (z Hoth)"}, {n:"Luke Skywalker (Ceremonia)"}, {n:"Luke Skywalker (Stary Luke)"}, {n:"Luke Skywalker (z Crait)"}, {n:"Luke Skywalker (Zbiornik Bacta)"}, {n:"Luke Skywalker (Pilot Śmigacza)"},
@@ -341,7 +342,7 @@
         ]
 };
 
-  let myPlayerId = 'u' + Math.floor(Math.random()*9999);
+ let myPlayerId = 'u' + Math.floor(Math.random()*9999);
     let currentRoomCode = null;
     let chosenSize = 28;
     let isGuessing = false;
@@ -385,6 +386,20 @@
         });
     }
 
+    // NOWA FUNKCJA POWROTU
+    function backToLobby() {
+        // Czyścimy Firebase, żeby można było zacząć nową rundę bez konfliktów
+        fireDb.ref('rooms/' + currentRoomCode + '/gameOver').remove();
+        
+        // Ukrywamy modal i planszę gry
+        document.getElementById('end-modal').style.display = 'none';
+        document.getElementById('game-area').style.display = 'none';
+        
+        // Pokazujemy lobby
+        document.getElementById('menu').style.display = 'block';
+        document.getElementById('lobby-view').style.display = 'block';
+    }
+
     function setLocalSize(size, el) {
         chosenSize = size;
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -395,6 +410,7 @@
         fireDb.ref('rooms/' + currentRoomCode + '/gameStart').set({
             category: cat, size: chosenSize, ts: Date.now()
         });
+        // Ważne: przy nowym starcie usuwamy stare dane o końcu gry
         fireDb.ref('rooms/' + currentRoomCode + '/gameOver').remove();
     }
 
@@ -440,6 +456,7 @@
 
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game-area').style.display = 'block';
+        document.getElementById('end-modal').style.display = 'none';
         isGuessing = false; updateGuessBtn();
     }
 
@@ -481,7 +498,6 @@
         modal.style.display = 'flex';
 
         if(myPlayerId === data.guesserId) {
-            // JA ZGADYWAŁEM
             if(data.wasCorrect) {
                 document.getElementById('end-status-title').innerText = "WYGRAŁEŚ!";
                 document.getElementById('end-status-title').style.color = "var(--lego-yellow)";
@@ -496,12 +512,11 @@
                 document.getElementById('end-char-name').innerText = data.targetCharName;
             }
         } else {
-            // PRZECIWNIK ZGADYWAŁ
             if(data.wasCorrect) {
                 document.getElementById('end-status-title').innerText = "PRZEGRAŁEŚ!";
                 document.getElementById('end-status-title').style.color = "var(--lego-red)";
                 document.getElementById('end-status-desc').innerText = "Przeciwnik odgadł Twoją postać. Jego postać to:";
-                document.getElementById('end-img').src = data.guesserCharImg; // Pokazuje postać przeciwnika (zwycięzcy)
+                document.getElementById('end-img').src = data.guesserCharImg;
                 document.getElementById('end-char-name').innerText = data.guesserCharName;
             } else {
                 document.getElementById('end-status-title').innerText = "WYGRAŁEŚ!";
