@@ -33,7 +33,30 @@
             min-height: 100vh;
         }
 
-        /* PRZYCISK DISCORD */
+        /* LOGO NAWIGACJA */
+        .logo-home {
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        .logo-home:hover { transform: scale(1.05); }
+
+        .small-logo-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            z-index: 1000;
+            background: var(--glass);
+            padding: 8px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: none; /* Pokazywane tylko w game-area */
+        }
+        .small-logo-nav span { color: var(--lego-yellow); }
+        .small-logo-nav b { color: var(--lego-red); }
+
         .discord-btn {
             position: fixed;
             top: 20px;
@@ -52,7 +75,7 @@
             transition: 0.3s;
             z-index: 1000;
         }
-        .discord-btn:hover { transform: scale(1.1); background: #4752c4; }
+        .discord-btn:hover { transform: scale(1.1); }
 
         h1.main-title {
             font-weight: 700;
@@ -147,18 +170,20 @@
 
         @media (max-width: 800px) {
             #chat-container { position: relative; width: 90%; margin: 10px auto; height: 180px; bottom: 0; right: 0; }
-            .discord-btn { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 20px; }
+            .small-logo-nav { top: 10px; left: 10px; font-size: 0.9rem; padding: 5px 10px; }
         }
     </style>
 </head>
 <body>
 
-<a href="https://discord.gg/FeBT9tVEsY" target="_blank" class="discord-btn">
+<div class="small-logo-nav logo-home" onclick="location.reload()"><span>Minifig</span> <b>Who</b></div>
+
+<a href="https://discord.gg/yourlink" target="_blank" class="discord-btn">
     <i class="fab fa-discord"></i>
 </a>
 
 <div id="menu">
-    <h1 class="main-title">Minifig <span>Who</span></h1>
+    <h1 class="main-title logo-home" onclick="location.reload()">Minifig <span>Who</span></h1>
     <div id="setup-view">
         <div class="brickle-card" onclick="createGame()" style="cursor:pointer; border-style: dashed;">
             <h2 style="margin:0;">STWÓRZ NOWĄ GRĘ</h2>
@@ -224,7 +249,6 @@
 </div>
 
 <script>
-    // Konfiguracja Firebase (pozostaje bez zmian)
     const firebaseConfig = {
       apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
       databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
@@ -510,6 +534,7 @@ let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999);
 
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game-area').style.display = 'block';
+        document.querySelector('.small-logo-nav').style.display = 'block'; // POKAZUJEMY MAŁE LOGO
         isGuessing = false; 
         updateGuessBtn();
     }
@@ -523,8 +548,10 @@ let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999);
 
     function updateGuessBtn() {
         const btn = document.getElementById('guess-btn');
-        btn.innerText = isGuessing ? "ANULUJ" : "ZGADNIJ PRZECIWNIKA";
-        btn.style.background = isGuessing ? "var(--lego-red)" : "rgba(255,255,255,0.1)";
+        if(btn) {
+            btn.innerText = isGuessing ? "ANULUJ" : "ZGADNIJ PRZECIWNIKA";
+            btn.style.background = isGuessing ? "var(--lego-red)" : "rgba(255,255,255,0.1)";
+        }
     }
 
     function finalizeGuess(guessedChar) {
@@ -556,6 +583,7 @@ let myPlayerId = 'u' + Math.floor(1000 + Math.random() * 8999);
         fireDb.ref(`rooms/${currentRoomCode}/gameOver`).remove();
         document.getElementById('end-modal').style.display = 'none';
         document.getElementById('game-area').style.display = 'none';
+        document.querySelector('.small-logo-nav').style.display = 'none'; // UKRYWAMY MAŁE LOGO
         document.getElementById('menu').style.display = 'block';
         document.getElementById('lobby-view').style.display = 'block';
     }
