@@ -34,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* NAGŁÓWEK I LOGO */
         .main-title {
             font-weight: 800; font-size: clamp(2.5rem, 6vw, 4rem);
             text-transform: uppercase; color: var(--lego-yellow);
@@ -46,7 +45,6 @@
 
         .subtitle { font-size: 1rem; color: #9CA3AF; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
 
-        /* MENU STARTOWE */
         .start-grid { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
             gap: 30px; max-width: 900px; margin: 0 auto; padding: 0 20px; 
@@ -59,7 +57,6 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Stwórz grę - Świeci i zmienia kolor ramki TYLKO po najechaniu */
         .create-card { cursor: pointer; }
         .create-card:hover { border-color: var(--lego-yellow); box-shadow: 0 0 35px rgba(255, 213, 0, 0.4); transform: translateY(-5px); }
 
@@ -91,7 +88,6 @@
         }
         .join-card .action-btn:hover { background: var(--lego-red); border-color: var(--lego-red); box-shadow: 0 0 15px rgba(227, 0, 11, 0.5); }
 
-        /* LOBBY I ROZMIAR PLANSZY */
         .lobby-panel {
             background: var(--dark-panel); padding: 20px 40px; border-radius: 20px; 
             border: 2px solid var(--lego-red); display: inline-block; margin-bottom: 30px;
@@ -109,7 +105,6 @@
             color: white; box-shadow: 0 0 20px rgba(227, 0, 11, 0.5); 
         }
 
-        /* KATEGORIE */
         #category-buttons { max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; }
         .cat-btn {
             background: var(--dark-panel); border: 2px solid var(--lego-yellow);
@@ -121,7 +116,6 @@
         .cat-btn.mix-btn { border-color: var(--lego-red); box-shadow: 0 0 10px rgba(227, 0, 11, 0.3); }
         .cat-btn.mix-btn:hover { border-color: var(--lego-yellow); box-shadow: 0 0 20px rgba(255, 213, 0, 0.6); }
 
-        /* PLANSZA GRY */
         .target-box {
             background: var(--dark-panel); border: 3px solid var(--lego-yellow);
             padding: 20px 40px; border-radius: 20px; display: flex;
@@ -136,7 +130,6 @@
         
         .game-actions { display: flex; flex-direction: column; gap: 10px; min-width: 220px; }
         
-        /* Przycisk powrotu - czerwona poświata domyślnie, żółta po najechaniu */
         .nav-btn {
             background: transparent; border: 2px solid var(--lego-red); color: white;
             padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;
@@ -161,14 +154,12 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
-        /* KARTY POSTACI - wymuszone 7 w rzędzie */
         .character-grid {
             display: grid; 
             grid-template-columns: repeat(7, 1fr);
             gap: 15px; max-width: 1200px; margin: 0 auto; padding: 0 20px;
         }
 
-        /* Responsywność dla bardzo małych ekranów (telefony) - ale na PC będzie zawsze 7 */
         @media (max-width: 1000px) { .character-grid { grid-template-columns: repeat(5, 1fr); } }
         @media (max-width: 700px) { .character-grid { grid-template-columns: repeat(4, 1fr); } }
 
@@ -186,7 +177,6 @@
         .main-img { width: 100%; height: 100%; object-fit: contain; }
         .card-name { color: #111; font-size: 14px; font-weight: 800; margin-top: 10px; text-transform: uppercase; }
 
-        /* CZAT, DISCORD I WŁASNE OKIENKA (MODALE) */
         .discord-corner {
             position: absolute; top: 20px; right: 20px; width: 60px; height: 60px;
             background: #5865F2; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -231,7 +221,6 @@
         }
         .win-title { font-size: 5rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 30px currentColor; }
 
-        /* WŁASNY MODAL ZAMIAST ALERTÓW SYSTEMOWYCH */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 15, 25, 0.85); z-index: 20000; align-items: center; justify-content: center;
@@ -334,7 +323,6 @@
     Niniejsza strona jest projektem fanowskim o charakterze niekomercyjnym. Gra nie jest w żaden sposób powiązana, wspierana ani sponsorowana przez Grupę LEGO. Wszystkie znaki towarowe, nazwy oraz wizerunki postaci należą do ich prawowitych właścicieli.
 </div>
 
-<!-- NASZE WŁASNE OKIENKO (MODAL) ZAMIAST ALERTÓW -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <p id="modal-text"></p>
@@ -509,7 +497,7 @@
             {n:"Apogeum"}, {n:"Blazestone"}, {n:"Fylaks"}, {n:"Macroburst"}, {n:"Thunderhead"}, {n:"Universal Man"},
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
         ],
-        "MIX": [] // Pozostaw puste, kod obsłuży to automatycznie
+        "MIX": []
     };
 
    let currentBoardSize = 28;
@@ -519,14 +507,13 @@
     let isChatOpen = false;
     let unreadMessages = 0;
 
-    // --- SYSTEM WŁASNYCH POWIADOMIEŃ (MODALI) ---
     function showModal(msg, type = 'alert', onConfirm = null) {
         const modal = document.getElementById('custom-modal');
         const text = document.getElementById('modal-text');
         const btns = document.getElementById('modal-buttons');
         
         text.innerText = msg;
-        btns.innerHTML = ''; // czyszczenie starych przycisków
+        btns.innerHTML = '';
         
         if (type === 'alert') {
             const btnOk = document.createElement('button');
@@ -555,7 +542,6 @@
         modal.style.display = 'flex';
     }
 
-    // --- CZAT ---
     function toggleChat() {
         const panel = document.getElementById('chat-panel');
         isChatOpen = !isChatOpen;
@@ -593,7 +579,6 @@
         });
     }
 
-    // --- LOBBY ---
     function updateBoardSize(size, el) {
         if (!currentRoomCode) return;
         fireDb.ref('rooms/' + currentRoomCode + '/settings').update({ boardSize: size });
@@ -635,7 +620,6 @@
     const val = s.val();
     if(!val) return;
 
-    // Aktualizacja rozmiaru planszy
     if(val.boardSize) {
         currentBoardSize = val.boardSize;
         document.querySelectorAll('.size-btn').forEach(b => {
@@ -643,22 +627,19 @@
         });
     }
 
-    // SPRAWDZANIE STATUSU GRY:
     if(val.gameStatus === 'starting') {
-        initGame(val.selectedCategory); // Startujemy grę
+        initGame(val.selectedCategory);
     } 
     else if(val.gameStatus === 'lobby') {
-        switchViewToLobby(); // WRACAMY DO MENU (To dodaliśmy)
+        switchViewToLobby();
     }
 });
 
-        // POPRAWA WYGRANEJ
         fireDb.ref('rooms/' + code + '/victory').on('value', (s) => {
             const d = s.val();
             if(d) {
                 const isMe = d.winner === myPlayerId;
-                // Jeśli wygrałem ja, chcę zobaczyć postać przeciwnika (loserCharacter)
-                // Jeśli przegrałem, pokazuję postać tego który wygrał (winnerCharacter)
+               
                 const opponentChar = isMe ? d.loserCharacter : d.winnerCharacter;
                 showWinOverlay(isMe, opponentChar);
             }
@@ -681,7 +662,6 @@
         });
     }
 
-    // --- GRA I ZGADYWANIE ---
     function toggleGuessMode() {
         const btn = document.getElementById('guess-btn-main');
         isGuessMode = !isGuessMode;
@@ -749,14 +729,12 @@
     }
 
     async function confirmGuess(name) {
-        // Używamy naszego nowego Modala zamiast confirm()
         showModal(`Czy przeciwnik ma postać: ${name}?`, 'confirm', async () => {
             const snap = await fireDb.ref('rooms/' + currentRoomCode + '/targets').once('value');
             const targets = snap.val();
             const opponentId = Object.keys(targets).find(id => id !== myPlayerId);
             
             if (targets[opponentId] === name) {
-                // POPRAWA: Wysyłamy do bazy obie postacie (wygranego i przegranego)
                 fireDb.ref('rooms/' + currentRoomCode + '/victory').set({ 
                     winner: myPlayerId, 
                     winnerCharacter: targets[myPlayerId], 
@@ -764,7 +742,7 @@
                 });
             } else {
                 showModal("Pudło! To nie jest ta postać.", "alert");
-                toggleGuessMode(); // Wyłącz pulsujący przycisk
+                toggleGuessMode();
             }
         });
     }
@@ -800,25 +778,20 @@
  function backToLobby() {
         if (!currentRoomCode) return;
 
-        // 1. Informujemy bazę, że wracamy do lobby - to wywoła reakcję u obu graczy
         fireDb.ref('rooms/' + currentRoomCode + '/settings').update({ 
             gameStatus: 'lobby' 
         });
 
-        // 2. Czyścimy dane o wygranej, żeby móc zacząć nową rundę na czysto
         fireDb.ref('rooms/' + currentRoomCode + '/victory').remove();
         
-        // 3. Przełączamy widok lokalnie
         switchViewToLobby();
     }
 
-    // Funkcja pomocnicza, która fizycznie ukrywa planszę i pokazuje menu
     function switchViewToLobby() {
         document.getElementById('game-area').style.display = 'none';
         document.getElementById('lobby-view').style.display = 'block';
         document.getElementById('menu').style.display = 'block';
         
-        // Resetujemy stan planszy
         document.getElementById('character-grid').innerHTML = '';
         isGuessMode = false;
         
@@ -828,12 +801,10 @@
             btn.classList.remove('active');
         }
 
-        // Jeśli na ekranie jest informacja o zwycięstwie, usuwamy ją
         const winOverlay = document.querySelector('.win-overlay');
         if(winOverlay) winOverlay.remove();
     }
 
-    // Start gry z linku (jeśli w adresie jest ?room=XXXX)
     window.onload = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const room = urlParams.get('room');
