@@ -631,17 +631,26 @@
         document.getElementById('chat-widget').style.display = 'flex';
         listenToChat(code);
         
-        roomRef.child('settings').on('value', (s) => {
-            const val = s.val();
-            if(!val) return;
-            if(val.boardSize) {
-                currentBoardSize = val.boardSize;
-                document.querySelectorAll('.size-btn').forEach(b => {
-                    b.classList.toggle('active', parseInt(b.innerText) === val.boardSize);
-                });
-            }
-            if(val.gameStatus === 'starting') initGame(val.selectedCategory);
+      roomRef.child('settings').on('value', (s) => {
+    const val = s.val();
+    if(!val) return;
+
+    // Aktualizacja rozmiaru planszy
+    if(val.boardSize) {
+        currentBoardSize = val.boardSize;
+        document.querySelectorAll('.size-btn').forEach(b => {
+            b.classList.toggle('active', parseInt(b.innerText) === val.boardSize);
         });
+    }
+
+    // SPRAWDZANIE STATUSU GRY:
+    if(val.gameStatus === 'starting') {
+        initGame(val.selectedCategory); // Startujemy grę
+    } 
+    else if(val.gameStatus === 'lobby') {
+        switchViewToLobby(); // WRACAMY DO MENU (To dodaliśmy)
+    }
+});
 
         // POPRAWA WYGRANEJ
         fireDb.ref('rooms/' + code + '/victory').on('value', (s) => {
@@ -780,11 +789,43 @@
         });
     }
 
-    function backToLobby() {
-        fireDb.ref('rooms/' + currentRoomCode + '/settings').update({ gameStatus: 'lobby' });
-        location.reload();
+ function backToLobby() {
+        if (!currentRoomCode) return;
+
+        // 1. Informujemy bazę, że wracamy do lobby - to wywoła reakcję u obu graczy
+        fireDb.ref('rooms/' + currentRoomCode + '/settings').update({ 
+            gameStatus: 'lobby' 
+        });
+
+        // 2. Czyścimy dane o wygranej, żeby móc zacząć nową rundę na czysto
+        fireDb.ref('rooms/' + currentRoomCode + '/victory').remove();
+        
+        // 3. Przełączamy widok lokalnie
+        switchViewToLobby();
     }
 
+    // Funkcja pomocnicza, która fizycznie ukrywa planszę i pokazuje menu
+    function switchViewToLobby() {
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('lobby-view').style.display = 'block';
+        document.getElementById('menu').style.display = 'block';
+        
+        // Resetujemy stan planszy
+        document.getElementById('character-grid').innerHTML = '';
+        isGuessMode = false;
+        
+        const btn = document.getElementById('guess-btn-main');
+        if(btn) {
+            btn.innerText = "ZGADUJ";
+            btn.classList.remove('active');
+        }
+
+        // Jeśli na ekranie jest informacja o zwycięstwie, usuwamy ją
+        const winOverlay = document.querySelector('.win-overlay');
+        if(winOverlay) winOverlay.remove();
+    }
+
+    // Start gry z linku (jeśli w adresie jest ?room=XXXX)
     window.onload = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const room = urlParams.get('room');
