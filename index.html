@@ -59,8 +59,9 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .create-card { border-color: var(--lego-yellow); box-shadow: 0 0 20px rgba(255, 213, 0, 0.2); cursor: pointer; }
-        .create-card:hover { transform: translateY(-5px); box-shadow: 0 0 35px rgba(255, 213, 0, 0.4); }
+        /* Stwórz grę - Świeci i zmienia kolor ramki TYLKO po najechaniu */
+        .create-card { cursor: pointer; }
+        .create-card:hover { border-color: var(--lego-yellow); box-shadow: 0 0 35px rgba(255, 213, 0, 0.4); transform: translateY(-5px); }
 
         .join-card:hover { border-color: var(--lego-red); box-shadow: 0 0 35px rgba(227, 0, 11, 0.4); transform: translateY(-5px); }
 
@@ -117,8 +118,6 @@
             text-transform: uppercase; box-shadow: 0 0 10px rgba(255, 213, 0, 0.2);
         }
         .cat-btn:hover { transform: scale(1.08); border-color: var(--lego-red); box-shadow: 0 0 20px rgba(227, 0, 11, 0.6); }
-        
-        /* Wyróżnienie trybu MIX */
         .cat-btn.mix-btn { border-color: var(--lego-red); box-shadow: 0 0 10px rgba(227, 0, 11, 0.3); }
         .cat-btn.mix-btn:hover { border-color: var(--lego-yellow); box-shadow: 0 0 20px rgba(255, 213, 0, 0.6); }
 
@@ -135,15 +134,19 @@
             border-radius: 15px; overflow: hidden; display: flex; justify-content: center; align-items: center;
         }
         
-        /* Profesjonalny Przycisk Zgaduj i Powrót */
         .game-actions { display: flex; flex-direction: column; gap: 10px; min-width: 220px; }
         
+        /* Przycisk powrotu - czerwona poświata domyślnie, żółta po najechaniu */
         .nav-btn {
-            background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white;
+            background: transparent; border: 2px solid var(--lego-red); color: white;
             padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;
             transition: 0.3s; font-family: 'Fredoka', sans-serif; text-transform: uppercase; font-size: 13px;
+            box-shadow: 0 0 15px rgba(227, 0, 11, 0.5);
         }
-        .nav-btn:hover { border-color: var(--lego-yellow); background: rgba(255,213,0,0.1); box-shadow: 0 0 15px rgba(255,213,0,0.3); }
+        .nav-btn:hover { 
+            border-color: var(--lego-yellow); background: rgba(255,213,0,0.1); 
+            box-shadow: 0 0 20px rgba(255, 213, 0, 0.7);
+        }
 
         .guess-btn {
             background: rgba(255,255,255,0.05); color: white; border: 2px solid var(--lego-red);
@@ -158,11 +161,16 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
-        /* KARTY POSTACI */
+        /* KARTY POSTACI - wymuszone 7 w rzędzie */
         .character-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr);
             gap: 15px; max-width: 1200px; margin: 0 auto; padding: 0 20px;
         }
+
+        /* Responsywność dla bardzo małych ekranów (telefony) - ale na PC będzie zawsze 7 */
+        @media (max-width: 1000px) { .character-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (max-width: 700px) { .character-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .card {
             background: white; border-radius: 15px; padding: 12px; cursor: pointer;
@@ -172,13 +180,13 @@
         .card:hover { transform: scale(1.08); border-color: var(--lego-yellow); z-index: 5; box-shadow: 0 10px 25px rgba(255,213,0,0.4); }
         .card.target-character { border-color: var(--lego-red); box-shadow: 0 0 20px rgba(227, 0, 11, 0.5); }
         .card.eliminated { opacity: 0.2; filter: grayscale(100%); transform: scale(0.92); pointer-events: auto; }
-        .card.eliminated:hover { filter: grayscale(50%); border-color: #888; } /* Możliwość odklikania */
+        .card.eliminated:hover { filter: grayscale(50%); border-color: #888; }
 
         .card-img-container { width: 100%; height: 170px; display: flex; align-items: center; justify-content: center; }
         .main-img { width: 100%; height: 100%; object-fit: contain; }
         .card-name { color: #111; font-size: 14px; font-weight: 800; margin-top: 10px; text-transform: uppercase; }
 
-        /* CZAT I DISCORD */
+        /* CZAT, DISCORD I WŁASNE OKIENKA (MODALE) */
         .discord-corner {
             position: absolute; top: 20px; right: 20px; width: 60px; height: 60px;
             background: #5865F2; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -211,19 +219,31 @@
             border: 2px solid var(--dark-panel);
         }
 
-        /* STOPKA */
         .footer-disclaimer {
             font-size: 11px; color: rgba(255,255,255,0.3); padding: 20px; width: 100%;
             text-align: center; margin-top: auto; font-family: sans-serif; max-width: 800px; align-self: center; line-height: 1.5;
         }
         
-        /* Nakładka wygranej */
         .win-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 15, 25, 0.95);
             z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column;
             backdrop-filter: blur(10px);
         }
         .win-title { font-size: 5rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 30px currentColor; }
+
+        /* WŁASNY MODAL ZAMIAST ALERTÓW SYSTEMOWYCH */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 15, 25, 0.85); z-index: 20000; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        .modal-box {
+            background: var(--dark-panel); border: 3px solid var(--lego-yellow);
+            padding: 30px 40px; border-radius: 20px; text-align: center; max-width: 450px;
+            box-shadow: 0 0 40px rgba(255,213,0,0.3);
+        }
+        #modal-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
+        #modal-buttons { display: flex; justify-content: center; gap: 15px; }
     </style>
 </head>
     <body>
@@ -312,6 +332,14 @@
 
 <div class="footer-disclaimer">
     Niniejsza strona jest projektem fanowskim o charakterze niekomercyjnym. Gra nie jest w żaden sposób powiązana, wspierana ani sponsorowana przez Grupę LEGO. Wszystkie znaki towarowe, nazwy oraz wizerunki postaci należą do ich prawowitych właścicieli.
+</div>
+
+<!-- NASZE WŁASNE OKIENKO (MODAL) ZAMIAST ALERTÓW -->
+<div id="custom-modal" class="modal-overlay">
+    <div class="modal-box">
+        <p id="modal-text"></p>
+        <div id="modal-buttons"></div>
+    </div>
 </div>
         <script>
     const firebaseConfig = {
@@ -484,12 +512,48 @@
         "MIX": [] // Pozostaw puste, kod obsłuży to automatycznie
     };
 
-    let currentBoardSize = 28;
+   let currentBoardSize = 28;
     let currentRoomCode = null;
     let isGuessMode = false;
     const myPlayerId = Math.random().toString(36).substring(2, 10);
     let isChatOpen = false;
     let unreadMessages = 0;
+
+    // --- SYSTEM WŁASNYCH POWIADOMIEŃ (MODALI) ---
+    function showModal(msg, type = 'alert', onConfirm = null) {
+        const modal = document.getElementById('custom-modal');
+        const text = document.getElementById('modal-text');
+        const btns = document.getElementById('modal-buttons');
+        
+        text.innerText = msg;
+        btns.innerHTML = ''; // czyszczenie starych przycisków
+        
+        if (type === 'alert') {
+            const btnOk = document.createElement('button');
+            btnOk.className = 'guess-btn';
+            btnOk.innerText = 'ROZUMIEM';
+            btnOk.onclick = () => { modal.style.display = 'none'; };
+            btns.appendChild(btnOk);
+        } else if (type === 'confirm') {
+            const btnYes = document.createElement('button');
+            btnYes.className = 'guess-btn';
+            btnYes.innerText = 'TAK, TO ON!';
+            btnYes.onclick = () => { modal.style.display = 'none'; if(onConfirm) onConfirm(); };
+            
+            const btnNo = document.createElement('button');
+            btnNo.className = 'nav-btn';
+            btnNo.innerText = 'NIE, ANULUJ';
+            btnNo.onclick = () => { 
+                modal.style.display = 'none'; 
+                if(isGuessMode) toggleGuessMode(); 
+            };
+            
+            btns.appendChild(btnYes);
+            btns.appendChild(btnNo);
+        }
+        
+        modal.style.display = 'flex';
+    }
 
     // --- CZAT ---
     function toggleChat() {
@@ -553,7 +617,7 @@
         const players = snap.val() || {};
         
         if (Object.keys(players).length >= 2 && !players[myPlayerId]) {
-            alert("Pokój jest pełny!"); return;
+            showModal("Niestety, ten pokój jest już pełny!"); return;
         }
 
         await roomRef.child('players').child(myPlayerId).set(true);
@@ -579,9 +643,16 @@
             if(val.gameStatus === 'starting') initGame(val.selectedCategory);
         });
 
+        // POPRAWA WYGRANEJ
         fireDb.ref('rooms/' + code + '/victory').on('value', (s) => {
             const d = s.val();
-            if(d) showWinOverlay(d.winner === myPlayerId, d.character);
+            if(d) {
+                const isMe = d.winner === myPlayerId;
+                // Jeśli wygrałem ja, chcę zobaczyć postać przeciwnika (loserCharacter)
+                // Jeśli przegrałem, pokazuję postać tego który wygrał (winnerCharacter)
+                const opponentChar = isMe ? d.loserCharacter : d.winnerCharacter;
+                showWinOverlay(isMe, opponentChar);
+            }
         });
     }
 
@@ -606,7 +677,7 @@
         const btn = document.getElementById('guess-btn-main');
         isGuessMode = !isGuessMode;
         if(isGuessMode) {
-            btn.innerText = "KLIKNIJ POSTAĆ...";
+            btn.innerText = "KLIKNIJ W POSTAĆ...";
             btn.classList.add('active');
         } else {
             btn.innerText = "ZGADUJ";
@@ -659,7 +730,6 @@
             grid.appendChild(card);
         });
 
-        // Reset przycisku zgadywania na wypadek nowej gry
         isGuessMode = false;
         document.getElementById('guess-btn-main').innerText = "ZGADUJ";
         document.getElementById('guess-btn-main').classList.remove('active');
@@ -670,21 +740,24 @@
     }
 
     async function confirmGuess(name) {
-        if (!confirm(`Czy przeciwnik to ${name}?`)) {
-            toggleGuessMode(); // Anuluj tryb
-            return;
-        }
-        
-        const snap = await fireDb.ref('rooms/' + currentRoomCode + '/targets').once('value');
-        const targets = snap.val();
-        const opponentId = Object.keys(targets).find(id => id !== myPlayerId);
-        
-        if (targets[opponentId] === name) {
-            fireDb.ref('rooms/' + currentRoomCode + '/victory').set({ winner: myPlayerId, character: name });
-        } else {
-            alert("Nie! To nie ta postać.");
-            toggleGuessMode(); // Wyłącz pulsujący przycisk po pudle
-        }
+        // Używamy naszego nowego Modala zamiast confirm()
+        showModal(`Czy przeciwnik ma postać: ${name}?`, 'confirm', async () => {
+            const snap = await fireDb.ref('rooms/' + currentRoomCode + '/targets').once('value');
+            const targets = snap.val();
+            const opponentId = Object.keys(targets).find(id => id !== myPlayerId);
+            
+            if (targets[opponentId] === name) {
+                // POPRAWA: Wysyłamy do bazy obie postacie (wygranego i przegranego)
+                fireDb.ref('rooms/' + currentRoomCode + '/victory').set({ 
+                    winner: myPlayerId, 
+                    winnerCharacter: targets[myPlayerId], 
+                    loserCharacter: targets[opponentId]
+                });
+            } else {
+                showModal("Pudło! To nie jest ta postać.", "alert");
+                toggleGuessMode(); // Wyłącz pulsujący przycisk
+            }
+        });
     }
 
     function showWinOverlay(isMe, char) {
@@ -694,7 +767,7 @@
         const text = isMe ? 'ZWYCIĘSTWO!' : 'PRZEGRANA';
         div.innerHTML = `
             <h1 class="win-title" style="color: ${color};">${text}</h1>
-            <p style="font-size: 1.5rem; margin-bottom: 30px;">Postać przeciwnika: <b>${char}</b></p>
+            <p style="font-size: 1.5rem; margin-bottom: 30px;">Postać przeciwnika: <b style="color:var(--lego-yellow);">${char}</b></p>
             <button class="action-btn" onclick="location.reload()" style="font-size: 18px; padding: 15px 40px; background: rgba(255,255,255,0.1);">ZAGRAJ PONOWNIE</button>
         `;
         document.body.appendChild(div);
@@ -702,7 +775,9 @@
 
     function copyRoomLink() {
         const url = window.location.origin + window.location.pathname + "?room=" + currentRoomCode;
-        navigator.clipboard.writeText(url).then(() => alert("Skopiowano link do schowka!"));
+        navigator.clipboard.writeText(url).then(() => {
+            showModal("Link został skopiowany do schowka! Wyślij go znajomemu.", "alert");
+        });
     }
 
     function backToLobby() {
