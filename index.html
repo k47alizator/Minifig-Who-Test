@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - BETA 1.0.2</title>
+    <title>Minifig Who - BETA 1.0.3</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -19,7 +19,6 @@
         :root {
             --lego-yellow: #FFD500;
             --lego-red: #E3000B;
-            --lego-blue: #006CB7;
             --dark-panel: rgba(20, 26, 35, 0.85);
             --panel-border: rgba(255, 255, 255, 0.1);
         }
@@ -198,11 +197,11 @@
         #chat-input-area { padding: 15px; display: flex; gap: 10px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--panel-border); }
         
         .chat-msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 80%; line-height: 1.4; }
-        .my-msg { background: var(--lego-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .my-msg { background: var(--lego-yellow); align-self: flex-end; border-bottom-right-radius: 4px; }
         .other-msg { background: var(--lego-red); align-self: flex-start; border-bottom-left-radius: 4px; }
 
         #chat-toggle-btn {
-            width: 65px; height: 65px; border-radius: 50%; background: var(--lego-blue); color: white;
+            width: 65px; height: 65px; border-radius: 50%; background: var(--lego-yellow); color: white;
             border: 3px solid rgba(255,255,255,0.2); font-size: 26px; cursor: pointer; position: relative; transition: 0.3s;
         }
         #chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(0, 108, 183, 0.6); }
@@ -241,11 +240,11 @@
         }
 
         .end-turn-btn {
-            background: rgba(255,255,255,0.05); color: white; border: 2px solid var(--lego-blue);
+            background: rgba(255,255,255,0.05); color: white; border: 2px solid var(--lego-yellow);
             padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 14px;
             cursor: pointer; transition: all 0.3s; font-family: 'Fredoka', sans-serif; text-transform: uppercase;
         }
-        .end-turn-btn:hover { background: var(--lego-blue); box-shadow: 0 0 20px rgba(0, 108, 183, 0.5); transform: scale(1.02); }
+        .end-turn-btn:hover { background: var(--lego-yellow); box-shadow: 0 0 20px rgba(0, 108, 183, 0.5); transform: scale(1.02); }
     </style>
 </head>
     <body>
@@ -324,7 +323,7 @@
         <div id="chat-messages"></div>
         <div id="chat-input-area">
             <input type="text" id="chat-input" placeholder="Napisz wiadomość..." onkeypress="if(event.key==='Enter') sendChatMessage()" style="margin: 0; padding: 10px; width: 100%; border-radius: 8px;">
-            <button class="action-btn" onclick="sendChatMessage()" style="margin: 0; padding: 10px 15px; border-radius: 8px; border-color: var(--lego-blue); background: var(--lego-blue);"><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="action-btn" onclick="sendChatMessage()" style="margin: 0; padding: 10px 15px; border-radius: 8px; border-color: var(--lego-yellow); background: var(--lego-yellow);"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
     <button id="chat-toggle-btn" onclick="toggleChat()">
