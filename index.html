@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - BETA 1.1.0</title>
+    <title>Minifig Who - BETA 1.1.1</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -511,7 +511,7 @@
             {n:"Apogeum"}, {n:"Blazestone"}, {n:"Fylaks"}, {n:"Macroburst"}, {n:"Thunderhead"}, {n:"Universal Man"},
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
         ],
-        "MIX": []
+       "MIX": []
     };
 
    let currentBoardSize = 28;
@@ -558,62 +558,6 @@
         modal.style.display = 'flex';
     }
 
-            let currentLang = 'pl'; // 'pl' lub 'en'
-
-    const characterTranslations = {
-        "Luke Skywalker (Wersja z Tatooine)": "Luke Skywalker (Tatooine Version)",
-        "Księżniczka Leia": "Princess Leia",
-        "Lord Vader": "Darth Vader",
-        // Tutaj dopisujesz kolejne postacie: "Nazwa PL": "Nazwa EN"
-    };
-
-    function translateCharacterName(name) {
-        return characterTranslations[name] || name; 
-    }
-
-    function changeLanguage(lang) {
-        currentLang = lang;
-        
-      function changeLanguage(lang) {
-        currentLang = lang;
-        
-        // 1. Podmiana napisów na kartach postaci
-        document.querySelectorAll('.card').forEach((card, index) => {
-            if (currentBoardCharacters[index]) {
-                const charName = currentBoardCharacters[index].n;
-                const nameDiv = card.querySelector('.card-name');
-                if (nameDiv) {
-                    nameDiv.innerText = currentLang === 'pl' ? charName : translateCharacterName(charName);
-                }
-            }
-        });
-
-        // 2. Podmiana tekstu wybranej postaci
-        const targetNameEl = document.getElementById('target-name');
-        if (targetNameEl) {
-            if (window.currentTargetNamePl) {
-                targetNameEl.innerText = currentLang === 'pl' ? window.currentTargetNamePl : translateCharacterName(window.currentTargetNamePl);
-            } else {
-                targetNameEl.innerText = currentLang === 'pl' ? "WYBIERZ POSTAĆ!" : "CHOOSE A CHARACTER!";
-            }
-        }
-
-        // 3. Podmiana tekstu przycisku zgadywania
-        const guessBtn = document.getElementById('guess-btn-main');
-        if (guessBtn && !isGuessMode) {
-            guessBtn.innerText = currentLang === 'pl' ? "ZGADUJ" : "GUESS";
-        }
-
-        // 4. Podmiana napisów na ekranie startowym
-        const createBtn = document.getElementById('create-game-btn');
-        if (createBtn) createBtn.innerText = currentLang === 'pl' ? "STWÓRZ POKÓJ" : "CREATE ROOM";
-
-        const joinBtn = document.getElementById('join-game-btn');
-        if (joinBtn) joinBtn.innerText = currentLang === 'pl' ? "DOŁĄCZ DO POKOJU" : "JOIN ROOM";
-        
-        const roomInput = document.getElementById('room-input');
-        if (roomInput) roomInput.placeholder = currentLang === 'pl' ? "Wpisz kod..." : "Enter code...";
-    }
     function toggleChat() {
         const panel = document.getElementById('chat-panel');
         isChatOpen = !isChatOpen;
@@ -722,17 +666,15 @@
             const myTargetName = targets[myPlayerId];
             
             if (myTargetName) {
-                window.currentTargetNamePl = myTargetName;
                 const charObj = currentBoardCharacters.find(c => c.n === myTargetName);
                 if (charObj) {
-                    document.getElementById('target-name').innerText = currentLang === 'pl' ? charObj.n : translateCharacterName(charObj.n);
+                    document.getElementById('target-name').innerText = charObj.n;
                     const targetImg = document.getElementById('target-img');
                     targetImg.src = `https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/img/${charObj.folder}/${encodeURIComponent(charObj.n)}.webp`;
                     targetImg.onerror = () => { targetImg.src = `https://tse2.mm.bing.net/th?q=lego+${encodeURIComponent(charObj.n)}+minifigure`; };
                 }
             } else {
-                window.currentTargetNamePl = null;
-                document.getElementById('target-name').innerText = currentLang === 'pl' ? "WYBIERZ POSTAĆ!" : "CHOOSE A CHARACTER!";
+                document.getElementById('target-name').innerText = "WYBIERZ POSTAĆ!";
                 document.getElementById('target-img').src = "https://placehold.co/170x170/ffffff/dd0000?text=?";
             }
 
@@ -798,11 +740,11 @@
     function toggleGuessMode() {
         const btn = document.getElementById('guess-btn-main');
         isGuessMode = !isGuessMode;
-       if(isGuessMode) {
-            btn.innerText = currentLang === 'pl' ? "KLIKNIJ W POSTAĆ..." : "CLICK A CHARACTER...";
+        if(isGuessMode) {
+            btn.innerText = "KLIKNIJ W POSTAĆ...";
             btn.classList.add('active');
         } else {
-            btn.innerText = currentLang === 'pl' ? "ZGADUJ" : "GUESS";
+            btn.innerText = "ZGADUJ";
             btn.classList.remove('active');
         }
     }
@@ -837,10 +779,9 @@
         selected.forEach(char => {
             const card = document.createElement('div');
             card.className = 'card';
-            const displayName = currentLang === 'pl' ? char.n : translateCharacterName(char.n);
             card.innerHTML = `
                 <div class="card-img-container"><img class="main-img" src="https://raw.githubusercontent.com/${githubConfig.user}/${githubConfig.repo}/main/img/${char.folder}/${encodeURIComponent(char.n)}.webp" onerror="this.src='https://tse2.mm.bing.net/th?q=lego+${encodeURIComponent(char.n)}+minifigure'"></div>
-                <div class="card-name">${displayName}</div>
+                <div class="card-name">${char.n}</div>
             `;
             
             card.onclick = () => {
@@ -871,10 +812,7 @@
     }
 
     async function confirmGuess(name) {
-       const displayGuessName = currentLang === 'pl' ? name : translateCharacterName(name);
-        const confirmMsg = currentLang === 'pl' ? `Czy przeciwnik ma postać: ${displayGuessName}?` : `Does your opponent have the character: ${displayGuessName}?`;
-        
-        showModal(confirmMsg, 'confirm', async () => {
+        showModal(`Czy przeciwnik ma postać: ${name}?`, 'confirm', async () => {
             const snap = await fireDb.ref('rooms/' + currentRoomCode + '/targets').once('value');
             const targets = snap.val();
             const opponentId = Object.keys(targets).find(id => id !== myPlayerId);
@@ -886,34 +824,28 @@
                     loserCharacter: targets[opponentId]
                 });
             } else {
-                const failMsg = currentLang === 'pl' ? "Pudło! To nie jest ta postać. Koniec Twojej tury." : "Miss! That is not the character. End of your turn.";
-                showModal(failMsg, "alert");
+                showModal("Pudło! To nie jest ta postać. Koniec Twojej tury.", "alert");
                 toggleGuessMode();
                 passTurn();
             }
         });
     }
 
-     function showWinOverlay(isMe, char) {
+   function showWinOverlay(isMe, char) {
         const div = document.createElement('div');
         div.className = 'win-overlay';
         const color = isMe ? 'var(--lego-yellow)' : 'var(--lego-red)';
-        
-        const titleText = isMe ? (currentLang === 'pl' ? 'ZWYCIĘSTWO!' : 'VICTORY!') : (currentLang === 'pl' ? 'PRZEGRANA' : 'DEFEAT');
-        const descText = currentLang === 'pl' ? 'Postać przeciwnika: ' : "Opponent's character: ";
-        const finalCharName = currentLang === 'pl' ? char : translateCharacterName(char);
-        const btnLobbyText = currentLang === 'pl' ? 'POWRÓT DO KATEGORII' : 'BACK TO CATEGORIES';
-        const btnStartText = currentLang === 'pl' ? 'WRÓĆ DO STARTU' : 'BACK TO START';
+        const text = isMe ? 'ZWYCIĘSTWO!' : 'PRZEGRANA';
         
         div.innerHTML = `
-            <h1 class="win-title" style="color: ${color};">${titleText}</h1>
-            <p style="font-size: 1.5rem; margin-bottom: 30px;">${descText}<b style="color:var(--lego-yellow);">${finalCharName}</b></p>
+            <h1 class="win-title" style="color: ${color};">${text}</h1>
+            <p style="font-size: 1.5rem; margin-bottom: 30px;">Postać przeciwnika: <b style="color:var(--lego-yellow);">${char}</b></p>
             <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
                 <button class="action-btn" onclick="backToLobby()" style="font-size: 18px; padding: 15px 40px; background: var(--lego-yellow); color: black; border-color: var(--lego-yellow); font-weight: 800;">
-                    ${btnLobbyText}
+                    POWRÓT DO KATEGORII
                 </button>
                 <button class="action-btn" onclick="location.reload()" style="font-size: 18px; padding: 15px 40px; background: rgba(255,255,255,0.1);">
-                    ${btnStartText}
+                    WRÓĆ DO STARTU
                 </button>
             </div>
         `;
@@ -973,12 +905,7 @@ function backToLobby() {
         const urlParams = new URLSearchParams(window.location.search);
         const room = urlParams.get('room');
         if (room) enterLobby(room);
-        changeLanguage('pl'); // Wymusza załadowanie napisów przy starcie strony
     };
 </script>
-        <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 9999;">
-    <button onclick="changeLanguage('pl')" style="padding: 5px 10px; cursor: pointer; font-weight: bold;">PL</button>
-    <button onclick="changeLanguage('en')" style="padding: 5px 10px; cursor: pointer; font-weight: bold;">EN</button>
-</div>
 </body>
 </html>
