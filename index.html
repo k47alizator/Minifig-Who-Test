@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - BETA 1.0.4</title>
+    <title>Minifig Who - BETA 1.0.5</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -299,20 +299,20 @@
         <h1 class="main-title" onclick="location.reload()" style="font-size: 2rem; margin: 0;">MW</h1>
     </div>
 
-    <div class="target-box">
-        <div style="text-align: left; flex: 1;">
+   <div class="target-box" style="display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1050px; margin: 0 auto; gap: 40px; padding: 25px 35px; box-sizing: border-box;">
+        <div style="flex: 1; text-align: left; min-width: 220px;">
             <p style="margin: 0; color: #aaa; font-size: 12px; font-weight: 700; letter-spacing: 1px;">TWOJA POSTAĆ:</p>
-            <h2 id="target-name" style="margin: 5px 0 0 0; color: var(--lego-yellow); font-size: 32px; font-weight: 800; text-transform: uppercase;">---</h2>
+            <h2 id="target-name" style="margin: 5px 0 0 0; color: var(--lego-yellow); font-size: 32px; font-weight: 800; text-transform: uppercase; white-space: nowrap;">---</h2>
         </div>
         
-        <div class="target-img-frame">
+        <div class="target-img-frame" style="width: 140px; height: 140px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; margin: 0 auto;">
             <img id="target-img" src="" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
 
-        <div class="game-actions" style="flex: 1; align-items: flex-end;">
-            <button onclick="backToLobby()" class="nav-btn">POWRÓT DO KATEGORII</button>
-            <button id="guess-btn-main" onclick="toggleGuessMode()" class="guess-btn">ZGADUJ</button>
-            <button id="end-turn-btn" onclick="passTurn()" class="end-turn-btn" style="display: none; width: 100%; margin-top: 5px;">KONIEC TURY</button>
+        <div class="game-actions" style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 240px;">
+            <button onclick="backToLobby()" class="guess-btn" style="width: 100%; max-width: 240px;">POWRÓT DO KATEGORII</button>
+            <button id="guess-btn-main" onclick="toggleGuessMode()" class="guess-btn" style="width: 100%; max-width: 240px;">ZGADUJ</button>
+            <button id="end-turn-btn" onclick="passTurn()" class="guess-btn" style="display: none; width: 100%; max-width: 240px;">KONIEC TURY</button>
         </div>
     </div>
     <div id="character-grid" class="character-grid"></div>
