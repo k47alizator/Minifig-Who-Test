@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - BETA 1.0.3</title>
+    <title>Minifig Who - BETA 1.0.4</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -19,6 +19,7 @@
         :root {
             --lego-yellow: #FFD500;
             --lego-red: #E3000B;
+            --lego-blue: #006CB7;
             --dark-panel: rgba(20, 26, 35, 0.85);
             --panel-border: rgba(255, 255, 255, 0.1);
         }
@@ -197,11 +198,11 @@
         #chat-input-area { padding: 15px; display: flex; gap: 10px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--panel-border); }
         
         .chat-msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 80%; line-height: 1.4; }
-        .my-msg { background: var(--lego-yellow); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .my-msg { background: var(--lego-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
         .other-msg { background: var(--lego-red); align-self: flex-start; border-bottom-left-radius: 4px; }
 
         #chat-toggle-btn {
-            width: 65px; height: 65px; border-radius: 50%; background: var(--lego-yellow); color: white;
+            width: 65px; height: 65px; border-radius: 50%; background: var(--lego-blue); color: white;
             border: 3px solid rgba(255,255,255,0.2); font-size: 26px; cursor: pointer; position: relative; transition: 0.3s;
         }
         #chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(0, 108, 183, 0.6); }
