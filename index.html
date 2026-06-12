@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minifig Who - BETA 1.0.1</title>
+    <title>Minifig Who - BETA 1.0.2</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -150,8 +150,7 @@
             padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 14px;
             cursor: pointer; transition: all 0.3s; font-family: 'Fredoka', sans-serif; text-transform: uppercase;
         }
-        .guess-btn:hover { background: var(--lego-red); color: white; box-shadow: 0 0 20px rgba(227, 0, 11, 0.5); transform: scale(1.02); }
-        .guess-btn.active { 
+            .guess-btn:hover:not(:disabled) { background: var(--lego-red); color: white; box-shadow: 0 0 20px rgba(227, 0, 11, 0.5); transform: scale(1.02); }        .guess-btn.active { 
             background: var(--lego-yellow); color: black; border-color: var(--lego-yellow); 
             box-shadow: 0 0 20px rgba(255, 213, 0, 0.5); animation: pulse 1.5s infinite; 
         }
@@ -237,6 +236,16 @@
         }
         #modal-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
         #modal-buttons { display: flex; justify-content: center; gap: 15px; }
+        .guess-btn:disabled {
+            opacity: 0.4; cursor: not-allowed; border-color: #4b5563; color: #9ca3af;
+        }
+
+        .end-turn-btn {
+            background: rgba(255,255,255,0.05); color: white; border: 2px solid var(--lego-blue);
+            padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 14px;
+            cursor: pointer; transition: all 0.3s; font-family: 'Fredoka', sans-serif; text-transform: uppercase;
+        }
+        .end-turn-btn:hover { background: var(--lego-blue); box-shadow: 0 0 20px rgba(0, 108, 183, 0.5); transform: scale(1.02); }
     </style>
 </head>
     <body>
@@ -303,6 +312,7 @@
         <div class="game-actions" style="flex: 1; align-items: flex-end;">
             <button onclick="backToLobby()" class="nav-btn">POWRÓT DO KATEGORII</button>
             <button id="guess-btn-main" onclick="toggleGuessMode()" class="guess-btn">ZGADUJ</button>
+            <button id="end-turn-btn" onclick="passTurn()" class="end-turn-btn" style="display: none; width: 100%; margin-top: 5px;">KONIEC TURY</button>
         </div>
     </div>
     <div id="character-grid" class="character-grid"></div>
@@ -648,6 +658,22 @@
                 showWinOverlay(isMe, opponentChar);
             }
         });
+
+        fireDb.ref('rooms/' + code + '/turn').on('value', (s) => {
+            const currentTurnId = s.val();
+            if (!currentTurnId) return;
+            
+            const isMyTurn = currentTurnId === myPlayerId;
+            const guessBtn = document.getElementById('guess-btn-main');
+            const endTurnBtn = document.getElementById('end-turn-btn');
+            
+            if (guessBtn) guessBtn.disabled = !isMyTurn;
+            if (endTurnBtn) endTurnBtn.style.display = isMyTurn ? 'block' : 'none';
+            
+            if (!isMyTurn && isGuessMode) {
+                toggleGuessMode();
+            }
+        });
     }
 
     function selectCategory(category) {
@@ -678,7 +704,7 @@
         }
     }
 
-    function initGame(category) {
+    async function initGame(category) {
         const getFolderName = (n) => n.replace('LEGO ', '').toLowerCase().trim().replace(/\s+/g, '-');
         let pool = [];
         Object.keys(db).forEach(cat => {
@@ -704,6 +730,12 @@
         const myTarget = selected[Math.floor(((tSeed * 9301 + 49297) % 233280) / 233280 * selected.length)];
 
         fireDb.ref('rooms/' + currentRoomCode + '/targets/' + myPlayerId).set(myTarget.n);
+
+        const playersSnap = await fireDb.ref('rooms/' + currentRoomCode + '/players').once('value');
+        const pIds = Object.keys(playersSnap.val() || {}).sort();
+        if (pIds[0] === myPlayerId) {
+            fireDb.ref('rooms/' + currentRoomCode + '/turn').set(pIds[0]);
+        }
 
         document.getElementById('target-name').innerText = myTarget.n;
         const targetImg = document.getElementById('target-img');
@@ -745,8 +777,9 @@
                     loserCharacter: targets[opponentId]
                 });
             } else {
-                showModal("Pudło! To nie jest ta postać.", "alert");
+                showModal("Pudło! To nie jest ta postać. Koniec Twojej tury.", "alert");
                 toggleGuessMode();
+                passTurn();
             }
         });
     }
@@ -807,6 +840,16 @@
 
         const winOverlay = document.querySelector('.win-overlay');
         if(winOverlay) winOverlay.remove();
+    }
+
+    async function passTurn() {
+        if (!currentRoomCode) return;
+        const snap = await fireDb.ref('rooms/' + currentRoomCode + '/players').once('value');
+        const players = snap.val() || {};
+        const opponentId = Object.keys(players).find(id => id !== myPlayerId);
+        if (opponentId) {
+            fireDb.ref('rooms/' + currentRoomCode + '/turn').set(opponentId);
+        }
     }
 
     window.onload = () => {
