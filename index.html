@@ -7,38 +7,38 @@
     <style>
         :root { --steel-blue: #385c80; --ice-blue: #d1e8ff; }
         
-        /* Twój oryginalny wygląd tła i czcionek */
         body { font-family: 'Fredoka', sans-serif; background: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), url('img/tlo%20gry%202.webp'); background-size: cover; background-position: center; background-attachment: fixed; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         
-        /* Animacja i wygląd tytułu Frozen Who */
         @keyframes slowFloat { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
         h1 { font-size: 5rem; margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase; text-align: center; z-index: 10; }
         .frozen { font-family: 'Mountains of Christmas', cursive; background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5)); margin-right: 15px; display: inline-block; animation: slowFloat 4s ease-in-out infinite; }
         .who { color: var(--ice-blue); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: 700; }
 
-        /* Główne Menu */
         .menu-box { background: rgba(56, 92, 128, 0.2); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); width: 350px; text-align: center; margin-bottom: 20px; z-index: 10; }
+        
+        /* Przyciski z poprawnym animowanym powiększeniem */
         .btn-diff { padding: 15px; margin: 8px 0; cursor: pointer; border: 2px solid var(--ice-blue); border-radius: 10px; background: var(--ice-blue); color: var(--steel-blue); font-weight: 700; font-size: 1.1rem; font-family: 'Fredoka', sans-serif; transition: 0.3s; width: 100%; box-sizing: border-box; }
         .btn-diff.clicked { background: var(--steel-blue) !important; color: white !important; }
-        .btn-diff:hover { background: white; transform: scale(1.05); box-shadow: 0px 0px 15px rgba(209, 232, 255, 0.5); }        /* Nowa plansza gry dopasowana do Twojego stylu */
-        #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.4); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); max-width: 800px; width: 90%; z-index: 10; }
-        .left-side { flex: 1; display: flex; align-items: center; justify-content: center; }
-        .right-side { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
-        #minifig-image { max-width: 100%; max-height: 350px; filter: blur(80px); transition: filter 0.5s; border-radius: 15px; border: 3px solid var(--ice-blue); }
+        .btn-diff:hover { background: white; transform: scale(1.05); box-shadow: 0px 0px 15px rgba(209, 232, 255, 0.5); }
         
-        /* Pola tekstowe i menu wyboru na planszy */
+        #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.4); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); max-width: 900px; width: 90%; z-index: 10; }
+        
+        /* Nowy Osobny Kwadrat dla Postaci */
+        .left-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+        #image-container { width: 320px; height: 320px; background: rgba(10, 15, 25, 0.6); border-radius: 20px; border: 4px solid var(--ice-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #minifig-image { width: 90%; height: 90%; object-fit: contain; transition: filter 0.5s; }
+        
+        .right-side { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
+        
         .input-group { position: relative; width: 100%; }
         #guess-input { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--ice-blue); background: white; color: var(--steel-blue); cursor: pointer; font-family: 'Fredoka', sans-serif; font-weight: bold; font-size: 1.1rem; box-sizing: border-box; outline: none; }
-        #guess-input::placeholder { color: #888; }
         #category-menu { display: none; position: absolute; background: white; color: var(--steel-blue); border-radius: 10px; width: 100%; cursor: pointer; border: 2px solid var(--ice-blue); z-index: 100; margin-top: 5px; max-height: 200px; overflow-y: auto; box-sizing: border-box; font-weight: bold; }
         .menu-item { padding: 12px; border-bottom: 1px solid #eee; transition: background 0.2s; }
         .menu-item:hover { background: var(--ice-blue); }
-        .menu-item:last-child { border-bottom: none; }
         
         .stat-text { color: white; font-size: 1.3rem; margin: 0; font-weight: bold; }
         .stat-text span { color: var(--ice-blue); }
         
-        /* Ikonka Discorda */
         .discord-corner { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: rgba(56, 92, 128, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--ice-blue); backdrop-filter: blur(5px); transition: 0.3s; z-index: 1000; }
         .discord-corner:hover { transform: scale(1.1); background: var(--steel-blue); }
         .discord-corner img { width: 60%; }
@@ -69,17 +69,18 @@
 
     <div id="game-board">
         <div class="left-side">
-            <img id="minifig-image" src="" alt="Postać">
+            <div id="image-container">
+                <img id="minifig-image" src="" alt="Postać">
+            </div>
         </div>
         <div class="right-side">
             <p class="stat-text">Poziom: <span id="stat-mode">-</span></p>
-            <p class="stat-text">Szanse: <span id="stat-lives">❤️❤️❤️</span></p>
+            <p class="stat-text">Szanse: <span id="stat-lives">❤️❤️❤️❤️❤️</span></p>
             
             <div class="input-group">
                 <input type="text" id="guess-input" placeholder="Wybierz serię..." readonly onclick="toggleMenu()">
                 <div id="category-menu">
-                    <div class="menu-item" onclick="selectCategory('LEGO STAR WARS')">LEGO STAR WARS</div>
-                </div>
+                    </div>
             </div>
             
             <button class="btn-diff" onclick="checkGuess()" style="margin-top: 10px;">ZGADUJ!</button>
@@ -691,6 +692,11 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
 
         let selectedMode = null;
         let currentAnswer = null;
+        
+        // Zmienne gry
+        let lives = 5;
+        const blurLevels = [80, 60, 40, 20, 5]; // Twój rozkład w pikselach
+        let currentAttempt = 0;
 
         function selectMode(element, mode) {
             document.querySelectorAll('.menu-box .btn-diff').forEach(btn => btn.classList.remove('clicked'));
@@ -708,34 +714,54 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             toggleMenu();
         }
 
+        // Nowa funkcja: Automatycznie tworzy listę rozwijaną na podstawie bazy
+        function generateCategories() {
+            const menu = document.getElementById('category-menu');
+            menu.innerHTML = ''; // Czyścimy przed dodaniem
+            Object.keys(characters).forEach(categoryName => {
+                menu.innerHTML += `<div class="menu-item" onclick="selectCategory('${categoryName}')">${categoryName}</div>`;
+            });
+        }
+
         function continueGame() {
             if(!selectedMode) { alert("Wybierz poziom trudności!"); return; }
             
-            // Ukrywanie menu, pokazywanie planszy
             document.getElementById('menu').style.display = 'none';
             document.getElementById('main-title').style.display = 'none';
             document.getElementById('game-board').style.display = 'flex';
             
             document.getElementById('stat-mode').innerText = selectedMode.toUpperCase();
             
-            showRandomCharacter();
+            generateCategories(); // Generowanie listy serii
+            showRandomCharacter(); // Start pierwszej rundy
+        }
+
+        function updateLivesDisplay() {
+            document.getElementById('stat-lives').innerText = '❤️'.repeat(lives);
         }
 
         function showRandomCharacter() {
+            // Resetowanie szans i licznika dla nowej postaci
+            lives = 5;
+            currentAttempt = 0;
+            updateLivesDisplay();
+            document.getElementById('guess-input').value = ""; // Czyści input
+
             const pool = (selectedMode === 'easy') 
                 ? allCharacters.filter(c => c.isMain === true) 
                 : allCharacters;
                 
             currentAnswer = pool[Math.floor(Math.random() * pool.length)];
             
-            // Formatowanie nazwy pliku obrazka
             const cleanName = currentAnswer.n.toLowerCase()
                                 .replace(/[()]/g, '') 
                                 .replace(/\s+/g, '_');
                                 
             const imgElement = document.getElementById('minifig-image');
             imgElement.src = `img/${cleanName}.webp`;
-            imgElement.style.filter = "blur(80px)"; // Zawsze mocny blur na start nowej postaci
+            
+            // Nakładanie pierwszego poziomu rozmycia (80px)
+            imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`; 
         }
 
         function checkGuess() {
@@ -747,11 +773,27 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             }
 
             if (userGuess === currentAnswer.category) {
-                alert("Brawo! Zgadłeś!");
-                document.getElementById('guess-input').value = ""; // Czyszczenie wyboru
-                showRandomCharacter(); // Losowanie kolejnej postaci
+                document.getElementById('minifig-image').style.filter = "blur(0px)";
+                setTimeout(() => {
+                    alert("Brawo! Odgadłeś z " + lives + " szansami na koncie!");
+                    showRandomCharacter();
+                }, 300); // Małe opóźnienie, byś zobaczył postać bez blura
             } else {
-                alert("Źle! Próbuj dalej.");
+                // Odjęcie życia i zmniejszenie blura
+                lives--;
+                currentAttempt++;
+                
+                if (lives > 0) {
+                    updateLivesDisplay();
+                    document.getElementById('minifig-image').style.filter = `blur(${blurLevels[currentAttempt]}px)`;
+                } else {
+                    updateLivesDisplay();
+                    document.getElementById('minifig-image').style.filter = "blur(0px)";
+                    setTimeout(() => {
+                        alert("Koniec szans! To było: " + currentAnswer.category);
+                        showRandomCharacter();
+                    }, 300);
+                }
             }
         }
     </script>
