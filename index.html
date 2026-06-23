@@ -2,110 +2,94 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Minifig Who</title>
+    <title>Frozen Who</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #385c80;   /* Stalowy Błękit */
-            --accent: #d1e8ff;    /* Lodowy Błękit */
-            --glass: rgba(56, 92, 128, 0.7); /* Półprzezroczysty stalowy */
+            --steel-blue: #385c80;
+            --ice-blue: #d1e8ff;
         }
 
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(135deg, var(--primary), #1a2a3a), url('img/tlo%20gry%202.webp');
-            background-blend-mode: overlay;
+            /* Ciemniejszy overlay (0.85 zamiast 0.75) daje lepszy klimat */
+            background: linear-gradient(rgba(10, 15, 25, 0.85), rgba(10, 15, 25, 0.85)), url('img/tlo%20gry%202.webp');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: var(--accent);
+            color: var(--ice-blue);
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-
-        h1 { font-size: 3.5rem; color: var(--accent); text-shadow: 2px 2px 10px rgba(0,0,0,0.5); margin-bottom: 50px; }
-
-        .container {
-            display: flex;
-            gap: 20px;
-            width: 90%;
-            max-width: 900px;
-        }
-
-        .card {
-            flex: 1;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 20px;
             text-align: center;
-            border: 2px solid var(--accent);
-            transition: 0.3s;
         }
 
-        .card:hover { transform: translateY(-10px); background: rgba(56, 92, 128, 0.9); }
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(209, 232, 255, 0.3);
+            letter-spacing: 2px;
+        }
 
-        h2 { margin-top: 20px; color: var(--accent); }
-        
-        input {
-            width: 80%;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 10px;
-            border: 1px solid var(--accent);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 16px;
+        /* Dekoracja lodowa */
+        h1::before, h1::after { content: '❄'; margin: 0 15px; opacity: 0.6; }
+
+        .menu-box {
+            background: rgba(56, 92, 128, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 50px;
+            border-radius: 30px;
+            border: 1px solid rgba(209, 232, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px;
         }
 
         button {
-            background: var(--accent);
-            color: var(--primary);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 20px;
+            border: 2px solid var(--ice-blue);
+            border-radius: 15px;
+            background: var(--steel-blue);
+            color: var(--ice-blue);
             font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            transition: 0.3s;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        button:hover { background: white; transform: scale(1.05); }
+        button:hover {
+            background: var(--ice-blue);
+            color: var(--steel-blue);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--ice-blue);
+        }
 
         footer {
             position: fixed;
-            bottom: 10px;
-            font-size: 10px;
-            color: var(--accent);
-            opacity: 0.6;
+            bottom: 20px;
+            font-size: 11px;
+            color: var(--ice-blue);
+            opacity: 0.5;
+            max-width: 80%;
         }
     </style>
 </head>
 <body>
 
-    <h1>MINIFIG WHO</h1>
+    <h1>Frozen Who</h1>
 
-    <div class="container">
-        <div class="card">
-            <h2>STWÓRZ GRĘ</h2>
-            <p>Załóż nowy pokój i zaproś znajomego.</p>
-            <button onclick="alert('Tworzenie...')">STWÓRZ POKÓJ</button>
-        </div>
-
-        <div class="card">
-            <h2>DOŁĄCZ</h2>
-            <input type="text" placeholder="Wpisz kod pokoju np. 1234">
-            <button onclick="alert('Dołączanie...')">DOŁĄCZ</button>
-        </div>
+    <div class="menu-box">
+        <button onclick="startGame('easy')">Tryb Easy</button>
+        <button onclick="startGame('hard')">Tryb Hard</button>
     </div>
 
     <footer>
-        Niniejsza strona jest projektem fanowskim o charakterze niekomercyjnym. Gra nie jest w żaden sposób powiązana, wspierana ani sponsorowana przez Grupę LEGO. Wszystkie znaki towarowe, nazwy oraz wizerunki postaci należą do ich prawowitych właścicieli.
+        Niniejsza strona jest projektem fanowskim. Gra nie jest powiązana z Grupą LEGO. Wszystkie znaki towarowe należą do prawowitych właścicieli.
     </footer>
     <script>
 // 1. Twoje dane w poprawnym formacie (pamiętaj, aby na końcu każdej sekcji mieć przecinek)
