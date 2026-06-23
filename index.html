@@ -30,7 +30,7 @@
         .frozen { color: var(--ice-blue); text-shadow: 0 0 10px rgba(209, 232, 255, 0.5); }
         .who { color: #5a8cc0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-        /* DUŻY KWADRAT */
+        /* MENU */
         .menu-box {
             background: rgba(56, 92, 128, 0.2);
             backdrop-filter: blur(15px);
@@ -43,56 +43,55 @@
 
         .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; }
 
-        /* GRUPA PRZYCISKÓW */
+        /* PRZYCISKI POZIOMÓW */
         .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
 
-        button {
+        .btn-diff {
             padding: 15px;
             border: 2px solid var(--ice-blue);
             border-radius: 10px;
-            background: transparent;
-            color: var(--ice-blue);
+            background: var(--ice-blue); /* Domyślny jasny kolor */
+            color: var(--steel-blue);    /* Domyślny ciemny tekst */
             font-family: 'Fredoka', sans-serif;
             font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        /* ODWRÓCONE KOLORY (Dla jednego przycisku) */
-        .inverted {
-            background: var(--ice-blue);
-            color: var(--steel-blue);
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: var(--ice-blue);
-            color: var(--steel-blue);
-            transform: scale(1.02);
+        /* KLASA AKTYWNA (Kliknięty) */
+        .btn-diff.active {
+            background: var(--steel-blue);
+            color: var(--ice-blue);
+            border: 2px solid var(--ice-blue);
         }
 
         /* PRZYCISK KONTYNUUJ */
         .continue-btn {
             width: 100%;
-            background: var(--steel-blue);
+            padding: 15px;
+            background: transparent;
             color: var(--ice-blue);
             border: 2px solid var(--ice-blue);
+            border-radius: 10px;
             font-weight: bold;
             font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
         }
         
         .continue-btn:hover { background: var(--ice-blue); color: var(--steel-blue); }
 
-        /* PRZYCISK DISCORD */
+        /* DISCORD */
         .discord-corner {
             position: fixed; top: 20px; right: 20px; width: 60px; height: 60px;
             background: var(--steel-blue); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 2000; transition: 0.3s; border: 2px solid var(--ice-blue);
         }
-        .discord-corner:hover { transform: rotate(10deg) scale(1.1); box-shadow: 0 0 20px var(--ice-blue); background: var(--ice-blue); }
-        .discord-corner img { width: 60%; transition: 0.3s; }
+        .discord-corner:hover { background: var(--ice-blue); }
         .discord-corner:hover img { filter: invert(1); }
+        .discord-corner img { width: 60%; transition: 0.3s; }
 
         footer { position: fixed; bottom: 20px; font-size: 11px; color: var(--ice-blue); opacity: 0.5; }
     </style>
@@ -112,9 +111,9 @@
         <h2>Poziom trudności</h2>
         
         <div class="diff-buttons">
-            <button onclick="selectMode('easy')">Easy</button>
-            <button class="inverted" onclick="selectMode('medium')">Medium</button> <!-- Tu są odwrócone kolory -->
-            <button onclick="selectMode('hard')">Hard</button>
+            <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
+            <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
+            <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
         </div>
 
         <button class="continue-btn" onclick="continueGame()">Kontynuuj</button>
