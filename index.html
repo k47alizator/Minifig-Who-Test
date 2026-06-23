@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Frozen Who</title>
+    <title>Frozen Who - Game Logic</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -10,162 +10,683 @@
             --ice-blue: #d1e8ff;
         }
 
-        body {
-            font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
+        body { font-family: 'Fredoka', sans-serif; background: #0a0f19; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
 
-        /* ANIMACJA - teraz będzie działać na pewno */
+        /* ANIMACJA FROZEN */
         @keyframes slowFloat {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-8px); }
             100% { transform: translateY(0px); }
         }
-
-        h1 { 
-            font-size: 5rem; 
-            margin-bottom: 50px; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-        }
-        
         .frozen { 
             font-family: 'Mountains of Christmas', cursive;
+            display: inline-block; 
+            animation: slowFloat 4s ease-in-out infinite;
             background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
-            margin-right: 15px;
-            /* KLUCZOWE: display: inline-block musi być ustawione */
-            display: inline-block; 
-            animation: slowFloat 4s ease-in-out infinite;
         }
 
-        .who { 
-            color: var(--ice-blue); 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
-            font-weight: 700;
+        /* HARD MODE - ODWRÓCONE KOLORY */
+        /* To jest klasa, którą dodamy przez JS, gdy ktoś wybierze Hard */
+        .hard-mode {
+            filter: invert(1) hue-rotate(90deg) contrast(1.2);
         }
 
-        /* MENU BOX */
-        .menu-box {
-            background: rgba(56, 92, 128, 0.2);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 30px;
-            border: 2px solid var(--ice-blue);
-            width: 350px;
-            text-align: center;
-        }
+        .menu-box { background: rgba(56, 92, 128, 0.2); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); width: 350px; text-align: center; }
 
-        .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; font-size: 1.8rem; }
-
-        .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-
-        .btn-diff {
-            padding: 12px;
-            border: 2px solid var(--ice-blue);
-            border-radius: 10px;
-            background: var(--ice-blue);
-            color: var(--steel-blue);
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-diff:hover { background: #a9c5e0; transform: scale(1.02); }
-
-        .btn-diff.clicked {
-            background: var(--steel-blue) !important;
-            color: var(--ice-blue) !important;
-            border-color: var(--ice-blue);
-        }
-
-        .continue-btn {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            color: var(--ice-blue);
-            border: 2px solid var(--ice-blue);
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Fredoka', sans-serif;
-        }
-        
-        .continue-btn:hover { background: var(--ice-blue); color: var(--steel-blue); }
-
-        .discord-corner {
-            position: fixed; top: 20px; right: 20px; width: 60px; height: 60px;
-            background: var(--steel-blue); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 2000; transition: 0.3s; border: 2px solid var(--ice-blue);
-        }
-        .discord-corner:hover { background: var(--ice-blue); }
-        .discord-corner:hover img { filter: invert(1); }
-        .discord-corner img { width: 60%; transition: 0.3s; }
-
-        footer { position: fixed; bottom: 20px; font-size: 12px; color: var(--ice-blue); opacity: 0.5; }
+        .btn-diff { padding: 12px; border: 2px solid var(--ice-blue); border-radius: 10px; background: var(--ice-blue); color: var(--steel-blue); font-weight: 700; cursor: pointer; transition: 0.3s; margin: 5px; }
+        .btn-diff.clicked { background: var(--steel-blue) !important; color: var(--ice-blue) !important; }
+        .continue-btn { margin-top: 20px; width: 100%; padding: 12px; background: transparent; color: var(--ice-blue); border: 2px solid var(--ice-blue); border-radius: 10px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')">
-        <img src="img/Discord.webp" alt="Discord" onerror="this.src='https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
-    </div>
+    <h1><span class="frozen">Frozen</span> Who</h1>
 
-    <h1>
-        <span class="frozen">Frozen</span> 
-        <span class="who">Who</span>
-    </h1>
-
-    <div class="menu-box">
+    <div class="menu-box" id="game-container">
         <h2>Poziom trudności</h2>
-        
         <div class="diff-buttons">
             <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
             <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
             <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
         </div>
-
         <button class="continue-btn" onclick="continueGame()">Kontynuuj</button>
     </div>
 
-    <footer>
-        Niniejsza strona jest projektem fanowskim. Gra nie jest powiązana z Grupą LEGO.
-    </footer>
-
     <script>
-        let selectedMode = null;
+        const characters = {
+           "LEGO STAR WARS": [
+    {n: "Luke Skywalker (z Tatooine)", isMain: true}, {n: "Luke Skywalker (Pilot X-Wing)", isMain: true}, 
+    {n: "Luke Skywalker (z Bespin)", isMain: true}, {n: "Luke Skywalker (z Dagobah)", isMain: false}, 
+    {n: "Luke Skywalker (Rycerz Jedi)", isMain: true}, {n: "Luke Skywalker (z Endor)", isMain: false}, 
+    {n: "Luke Skywalker (Szturmowiec)", isMain: false}, {n: "Luke Skywalker (z Hoth)", isMain: false}, 
+    {n: "Luke Skywalker (Ceremonia)", isMain: false}, {n: "Luke Skywalker (Stary Luke)", isMain: true}, 
+    {n: "Luke Skywalker (z Crait)", isMain: false}, {n: "Luke Skywalker (Zbiornik Bacta)", isMain: false}, 
+    {n: "Luke Skywalker (Pilot Śmigacza)", isMain: false},
+    {n: "Darth Vader", isMain: true}, {n: "Darth Vader (Bez Maski)", isMain: true}, 
+    {n: "Darth Vader (Zniszczony)", isMain: false}, {n: "Darth Vader (Świąteczny)", isMain: false}, 
+    {n: "Anakin Skywalker (Dziecko)", isMain: true}, {n: "Anakin Skywalker (Padawan)", isMain: true}, 
+    {n: "Anakin Skywalker (Sith)", isMain: true}, {n: "Anakin Skywalker (Pilot Podracera)", isMain: false},
+    {n: "Obi-Wan Kenobi (Padawan)", isMain: true}, {n: "Obi-Wan Kenobi (Epizod 2)", isMain: true}, 
+    {n: "Obi-Wan Kenobi (Epizod 3)", isMain: true}, {n: "Obi-Wan Kenobi (Stary Ben)", isMain: true}, 
+    {n: "Obi-Wan Kenobi (Duch Mocy)", isMain: false}, {n: "Obi-Wan Kenobi (Wojny Klonów)", isMain: true}, 
+    {n: "Han Solo (z Hoth)", isMain: true}, {n: "Han Solo (z Endor)", isMain: true}, 
+    {n: "Han Solo (z Bespin)", isMain: true}, {n: "Han Solo (Młody)", isMain: true}, 
+    {n: "Han Solo (Stary)", isMain: true}, {n: "Han Solo (Szturmowiec)", isMain: false}, 
+    {n: "Han Solo (W Karbonicie)", isMain: false},
+    {n: "Księżniczka Leia (Senator)", isMain: true}, {n: "Księżniczka Leia (z Hoth)", isMain: true}, 
+    {n: "Księżniczka Leia (z Bespin)", isMain: true}, {n: "Księżniczka Leia (Niewolnica)", isMain: true}, 
+    {n: "Księżniczka Leia (z Endor)", isMain: true}, {n: "Księżniczka Leia (Boushh)", isMain: false}, 
+    {n: "Generał Leia Organa", isMain: true}, {n: "Leia (z wioski Ewoków)", isMain: false},
+    {n: "Mistrz Yoda", isMain: true}, {n: "Yoda (Duch Mocy)", isMain: false}, 
+    {n: "Mace Windu", isMain: true}, {n: "Qui-Gon Jinn", isMain: true}, 
+    {n: "Kit Fisto", isMain: false}, {n: "Plo Koon", isMain: false}, 
+    {n: "Aayla Secura", isMain: false}, {n: "Ki-Adi-Mundi", isMain: false}, 
+    {n: "Luminara Unduli", isMain: false}, {n: "Shaak Ti", isMain: false}, 
+    {n: "Eeth Koth", isMain: false}, {n: "Saesee Tiin", isMain: false}, 
+    {n: "Agen Kolar", isMain: false}, {n: "Adi Gallia", isMain: false}, 
+    {n: "Ahsoka Tano (Padawan)", isMain: true}, {n: "Ahsoka Tano (Wojny Klonów)", isMain: true}, 
+    {n: "Jocasta Nu", isMain: false}, {n: "Mistrzyni Yaddle", isMain: false}, {n: "Barriss Offee", isMain: false},
+    {n: "Darth Maul", isMain: true}, {n: "Darth Maul (Cyborg)", isMain: true}, 
+    {n: "Imperator Palpatine", isMain: true}, {n: "Kanclerz Palpatine", isMain: true}, 
+    {n: "Darth Sidious", isMain: true}, {n: "Hrabia Dooku", isMain: true}, 
+    {n: "Generał Grievous", isMain: true}, {n: "Asajj Ventress", isMain: true}, 
+    {n: "Savage Opress", isMain: false}, {n: "Wielki Inkwizytor", isMain: true}, 
+    {n: "Siódma Siostra", isMain: false}, {n: "Piąty Brat", isMain: false}, 
+    {n: "Ósmy Brat", isMain: false}, {n: "Kylo Ren", isMain: true}, 
+    {n: "Kylo Ren (Bez Maski)", isMain: true}, {n: "Naczelny Wódz Snoke", isMain: true}, 
+    {n: "Kapitan Phasma", isMain: true}, {n: "Generał Hux", isMain: true},
+    {n: "Klon (Faza 1)", isMain: false}, {n: "Klon (Faza 2)", isMain: false}, 
+    {n: "Kapitan Rex", isMain: true}, {n: "Komandor Cody", isMain: true}, 
+    {n: "Komandor Gree", isMain: false}, {n: "Komandor Fox", isMain: false}, 
+    {n: "Komandor Neyo", isMain: false}, {n: "Żołnierz ARC", isMain: false}, 
+    {n: "Pilot Klon", isMain: false}, {n: "Klon Snajper", isMain: false}, 
+    {n: "Klon z 501. Legionu", isMain: false}, {n: "Klon z 212. Batalionu", isMain: false}, 
+    {n: "Hunter (Parch)", isMain: true}, {n: "Wrecker (Parch)", isMain: true}, 
+    {n: "Tech (Parch)", isMain: true}, {n: "Echo (Parch)", isMain: true}, {n: "Crosshair (Parch)", isMain: true},
+    {n: "Szturmowiec Imperium", isMain: false}, {n: "Szturmowiec Pustynny", isMain: false}, 
+    {n: "Zwiadowca Imperium", isMain: false}, {n: "Szturmowiec Śmierci", isMain: false}, 
+    {n: "Szturmowiec Błotny", isMain: false}, {n: "Pilot Myśliwca TIE", isMain: false}, 
+    {n: "Pilot AT-AT", isMain: false}, {n: "Gwardzista Imperialny", isMain: false}, 
+    {n: "Wielki Moff Tarkin", isMain: true}, {n: "Dyrektor Krennic", isMain: true}, 
+    {n: "Admirał Piett", isMain: false}, {n: "Generał Veers", isMain: false}, 
+    {n: "Oficer Imperialny", isMain: false}, {n: "Pilot Floty Imperialnej", isMain: false},
+    {n: "Boba Fett", isMain: true}, {n: "Jango Fett", isMain: true}, 
+    {n: "Greedo", isMain: false}, {n: "Bossk", isMain: false}, 
+    {n: "Dengar", isMain: false}, {n: "IG-88", isMain: false}, 
+    {n: "Zuckuss", isMain: false}, {n: "4-LOM", isMain: false}, 
+    {n: "Aurra Sing", isMain: false}, {n: "Cad Bane", isMain: true}, 
+    {n: "Embo", isMain: false}, {n: "Zam Wesell", isMain: false}, 
+    {n: "Fennec Shand", isMain: true}, {n: "Din Djarin (Mandalorianin)", isMain: true}, 
+    {n: "Greef Karga", isMain: true}, {n: "Kuiil", isMain: false},
+    {n: "R2-D2", isMain: true}, {n: "C-3PO", isMain: true}, 
+    {n: "BB-8", isMain: true}, {n: "R5-D4", isMain: false}, 
+    {n: "R4-P17", isMain: false}, {n: "Chopper (C1-10P)", isMain: true}, 
+    {n: "K-2SO", isMain: true}, {n: "IG-11", isMain: true}, 
+    {n: "Gonk Droid", isMain: false}, {n: "Droid Bojowy B1", isMain: false}, 
+    {n: "Droid Ochroniarz B1", isMain: false}, {n: "Droid Pilot B1", isMain: false}, 
+    {n: "Super Droid Bojowy B2", isMain: false}, {n: "Droideka", isMain: false}, 
+    {n: "Droid Komandos", isMain: false}, {n: "Magnaguard", isMain: false},
+    {n: "Jabba the Hutt", isMain: true}, {n: "Wicket (Ewok)", isMain: true}, 
+    {n: "Logray", isMain: false}, {n: "Admirał Ackbar", isMain: true}, 
+    {n: "Nien Nunb", isMain: false}, {n: "Bib Fortuna", isMain: false}, 
+    {n: "Strażnik Gamorreański", isMain: false}, {n: "Jar Jar Binks", isMain: true}, 
+    {n: "Watto", isMain: false}, {n: "Sebulba", isMain: false}, 
+    {n: "Maz Kanata", isMain: true}, {n: "Babu Frik", isMain: false}, 
+    {n: "Poggle Mniejszy", isMain: false}, {n: "Wat Tambor", isMain: false},
+    {n: "Wedge Antilles", isMain: false}, {n: "Biggs Darklighter", isMain: false}, 
+    {n: "Dak Ralter", isMain: false}, {n: "Jek Porkins", isMain: false}, 
+    {n: "Zev Senesca", isMain: false}, {n: "Ten Numb", isMain: false}, 
+    {n: "Pilot B-Winga", isMain: false}, {n: "Pilot A-Winga", isMain: false}, 
+    {n: "Pilot U-Winga", isMain: false}, {n: "Snap Wexley", isMain: false}, 
+    {n: "Tallie Lintra", isMain: false}, {n: "Ello Asty", isMain: false},
+    {n: "Rey (z Jakku)", isMain: true}, {n: "Rey (Strój Ruchu Oporu)", isMain: true}, 
+    {n: "Rey (Trening Jedi)", isMain: true}, {n: "Finn (z Jakku)", isMain: true}, 
+    {n: "Finn (W kombinezonie)", isMain: true}, {n: "Finn (Oficer Najwyższego Porządku)", isMain: true}, 
+    {n: "Rose Tico", isMain: true}, {n: "Rose Tico (Technik)", isMain: false}, 
+    {n: "Admirał Holdo", isMain: true}, {n: "Kaydel Ko Connix", isMain: false}, 
+    {n: "Zorii Bliss", isMain: false}, {n: "Jannah", isMain: false}, 
+    {n: "Lor San Tekka", isMain: false},
+    {n: "Szturmowiec Najwyższego Porządku", isMain: false}, {n: "Ciężki Szturmowiec", isMain: false}, 
+    {n: "Szturmowiec z miotaczem ognia", isMain: false}, {n: "Pilot TIE Sił Specjalnych", isMain: false}, 
+    {n: "Szturmowiec Odrzutowy", isMain: false}, {n: "Szturmowiec Sithów", isMain: false}, 
+    {n: "Gwardzista Pretoriański", isMain: false}, {n: "Rycerz Ren (Vicrul)", isMain: false}, 
+    {n: "Rycerz Ren (Cardo)", isMain: false}, {n: "Rycerz Ren (Ushar)", isMain: false}, 
+    {n: "Rycerz Ren (Kuruk)", isMain: false}, {n: "Rycerz Ren (Trudgen)", isMain: false}, 
+    {n: "Rycerz Ren (Ap'lek)", isMain: false},
+    {n: "Ezra Bridger", isMain: true}, {n: "Kanan Jarrus", isMain: true}, 
+    {n: "Hera Syndulla", isMain: true}, {n: "Sabine Wren", isMain: true}, 
+    {n: "Zeb Orrelios", isMain: true}, {n: "Agent Kallus", isMain: false}, 
+    {n: "Wielki Admirał Thrawn", isMain: true}, {n: "Inkwizytor", isMain: false}, 
+    {n: "Grogu (Baby Yoda)", isMain: true}, {n: "Moff Gideon", isMain: true}, 
+    {n: "Bo-Katan Kryze", isMain: true}, {n: "Cara Dune", isMain: true}, 
+    {n: "Mandalorianin (Din Djarin)", isMain: true}, {n: "Cobb Vanth", isMain: false}, 
+    {n: "Krrsantan", isMain: false}, {n: "Mon Mothma", isMain: true}, 
+    {n: "Bail Organa", isMain: true}, {n: "Figrin D'an", isMain: false}, 
+    {n: "Ponda Baba", isMain: false}, {n: "Dr. Evazan", isMain: false}, 
+    {n: "Lobot", isMain: false}, {n: "Malakili (Opiekun Rancora)", isMain: false}, 
+    {n: "Oola", isMain: false}
+]
+"LEGO MARVEL": [
+    {n: "Iron Man (MK 1)", isMain: true}, {n: "Iron Man (MK 5)", isMain: false}, 
+    {n: "Iron Man (MK 6)", isMain: false}, {n: "Iron Man (MK 42)", isMain: false}, 
+    {n: "Iron Man (MK 43)", isMain: false}, {n: "Iron Man (MK 45)", isMain: false}, 
+    {n: "Iron Man (MK 50)", isMain: false}, {n: "Hulkbuster", isMain: false}, 
+    {n: "Tony Stark", isMain: true}, {n: "Tony Stark (W podkoszulku)", isMain: false}, 
+    {n: "Superior Iron Man", isMain: false},
+    {n: "Kapitan Ameryka", isMain: true}, {n: "Kapitan Ameryka (Bez maski)", isMain: false}, 
+    {n: "Kapitan Ameryka (WW2)", isMain: false}, {n: "Kapitan Ameryka (Sam Wilson)", isMain: true}, 
+    {n: "Zimowy Żołnierz", isMain: true}, {n: "Zimowy Żołnierz (W masce)", isMain: false}, 
+    {n: "Bucky Barnes", isMain: true}, {n: "Falcon", isMain: true},
+    {n: "Spider-Man (Peter Parker)", isMain: true}, {n: "Spider-Man (Miles Morales)", isMain: true}, 
+    {n: "Spider-Gwen", isMain: true}, {n: "Spider-Ham (Pająk-Chrum)", isMain: false}, 
+    {n: "Spider-Man 2099", isMain: false}, {n: "Spider-Man (Noir)", isMain: false}, 
+    {n: "Spider-Man (Symbiot)", isMain: false}, {n: "Spider-Man (Iron Spider)", isMain: false}, 
+    {n: "Venom", isMain: true}, {n: "Agent Venom", isMain: false}, {n: "Carnage", isMain: false},
+    {n: "Thor", isMain: true}, {n: "Thor (Klasyczny)", isMain: false}, 
+    {n: "Potężna Thor (Jane Foster)", isMain: true}, {n: "Hulk", isMain: true}, 
+    {n: "Bruce Banner", isMain: true}, {n: "She-Hulk", isMain: true}, 
+    {n: "Czerwony Hulk (Red Hulk)", isMain: false}, {n: "Czarna Wdowa", isMain: true}, 
+    {n: "Czarna Wdowa (Szary strój)", isMain: false}, {n: "Hawkeye", isMain: true}, 
+    {n: "Ronin (Hawkeye)", isMain: false}, {n: "Nick Fury", isMain: true}, 
+    {n: "Maria Hill", isMain: false}, {n: "Agent Coulson", isMain: false}, 
+    {n: "Vision", isMain: true}, {n: "Scarlet Witch", isMain: true}, 
+    {n: "Quicksilver", isMain: false}, {n: "Ant-Man (Scott Lang)", isMain: true}, 
+    {n: "Ant-Man (Hank Pym)", isMain: false}, {n: "Wasp (Osa)", isMain: true}, 
+    {n: "Czarna Pantera", isMain: true}, {n: "Shuri", isMain: true}, 
+    {n: "Okoye", isMain: false},
+    {n: "Wolverine", isMain: true}, {n: "Logan", isMain: true}, 
+    {n: "Cyclops", isMain: true}, {n: "Storm", isMain: true}, 
+    {n: "Jean Grey", isMain: true}, {n: "Phoenix", isMain: true}, 
+    {n: "Beast (Bestia)", isMain: false}, {n: "Professor X", isMain: true}, 
+    {n: "Magneto", isMain: true}, {n: "Mystique", isMain: true}, 
+    {n: "Sabretooth (Szablozębny)", isMain: false}, {n: "Deadpool", isMain: true}, 
+    {n: "Deadpool (X-Force)", isMain: false}, {n: "Gwenpool", isMain: false}, 
+    {n: "Mr. Fantastic", isMain: true}, {n: "Niewidzialna Kobieta", isMain: true}, 
+    {n: "Ludzka Pochodnia", isMain: true}, {n: "Thing (Stwór)", isMain: true}, 
+    {n: "Doktor Doom", isMain: true}, {n: "Silver Surfer", isMain: false},
+    {n: "Star-Lord", isMain: true}, {n: "Star-Lord (Szary strój)", isMain: false}, 
+    {n: "Gamora", isMain: true}, {n: "Drax", isMain: true}, 
+    {n: "Rocket Raccoon (Szop Rocket)", isMain: true}, {n: "Groot", isMain: true}, 
+    {n: "Baby Groot", isMain: false}, {n: "Yondu", isMain: false}, 
+    {n: "Nebula", isMain: true}, {n: "Mantis", isMain: true}, 
+    {n: "Adam Warlock", isMain: false}, {n: "Nova", isMain: false}, 
+    {n: "Cosmo (Kosmiczny pies)", isMain: false},
+    {n: "Doktor Strange", isMain: true}, {n: "Wong", isMain: false}, 
+    {n: "Starożytna (Ancient One)", isMain: false}, {n: "Ghost Rider (Johnny Blaze)", isMain: true}, 
+    {n: "Ghost Rider (Robbie Reyes)", isMain: false}, {n: "Moon Knight", isMain: true}, 
+    {n: "Daredevil", isMain: true}, {n: "Iron Fist", isMain: false}, 
+    {n: "Luke Cage", isMain: false}, {n: "Jessica Jones", isMain: false}, 
+    {n: "Punisher", isMain: true}, {n: "Blade", isMain: true},
+    {n: "Thanos", isMain: true}, {n: "Thanos (Rękawica Nieskończoności)", isMain: true}, 
+    {n: "Loki", isMain: true}, {n: "Loki (W garniturze)", isMain: false}, 
+    {n: "Ultron", isMain: true}, {n: "Red Skull (Czerwona Czaszka)", isMain: true}, 
+    {n: "Arnim Zola", isMain: false}, {n: "Baron Zemo", isMain: false}, 
+    {n: "Green Goblin", isMain: true}, {n: "Doktor Octopus", isMain: true}, 
+    {n: "Sandman", isMain: false}, {n: "Electro", isMain: false}, 
+    {n: "Mysterio", isMain: false}, {n: "Vulture (Sęp)", isMain: false}, 
+    {n: "Kraven Łowca", isMain: false}, {n: "Kingpin", isMain: false}, 
+    {n: "Bullseye", isMain: false}, {n: "M.O.D.O.K.", isMain: false}, 
+    {n: "Abomination", isMain: false}, {n: "Leader", isMain: false}, 
+    {n: "Enchantress", isMain: false}, {n: "Executioner", isMain: false}, 
+    {n: "Hela", isMain: true}, {n: "Ronan Oskarżyciel", isMain: false}, 
+    {n: "Ego", isMain: false},
+    {n: "Stan Lee", isMain: true}, {n: "Stan Lee (Hulkbuster)", isMain: false}, 
+    {n: "Kaczor Howard", isMain: true}, {n: "Squirrel Girl", isMain: false}, 
+    {n: "Kapitan Brytania", isMain: false}, {n: "Agentka Carter", isMain: false}
+]
+        "LEGO HARRY POTTER": [
+    {n: "Harry Potter (Szata szkolna)", isMain: true}, {n: "Harry Potter (Zadanie Turniejowe)", isMain: false}, 
+    {n: "Harry Potter (Strój do Quidditcha)", isMain: false}, {n: "Harry Potter (Szaty wyjściowe)", isMain: false}, 
+    {n: "Harry Potter (Piżama)", isMain: false},
+    {n: "Ron Weasley (Szata szkolna)", isMain: true}, {n: "Ron Weasley (Sweter)", isMain: false}, 
+    {n: "Ron Weasley (Strój do Quidditcha)", isMain: false}, {n: "Ron Weasley (Szaty wyjściowe)", isMain: false}, 
+    {n: "Ron Weasley (Zima)", isMain: false},
+    {n: "Hermiona Granger (Szata szkolna)", isMain: true}, {n: "Hermiona Granger (Suknia balowa)", isMain: false}, 
+    {n: "Hermiona Granger (Zima)", isMain: false}, {n: "Hermiona Granger (Jako kot)", isMain: false}, 
+    {n: "Hermiona Granger (Gringott)", isMain: false},
+    {n: "Neville Longbottom", isMain: true}, {n: "Neville (Piżama)", isMain: false}, 
+    {n: "Ginny Weasley", isMain: true}, {n: "Ginny (Quidditch)", isMain: false}, 
+    {n: "Fred Weasley", isMain: true}, {n: "George Weasley", isMain: true}, 
+    {n: "Percy Weasley", isMain: false}, {n: "Seamus Finnigan", isMain: false}, 
+    {n: "Dean Thomas", isMain: false}, {n: "Lee Jordan", isMain: false}, 
+    {n: "Oliver Wood", isMain: false}, {n: "Angelina Johnson", isMain: false}, 
+    {n: "Parvati Patil", isMain: false},
+    {n: "Albus Dumbledore", isMain: true}, {n: "Albus Dumbledore (Młody)", isMain: false}, 
+    {n: "Severus Snape", isMain: true}, {n: "Snape (W ubraniu babci)", isMain: false}, 
+    {n: "Minerva McGonagall", isMain: true}, {n: "Rubeus Hagrid", isMain: true}, 
+    {n: "Szalonooki Moody", isMain: true}, {n: "Remus Lupin", isMain: true}, 
+    {n: "Lupin (Wilkołak)", isMain: false}, {n: "Gilderoy Lockhart", isMain: true}, 
+    {n: "Horacy Slughorn", isMain: false}, {n: "Slughorn (Jako fotel)", isMain: false}, 
+    {n: "Filius Flitwick", isMain: false}, {n: "Pomona Sprout", isMain: false}, 
+    {n: "Sybilla Trelawney", isMain: false}, {n: "Madam Pomfrey", isMain: false}, 
+    {n: "Madam Hooch", isMain: false}, {n: "Argus Filch", isMain: false},
+    {n: "Sirius Black", isMain: true}, {n: "Sirius Black (Więzień)", isMain: false}, 
+    {n: "Arthur Weasley", isMain: false}, {n: "Molly Weasley", isMain: false}, 
+    {n: "Bill Weasley", isMain: false}, {n: "Nimfadora Tonks", isMain: false}, 
+    {n: "Kingsley Shacklebolt", isMain: false}, {n: "Aberforth Dumbledore", isMain: false}, 
+    {n: "James Potter", isMain: true}, {n: "Lily Potter", isMain: true},
+    {n: "Lord Voldemort", isMain: true}, {n: "Tom Riddle", isMain: true}, 
+    {n: "Bellatrix Lestrange", isMain: true}, {n: "Lucius Malfoy", isMain: true}, 
+    {n: "Narcyza Malfoy", isMain: false}, {n: "Draco Malfoy", isMain: true}, 
+    {n: "Draco (Szata szkolna)", isMain: false}, {n: "Draco (Quidditch)", isMain: false}, 
+    {n: "Vincent Crabbe", isMain: false}, {n: "Gregory Goyle", isMain: false}, 
+    {n: "Blaise Zabini", isMain: false}, {n: "Pansy Parkinson", isMain: false}, 
+    {n: "Marcus Flint", isMain: false}, {n: "Antonin Dolohov", isMain: false}, 
+    {n: "Fenrir Greyback", isMain: false}, {n: "Barty Crouch Jr.", isMain: true},
+    {n: "Luna Lovegood", isMain: true}, {n: "Luna (Maska lwa)", isMain: false}, 
+    {n: "Cho Chang", isMain: true}, {n: "Padma Patil", isMain: false},
+    {n: "Cedric Diggory", isMain: true}, {n: "Cedric (Zadanie Turniejowe)", isMain: false}, 
+    {n: "Justin Finch-Fletchley", isMain: false}, {n: "Hannah Abbott", isMain: false}, 
+    {n: "Susan Bones", isMain: false}, {n: "Ernie Macmillan", isMain: false},
+    {n: "Zgredek (Dobby)", isMain: true}, {n: "Stworek (Kreacher)", isMain: false}, 
+    {n: "Gryfek (Griphook)", isMain: false}, {n: "Bogrod (Gringott)", isMain: false}, 
+    {n: "Prawie Bezgłowy Nick", isMain: false}, {n: "Krwawy Baron", isMain: false}, 
+    {n: "Szara Dama", isMain: false}, {n: "Gruby Mnich", isMain: false}, 
+    {n: "Jęcząca Marta", isMain: false}, {n: "Profesor Binns", isMain: false},
+    {n: "Korneliusz Knot", isMain: false}, {n: "Rufus Scrimgeour", isMain: false}, 
+    {n: "Dolores Umbridge", isMain: true}, {n: "Wiktor Krum", isMain: true}, 
+    {n: "Fleur Delacour", isMain: true}, {n: "Madame Maxime", isMain: false}, 
+    {n: "Igor Karkarow", isMain: false}, {n: "Ksenofilius Lovegood", isMain: false}, 
+    {n: "Rita Skeeter", isMain: false}, {n: "Stan Shunpike", isMain: false}, 
+    {n: "Dudley Dursley", isMain: true}, {n: "Vernon Dursley", isMain: true}, 
+    {n: "Petunia Dursley", isMain: true}
+]
+        "LEGO BATMAN": [
+    {n: "Batman", isMain: true}, {n: "Batman (Klasyczny)", isMain: false}, 
+    {n: "Batman (Zbroja Sensor)", isMain: false}, {n: "Batman (Zbroja Sonic)", isMain: false}, 
+    {n: "Batman (Zbroja Arctic)", isMain: false}, {n: "Batman (Zbroja Electricity)", isMain: false}, 
+    {n: "Batman (Zbroja Space)", isMain: false}, {n: "Batman (Zbroja Scuba)", isMain: false}, 
+    {n: "Batman (Zur-En-Arrh)", isMain: false}, {n: "Bruce Wayne", isMain: true}, 
+    {n: "Batman (Mroczny Rycerz)", isMain: true},
+    {n: "Robin", isMain: true}, {n: "Robin (Klasyczny)", isMain: false}, 
+    {n: "Robin (Strój magnetyczny)", isMain: false}, {n: "Nightwing", isMain: true}, 
+    {n: "Red Hood", isMain: true}, {n: "Batgirl", isMain: true}, 
+    {n: "Batwoman", isMain: true}, {n: "Alfred Pennyworth", isMain: true}, 
+    {n: "Komisarz Gordon", isMain: true}, {n: "Ace (Pies Batmana)", isMain: false}, 
+    {n: "Huntress (Łowczyni)", isMain: false}, {n: "Azrael", isMain: false}, 
+    {n: "Bat-Mite", isMain: false}, {n: "Spoiler", isMain: false},
+    {n: "Superman", isMain: true}, {n: "Clark Kent", isMain: true}, 
+    {n: "Superman (Solar Suit)", isMain: false}, {n: "Wonder Woman", isMain: true}, 
+    {n: "Wonder Woman (New 52)", isMain: false}, {n: "The Flash (Barry Allen)", isMain: true}, 
+    {n: "The Flash (Wally West)", isMain: false}, {n: "Green Lantern (Hal Jordan)", isMain: true}, 
+    {n: "Green Lantern (John Stewart)", isMain: false}, {n: "Aquaman", isMain: true}, 
+    {n: "Cyborg", isMain: true}, {n: "Martian Manhunter (J'onn J'onzz)", isMain: true}, 
+    {n: "Shazam", isMain: true}, {n: "Green Arrow", isMain: true}, 
+    {n: "Black Canary", isMain: true}, {n: "Hawkman", isMain: false}, 
+    {n: "Hawkgirl", isMain: false}, {n: "Zatanna", isMain: false}, 
+    {n: "Plastic Man", isMain: false}, {n: "Blue Beetle", isMain: false}, 
+    {n: "Booster Gold", isMain: false}, {n: "Supergirl", isMain: true}, 
+    {n: "Firestorm", isMain: false}, {n: "Doctor Fate", isMain: false}, 
+    {n: "Atom", isMain: false},
+    {n: "Sinestro", isMain: true}, {n: "Saint Walker (Błękitna Latarnia)", isMain: false}, 
+    {n: "Atrocitus (Czerwona Latarnia)", isMain: false}, {n: "Star Sapphire (Fioletowa Latarnia)", isMain: false}, 
+    {n: "Larfleeze (Pomarańczowa Latarnia)", isMain: false}, {n: "Indigo-1", isMain: false}, 
+    {n: "Kilowog", isMain: false},
+    {n: "Joker", isMain: true}, {n: "Joker (Tropikalny)", isMain: false}, 
+    {n: "Joker (Pielęgniarka)", isMain: false}, {n: "Joker (Mim)", isMain: false}, 
+    {n: "Harley Quinn", isMain: true}, {n: "Harley Quinn (Klasyczna)", isMain: false},
+    {n: "Pingwin", isMain: true}, {n: "Riddler (Zagadka)", isMain: true}, 
+    {n: "Dwie-Twarze", isMain: true}, {n: "Catwoman (Kobieta-Kot)", isMain: true}, 
+    {n: "Poison Ivy (Trujący Bluszcz)", isMain: true}, {n: "Scarecrow (Strach na wróble)", isMain: true}, 
+    {n: "Bane", isMain: true}, {n: "Bane (Doładowany Venomem)", isMain: false}, 
+    {n: "Mr. Freeze", isMain: true}, {n: "Killer Croc", isMain: true}, 
+    {n: "Clayface", isMain: true}, {n: "Ra's al Ghul", isMain: true}, 
+    {n: "Deathstroke", isMain: true}, {n: "Deadshot", isMain: false}, 
+    {n: "Man-Bat", isMain: false}, {n: "Mad Hatter (Szalony Kapelusznik)", isMain: false}, 
+    {n: "Killer Frost", isMain: false}, {n: "Captain Cold", isMain: false}, 
+    {n: "Gorilla Grodd", isMain: false}, {n: "Reverse-Flash", isMain: true}, 
+    {n: "Black Manta", isMain: false}, {n: "Solomon Grundy", isMain: false}, 
+    {n: "Killer Moth", isMain: false}, {n: "Firefly", isMain: false}, 
+    {n: "Hush", isMain: false}, {n: "Ventrilokwista i Scarface", isMain: false},
+    {n: "Lex Luthor", isMain: true}, {n: "Lex Luthor (Zbroja)", isMain: true}, 
+    {n: "Brainiac", isMain: true}, {n: "Darkseid", isMain: true}, 
+    {n: "General Zod", isMain: true}, {n: "Doomsday", isMain: true}, 
+    {n: "Lobo", isMain: false}, {n: "Black Adam", isMain: true}, 
+    {n: "Metallo", isMain: false}, {n: "Bizarro", isMain: true}, 
+    {n: "Trigon", isMain: false}, {n: "Mr. Mxyzptlk", isMain: false}
+]
+        "LEGO LOTR-HOBBIT": [
+    {n: "Frodo Baggins", isMain: true}, {n: "Frodo (W ubraniu z Shire)", isMain: false}, 
+    {n: "Samwise Gamgee", isMain: true}, {n: "Merry Brandybuck", isMain: true}, 
+    {n: "Pippin Took", isMain: true}, {n: "Pippin (Zbroja Gondoru)", isMain: false}, 
+    {n: "Gandalf Szary", isMain: true}, {n: "Saruman", isMain: true}, 
+    {n: "Aragorn (Obieżyświat)", isMain: true}, {n: "Aragorn (Król Elessar)", isMain: true}, 
+    {n: "Legolas", isMain: true}, {n: "Gimli", isMain: true}, {n: "Boromir", isMain: true}, 
+    {n: "Thorin (Miasto na Jeziorze)", isMain: true}, {n: "Thorin (Królewska zbroja)", isMain: true}, 
+    {n: "Balin", isMain: true}, {n: "Dwalin", isMain: true}, {n: "Fili", isMain: true}, 
+    {n: "Kili", isMain: true}, {n: "Oin", isMain: true}, {n: "Gloin", isMain: true}, 
+    {n: "Dori", isMain: true}, {n: "Nori", isMain: true}, {n: "Ori", isMain: true}, 
+    {n: "Bifur", isMain: true}, {n: "Bofur", isMain: true}, {n: "Bombur", isMain: true}, 
+    {n: "Dain Żelazna Stopa", isMain: true}, {n: "Thrain", isMain: false},
+    {n: "Elrond", isMain: true}, {n: "Galadriela", isMain: true}, 
+    {n: "Arwena", isMain: true}, {n: "Celeborn", isMain: false}, 
+    {n: "Tauriela", isMain: true}, {n: "Haldir", isMain: false}, 
+    {n: "Gil-galad", isMain: false}, {n: "Bard Łucznik", isMain: true}, 
+    {n: "Bilbo Baggins (Stary)", isMain: true}, {n: "Bilbo Baggins (Młody)", isMain: true}, 
+    {n: "Król Theoden", isMain: true}, {n: "Eomer", isMain: true}, 
+    {n: "Eowina", isMain: true}, {n: "Denethor", isMain: true}, 
+    {n: "Faramir", isMain: true}, {n: "Isildur", isMain: true}, 
+    {n: "Radagast Bury", isMain: true}, {n: "Bain", isMain: false},
+    {n: "Sauron", isMain: true}, {n: "Czarnoksiężnik z Angmaru (Witch-king)", isMain: true}, 
+    {n: "Nazgul (Upiór Pierścienia)", isMain: true}, {n: "Lurtz", isMain: true}, 
+    {n: "Grima Smoczy Język", isMain: true}, {n: "Gollum", isMain: true}, 
+    {n: "Smeagol", isMain: true}, {n: "Azog Plugawiec", isMain: true}, 
+    {n: "Bolg", isMain: true}, {n: "Wielki Goblin", isMain: true}, 
+    {n: "Rzecznik Saurona", isMain: false}, {n: "Uruk-hai", isMain: false}, 
+    {n: "Orczy Wojownik", isMain: false}, {n: "Ork z Mordoru", isMain: false}, 
+    {n: "Ork z Gundabad", isMain: false}, {n: "Troll Jaskiniowy", isMain: false}, 
+    {n: "Goblin Pisarz", isMain: false}, {n: "Nekromanta", isMain: true}, 
+    {n: "Król Umarłych", isMain: true}, {n: "Żołnierz Umarłych", isMain: false}, 
+    {n: "Gothmog", isMain: false}, {n: "Shagrat", isMain: false}, 
+    {n: "Grishnakh", isMain: false},
+    {n: "Barliman Butterbur", isMain: false}, {n: "Róża Cotton", isMain: false}, 
+    {n: "Alfrid", isMain: false}, {n: "Beorn", isMain: true}, 
+    {n: "Tom Bombadil", isMain: false}, {n: "Bree Peasant (Mieszkaniec Bree)", isMain: false}, 
+    {n: "Gwaihir (Orzeł)", isMain: false}
+]
+        "LEGO CITY UNDERCOVER": [
+    {n: "Chase McCain (Policjant)", isMain: true}, {n: "Chase McCain (Złodziej)", isMain: false}, 
+    {n: "Chase McCain (Górnik)", isMain: false}, {n: "Chase McCain (Astronauta)", isMain: false}, 
+    {n: "Chase McCain (Rolnik)", isMain: false}, {n: "Chase McCain (Strażak)", isMain: false}, 
+    {n: "Chase McCain (Budowniczy)", isMain: false}, {n: "Chase McCain (Nurek)", isMain: false},
+    {n: "Frank Honey", isMain: true}, {n: "Ellie Phillips", isMain: true}, 
+    {n: "Natalia Kowalski", isMain: true}, {n: "Komisarz Dunby", isMain: true}, 
+    {n: "Burmistrz Gleeson", isMain: true}, {n: "Szeryf Huckleberry", isMain: false}, 
+    {n: "Chief Kanui", isMain: false}, {n: "Chuck Fieri", isMain: false}, 
+    {n: "Barry Smith", isMain: false}, {n: "Albert Spindlerouter", isMain: false}, 
+    {n: "Profesor Kowalski", isMain: false},
+    {n: "Rex Fury", isMain: true}, {n: "Vinnie Pappalardo", isMain: true}, 
+    {n: "Chan Chuang", isMain: true}, {n: "Forrest Blackwell", isMain: true}, 
+    {n: "Jimmy Grossman", isMain: false}, {n: "Smokey Fuentes", isMain: false}, 
+    {n: "Sentinel Channing", isMain: false}, {n: "Carlo Jerome", isMain: false}, 
+    {n: "Moe De Luca", isMain: false}, {n: "Cornelius Burns", isMain: false},
+    {n: "Ranger Barber", isMain: false}, {n: "Bucky Butler", isMain: false}, 
+    {n: "Clutch", isMain: false}, {n: "Kucharz", isMain: false}, 
+    {n: "Doktor Jones", isMain: false}, {n: "Eksplorator", isMain: false}, 
+    {n: "Mechanik", isMain: false}, {n: "Horace Cone", isMain: false}, 
+    {n: "James Curry", isMain: false}, {n: "Jethro Hayes", isMain: false}, 
+    {n: "Prezenter wiadomości", isMain: false}, {n: "Kierowca wyścigowy", isMain: false}, 
+    {n: "Taksówkarz", isMain: false},
+    {n: "Mumia", isMain: false}, {n: "Faraon", isMain: false}, 
+    {n: "Robot", isMain: false}, {n: "Samuraj", isMain: false}, 
+    {n: "Surfer", isMain: false}, {n: "Wiking", isMain: false}, 
+    {n: "Nindża", isMain: false}, {n: "Jaskiniowiec", isMain: false}, 
+    {n: "Leprechaun", isMain: false}, {n: "Zombie", isMain: false}, 
+    {n: "Kosmonauta (Klasyczny)", isMain: false}, {n: "Klaun", isMain: false}, 
+    {n: "Magik", isMain: false}, {n: "Pirat", isMain: false}, 
+    {n: "Goryl (Kostium)", isMain: false}, {n: "Wilkołak", isMain: false}, 
+    {n: "Wrestler", isMain: false}, {n: "Spartanin", isMain: false}, 
+    {n: "Elf", isMain: false}, {n: "Krasnal ogrodowy", isMain: false}, 
+    {n: "Święty Mikołaj", isMain: false}
+]
+        "LEGO INDIANA JONES": [
+    {n: "Indiana Jones", isMain: true}, {n: "Indiana Jones (Smoking)", isMain: false}, 
+    {n: "Indiana Jones (Profesor)", isMain: false}, {n: "Indiana Jones (Oficer)", isMain: false}, 
+    {n: "Indiana Jones (Świątynia Zagłady)", isMain: false}, {n: "Młody Indiana Jones", isMain: false},
+    {n: "Henry Jones Sr.", isMain: true}, {n: "Marion Ravenwood", isMain: true}, 
+    {n: "Marion (Suknia wieczorowa)", isMain: false}, {n: "Marion (Kair)", isMain: false}, 
+    {n: "Mutt Williams", isMain: true}, {n: "Short Round (Krótki Szpic)", isMain: true}, 
+    {n: "Sallah", isMain: true}, {n: "Sallah (Pustynny)", isMain: false}, 
+    {n: "Marcus Brody", isMain: true}, {n: "Jock (Pilot)", isMain: false}, 
+    {n: "Kapitan Katanga", isMain: false}, {n: "Harold Oxley", isMain: true}, 
+    {n: "Wu Han", isMain: false}, {n: "Willie Scott", isMain: true}, 
+    {n: "Willie (Ceremonia)", isMain: false},
+    {n: "Rene Belloq", isMain: true}, {n: "Belloq (Rytualne szaty)", isMain: false}, 
+    {n: "Belloq (Dżungla)", isMain: false}, {n: "Major Toht", isMain: true}, 
+    {n: "Pułkownik Dietrich", isMain: true}, {n: "Mola Ram", isMain: true}, 
+    {n: "Chatter Lal", isMain: false}, {n: "Walter Donovan", isMain: true}, 
+    {n: "Pułkownik Vogel", isMain: true}, {n: "Dr Elsa Schneider", isMain: true}, 
+    {n: "Elsa (Oficer)", isMain: false}, {n: "Irina Spalko", isMain: true}, 
+    {n: "Pułkownik Dowczenko", isMain: true}, {n: "Lao Che", isMain: true}, 
+    {n: "Kao Kan", isMain: false}, {n: "Chen", isMain: false},
+    {n: "Wojownik Hovitos", isMain: false}, {n: "Satipo", isMain: false}, 
+    {n: "Barranca", isMain: false}, {n: "Bandyta", isMain: false}, 
+    {n: "Żołnierz niemiecki", isMain: false}, {n: "Oficer niemiecki", isMain: false}, 
+    {n: "Strażnik niemiecki", isMain: false}, {n: "Żołnierz z bazooką", isMain: false}, 
+    {n: "Rycerz Graala", isMain: true}, {n: "Thuggee (Kultysta)", isMain: false}, 
+    {n: "Kapłan Thuggee", isMain: false}, {n: "Strażnik Pankot", isMain: false}, 
+    {n: "Żołnierz radziecki", isMain: false}, {n: "Wojownik Ugha", isMain: false},
+    {n: "Han Solo (Ukryta postać)", isMain: true}, {n: "Święty Mikołaj", isMain: false}, 
+    {n: "Starszy wioski", isMain: false}, {n: "Brytyjski dowódca", isMain: false}, 
+    {n: "Cmentarny wojownik", isMain: false}
+]
+        "LEGO PIRACI Z KARAIBÓW": [
+    {n: "Jack Sparrow", isMain: true}, {n: "Jack Sparrow (Wódz Pelegostos)", isMain: false}, 
+    {n: "Jack Sparrow (Kamizelka)", isMain: false}, {n: "Jack Sparrow (Voodoo)", isMain: false}, 
+    {n: "Jack Sparrow (Szkielet)", isMain: false},
+    {n: "Will Turner", isMain: true}, {n: "Will Turner (Pirat)", isMain: false},
+    {n: "Elizabeth Swann", isMain: true}, {n: "Elizabeth Swann (Czerwony płaszcz)", isMain: false}, 
+    {n: "Elizabeth Swann (Pirat)", isMain: false},
+    {n: "Joshamee Gibbs", isMain: true}, {n: "Anamaria", isMain: true}, 
+    {n: "Pintel", isMain: true}, {n: "Ragetti", isMain: true}, 
+    {n: "Cotton", isMain: false}, {n: "Marty", isMain: false}, 
+    {n: "Tia Dalma", isMain: true}, {n: "Calypso", isMain: true},
+    {n: "Hektor Barbossa", isMain: true}, {n: "Barbossa (Korsarz)", isMain: false}, 
+    {n: "Davy Jones", isMain: true}, {n: "Maccus", isMain: false}, 
+    {n: "Clanker", isMain: false}, {n: "Jimmy Legs", isMain: false}, 
+    {n: "Koleniko", isMain: false}, {n: "Wyvern", isMain: false}, 
+    {n: "Angler", isMain: false}, {n: "Hadras", isMain: false}, 
+    {n: "Crash", isMain: false}, {n: "Palifico", isMain: false}, 
+    {n: "Penrod", isMain: false}, {n: "Bootstrap Bill (Przeklęty)", isMain: true},
+    {n: "Czarnobrody", isMain: true}, {n: "Angelica", isMain: true}, 
+    {n: "Angelica (W przebraniu)", isMain: false}, {n: "Lord Cutler Beckett", isMain: true}, 
+    {n: "James Norrington", isMain: true}, {n: "Admirał Norrington", isMain: false}, 
+    {n: "Gubernator Weatherby Swann", isMain: true}, {n: "Kapitan Sao Feng", isMain: true}, 
+    {n: "Tai Huang", isMain: false},
+    {n: "Murtogg", isMain: false}, {n: "Mullroy", isMain: false}, 
+    {n: "Porucznik Theodore Groves", isMain: false}, {n: "Gillette", isMain: false}, 
+    {n: "Hiszpański oficer", isMain: false}, {n: "Król Jerzy II", isMain: false}, 
+    {n: "Angielski strażnik", isMain: false},
+    {n: "Syrena", isMain: true}, {n: "Tamara (Syrena)", isMain: false}, 
+    {n: "Philip Swift", isMain: true}, {n: "Hiszpan (The Spaniard)", isMain: true}, 
+    {n: "Kwatermistrz", isMain: false}, {n: "Kucharz", isMain: false}, 
+    {n: "Pies więzienny", isMain: false}, {n: "Małpka Jack", isMain: false}, 
+    {n: "Stary marynarz", isMain: false}, {n: "Yeoman", isMain: false}, 
+    {n: "Derrick", isMain: false}, {n: "Scrum", isMain: true}, 
+    {n: "Garheng", isMain: false},
+    {n: "Pani Ching", isMain: false}, {n: "Sri Sumbhajee Angria", isMain: false}, 
+    {n: "Dżentelmen Jocard", isMain: false}, {n: "Amand Korsarz", isMain: false}, 
+    {n: "Eduardo Villanueva", isMain: false}, {n: "Capitaine Chevalle", isMain: false}, 
+    {n: "Pan Mercer", isMain: false}, {n: "Pan Brown", isMain: false}, 
+    {n: "Lian", isMain: false}, {n: "Wściekły Kanibal", isMain: false}, 
+    {n: "Kapitan Bellamy", isMain: false}
+]
+        "LEGO JURASSIC WORLD": [
+    {n: "Alan Grant", isMain: true}, {n: "Ellie Sattler", isMain: true}, 
+    {n: "Ian Malcolm", isMain: true}, {n: "John Hammond", isMain: true}, 
+    {n: "Lex Murphy", isMain: true}, {n: "Tim Murphy", isMain: true}, 
+    {n: "Robert Muldoon", isMain: true}, {n: "Dennis Nedry", isMain: true}, 
+    {n: "Donald Gennaro", isMain: false}, {n: "Ray Arnold", isMain: false},
+    {n: "Owen Grady", isMain: true}, {n: "Claire Dearing", isMain: true}, 
+    {n: "Simon Masrani", isMain: true}, {n: "Vic Hoskins", isMain: true}, 
+    {n: "Lowery Cruthers", isMain: false}, {n: "Barry Sembène", isMain: false}, 
+    {n: "Hamada", isMain: false}, {n: "Zara", isMain: false}, 
+    {n: "Gray Mitchell", isMain: true}, {n: "Zach Mitchell", isMain: true}, 
+    {n: "Henry Wu", isMain: true}, {n: "Dr Henry Wu (1993)", isMain: false}, 
+    {n: "Franklin Webb", isMain: true}, {n: "Zia Rodriguez", isMain: true}, 
+    {n: "Maisie Lockwood", isMain: true}, {n: "Eli Mills", isMain: true}, 
+    {n: "Ken Wheatley", isMain: true},
+    {n: "Sarah Harding", isMain: true}, {n: "Nick Van Owen", isMain: true}, 
+    {n: "Eddie Carr", isMain: false}, {n: "Roland Tembo", isMain: true}, 
+    {n: "Peter Ludlow", isMain: true}, {n: "Paul Kirby", isMain: true}, 
+    {n: "Amanda Kirby", isMain: true}, {n: "Eric Kirby", isMain: true}, 
+    {n: "Billy Brennan", isMain: true}, {n: "Udesky", isMain: false},
+    {n: "Tyrannosaurus Rex (T-Rex)", isMain: true}, {n: "Indominus Rex", isMain: true}, 
+    {n: "Indoraptor", isMain: true}, {n: "Velociraptor (Blue)", isMain: true}, 
+    {n: "Velociraptor (Charlie)", isMain: false}, {n: "Velociraptor (Delta)", isMain: false}, 
+    {n: "Velociraptor (Echo)", isMain: false}, {n: "Triceratops", isMain: true}, 
+    {n: "Brachiozaur", isMain: true}, {n: "Stegozaur", isMain: true}, 
+    {n: "Dilofozaur", isMain: true}, {n: "Spinozaur", isMain: true}, 
+    {n: "Ankylozaur", isMain: true}, {n: "Pteranodon", isMain: true}, 
+    {n: "Gallimim", isMain: false}, {n: "Kompsognat (Compy)", isMain: false}, 
+    {n: "Stygimoloch (Stiggy)", isMain: true}, {n: "Karnozaur", isMain: true}, 
+    {n: "Baryonyks", isMain: true}, {n: "Atrociraptor", isMain: false}, 
+    {n: "Giganotozaur", isMain: true}, {n: "Mała Beta (Raptor)", isMain: false},
+    {n: "Pracownik Parku", isMain: false}, {n: "Strażnik InGen", isMain: false}, 
+    {n: "Naukowiec InGen", isMain: false}, {n: "Żołnierz ACU", isMain: false}, 
+    {n: "Weterynarz", isMain: false}, {n: "Turysta", isMain: false}, 
+    {n: "Pan DNA (Mr. DNA)", isMain: true}, {n: "Jimmy Fallon", isMain: false}, 
+    {n: "Kierowca ciężarówki", isMain: false}, {n: "Pilot helikoptera", isMain: false}
+]
+        "LEGO PRZYGODA": [
+    {n: "Emmet (Budowniczy)", isMain: true}, {n: "Emmet (Piżama)", isMain: false}, 
+    {n: "Emmet (Western)", isMain: false}, {n: "Rex Niebezpiecznik", isMain: true}, 
+    {n: "Rex (Z małym raptorem)", isMain: false},
+    {n: "Żyleta (Wyldstyle)", isMain: true}, {n: "Żyleta (Kaptur na głowie)", isMain: false}, 
+    {n: "Żyleta (Styl westernowy)", isMain: false}, {n: "Lucy (Apokalipsburg)", isMain: true}, 
+    {n: "Benny (Kosmonauta)", isMain: true}, {n: "Benny (Z metalową ręką)", isMain: false}, 
+    {n: "Stalowobrody", isMain: true}, {n: "Stalowobrody (Mini)", isMain: false}, 
+    {n: "Witruwiusz", isMain: true}, {n: "Witruwiusz (Duch)", isMain: false}, 
+    {n: "Kicia Rożek", isMain: true}, {n: "Kicia Rożek (Gwiezdna)", isMain: false}, 
+    {n: "Kicia Rożek (Zła)", isMain: false}, {n: "Kicia Rożek (Chora)", isMain: false}, 
+    {n: "Batman (LEGO Movie)", isMain: true},
+    {n: "Prezes Biznes", isMain: true}, {n: "Lord Biznes (Wielkie nogi)", isMain: false}, 
+    {n: "Zły Glina", isMain: true}, {n: "Dobry Glina", isMain: false}, 
+    {n: "Słodka Żyleta (Sweet Mayhem)", isMain: true}, {n: "Królowa Wisimi I'Powiewa", isMain: true}, 
+    {n: "Generał Zadyma", isMain: true}, {n: "Kosmita DUPLO", isMain: false}, 
+    {n: "Balthazar", isMain: true},
+    {n: "Abraham Lincoln", isMain: false}, {n: "William Szekspir", isMain: false}, 
+    {n: "Kleopatra", isMain: false}, {n: "Panczo Villa", isMain: false}, 
+    {n: "Gandalf (Z filmu)", isMain: false}, {n: "Dumbledore (Z filmu)", isMain: false}, 
+    {n: "Superman (LEGO Movie)", isMain: true}, {n: "Green Lantern (LEGO Movie)", isMain: false}, 
+    {n: "Wonder Woman (LEGO Movie)", isMain: false}, {n: "Shaquille O'Neal", isMain: false},
+    {n: "Banan", isMain: false}, {n: "Lodziarz", isMain: false}, 
+    {n: "Człowiek Panda", isMain: false}, {n: "Larry Barista", isMain: false}, 
+    {n: "Szeryf Nie-robot", isMain: false}, {n: "Magik", isMain: false}, 
+    {n: "Apokalipsburg Abe", isMain: false}, {n: "Wasteland Batman", isMain: false}, 
+    {n: "Człowiek wafel", isMain: false}, {n: "Koleś w kostiumie rekina", isMain: false}
+]
+        "LEGO NINJAGO": [
+    {n: "Lloyd (Zielony Ninja)", isMain: true}, {n: "Lloyd (Z kapturem)", isMain: false}, 
+    {n: "Lloyd (Kendo)", isMain: false}, {n: "Lloyd (Strój szkolny)", isMain: false}, 
+    {n: "Złoty Lloyd", isMain: true},
+    {n: "Kai (Ninja)", isMain: true}, {n: "Kai (Kendo)", isMain: false}, 
+    {n: "Kai (Strój szkolny)", isMain: false}, {n: "Kai (Treningowy)", isMain: false},
+    {n: "Jay (Ninja)", isMain: true}, {n: "Jay (Kendo)", isMain: false}, 
+    {n: "Jay (Strój szkolny)", isMain: false}, {n: "Jay (Treningowy)", isMain: false},
+    {n: "Cole (Ninja)", isMain: true}, {n: "Cole (Kendo)", isMain: false}, 
+    {n: "Cole (Strój szkolny)", isMain: false},
+    {n: "Zane (Ninja)", isMain: true}, {n: "Zane (Kendo)", isMain: false}, 
+    {n: "Zane (Strój szkolny)", isMain: false}, {n: "Zane (Robot Tytanowy)", isMain: true},
+    {n: "Nya (Ninja)", isMain: true}, {n: "Nya (Strój szkolny)", isMain: false},
+    {n: "Mistrz Wu", isMain: true}, {n: "Mistrz Wu (Młody)", isMain: false}, 
+    {n: "Mistrz Wu (Kimono)", isMain: false}, {n: "Lord Garmadon", isMain: true}, 
+    {n: "Lord Garmadon (Klasyczny)", isMain: false}, {n: "Garmadon (W garniturze)", isMain: false}, 
+    {n: "Garmadon (W dżungli)", isMain: false}, {n: "Koko", isMain: true}, 
+    {n: "Misako", isMain: true}, {n: "Pierwszy Mistrz Spinjitzu", isMain: true},
+    {n: "Pythor", isMain: true}, {n: "Skales", isMain: true}, 
+    {n: "Mistrz Chen", isMain: true}, {n: "Morro", isMain: true}, 
+    {n: "Nadakhan", isMain: true}, {n: "Harumi", isMain: true}, 
+    {n: "Kryptor", isMain: false}, {n: "Samuraj X", isMain: true},
+    {n: "Strzelec Armii Rekinów", isMain: false}, {n: "Zbir Armii Rekinów", isMain: false}, 
+    {n: "Generał Armii Rekinów #1", isMain: false}, {n: "Ośmiornica (Armia Rekinów)", isMain: false}, 
+    {n: "Wielki Biały (Armia Rekinów)", isMain: false}, {n: "Młot (Hammerhead)", isMain: false}, 
+    {n: "Skorupiak (Crusty)", isMain: false}, {n: "Rozdymka (Puffer)", isMain: false},
+    {n: "Burmistrz Ninjago", isMain: false}, {n: "Dziewczyna N-Pop", isMain: false}, 
+    {n: "Mistrz Sushi", isMain: false}, {n: "Informatyk (Nerd)", isMain: false}, 
+    {n: "Chłopak w kostiumie kurczaka", isMain: false}, {n: "Człowiek Hot Dog", isMain: false}, 
+    {n: "Jacob", isMain: false}, {n: "Listonosz", isMain: false}, 
+    {n: "Edna Walker", isMain: false}, {n: "Ed Walker", isMain: false}, 
+    {n: "Dareth (Brązowy Ninja)", isMain: true}, {n: "Dr Julien", isMain: false}, 
+    {n: "Ronin", isMain: true}, {n: "Nelson (Gazeciarz)", isMain: false},
+    {n: "Duch Cole'a", isMain: false}, {n: "Szkielet Kruncha", isMain: false}, 
+    {n: "Szkielet Nuckal", isMain: false}
+]
+        "LEGO DIMENSIONS": [
+    {n: "Lego Batman", isMain: true}, {n: "Gandalf", isMain: true}, {n: "Żyleta (Wyldstyle)", isMain: true},
+    {n: "Superman", isMain: true}, {n: "Wonder Woman", isMain: true}, {n: "Aquaman", isMain: true}, 
+    {n: "Cyborg", isMain: true}, {n: "Harley Quinn", isMain: false}, {n: "Joker", isMain: false}, 
+    {n: "Bane", isMain: false}, {n: "Batgirl", isMain: false}, {n: "Robin (LEGO Batman Movie)", isMain: false}, 
+    {n: "Excalibur Batman", isMain: false},
+    {n: "Legolas", isMain: true}, {n: "Gimli", isMain: true}, {n: "Gollum", isMain: false},
+    {n: "Emmet", isMain: true}, {n: "Benny", isMain: false}, {n: "Kicia Rożek (Unikitty)", isMain: false}, 
+    {n: "Stalowobrody (Bad Cop)", isMain: false},
+    {n: "Kai", isMain: true}, {n: "Jay", isMain: true}, {n: "Cole", isMain: true}, 
+    {n: "Zane", isMain: true}, {n: "Nya", isMain: true}, {n: "Sensei Wu", isMain: true}, 
+    {n: "Lloyd", isMain: true},
+    {n: "Homer Simpson", isMain: true}, {n: "Bart Simpson", isMain: true}, {n: "Klaun Krusty", isMain: false},
+    {n: "Doktor Kto", isMain: true}, {n: "Cyberman", isMain: false},
+    {n: "Marty McFly", isMain: true}, {n: "Doc Brown", isMain: false},
+    {n: "Peter Venkman", isMain: true}, {n: "Slimer", isMain: false}, {n: "Stay Puft", isMain: false}, 
+    {n: "Abby Yates", isMain: false}, {n: "Chell", isMain: true}, {n: "Owen Grady", isMain: true}, 
+    {n: "Strażnik ACU", isMain: false},
+    {n: "Scooby-Doo", isMain: true}, {n: "Kudłaty (Shaggy)", isMain: true},
+    {n: "Gamer Kid", isMain: false}, {n: "Finn the Human", isMain: true}, {n: "Jake the Dog", isMain: true}, 
+    {n: "Marcelina", isMain: false}, {n: "Królewna Grudkowego Kosmosu", isMain: false},
+    {n: "Ethan Hunt", isMain: true}, {n: "Harry Potter", isMain: true}, {n: "Lord Voldemort", isMain: false}, 
+    {n: "Hermiona Granger", isMain: true}, {n: "B.A. Baracus", isMain: true}, {n: "Newt Scamander", isMain: true}, 
+    {n: "Tina Goldstein", isMain: false}, {n: "Sonic the Hedgehog", isMain: true}, {n: "Gizmo", isMain: false}, 
+    {n: "Stripe", isMain: false}, {n: "E.T.", isMain: true}, {n: "Zła Czarownica", isMain: false},
+    {n: "Michael Knight", isMain: true}, {n: "Sloth", isMain: false}, {n: "Chase McCain", isMain: true},
+    {n: "Bójka", isMain: true}, {n: "Bajka", isMain: true}, {n: "Brawurka", isMain: true}, 
+    {n: "Raven", isMain: true}, {n: "Bestia (Beast Boy)", isMain: true}, {n: "Starfire", isMain: true}, 
+    {n: "Beetlejuice", isMain: false}
+]
+        "LEGO INIEMAMOCNI": [
+    {n: "Pan Iniemamocny (Bob Parr)", isMain: true}, {n: "Elastyna (Helen Parr)", isMain: true}, 
+    {n: "Maksymilian Parr (Maks)", isMain: true}, {n: "Wiola Parr", isMain: true}, 
+    {n: "Jack-Jack (Normalny)", isMain: true}, {n: "Jack-Jack (Potwór)", isMain: false}, 
+    {n: "Jack-Jack (Ogień)", isMain: false}, {n: "Mrożon (Lucius Best)", isMain: true}, 
+    {n: "Edna Mode", isMain: true},
+    {n: "Rick Dicker", isMain: false}, {n: "Gazerbeam", isMain: true}, 
+    {n: "Szybkobiegacz", isMain: true}, {n: "Refleksja (Voyd)", isMain: true}, 
+    {n: "Cegła (Brick)", isMain: true}, {n: "Zgryz (Krushauer)", isMain: true}, 
+    {n: "He-Lectrix", isMain: true}, {n: "Krzesztand (Screech)", isMain: true},
+    {n: "Apogeum", isMain: true}, {n: "Blazestone", isMain: true}, 
+    {n: "Fylaks", isMain: true}, {n: "Macroburst", isMain: true}, 
+    {n: "Thunderhead", isMain: true}, {n: "Universal Man", isMain: true},
+    {n: "Syndrom", isMain: true}, {n: "Mirage", isMain: true}, 
+    {n: "Bomb Voyage", isMain: true}, {n: "Podkopywacz", isMain: true}, 
+    {n: "Ekranocholik", isMain: true},
+    {n: "Pan Iniemamocny (Złota Era)", isMain: false}, {n: "Elastyna (Złota Era)", isMain: false}, 
+    {n: "Lucius Best (Cywil)", isMain: false}, {n: "Tony Rydinger", isMain: false}, 
+    {n: "Bernie Kropp", isMain: false}, {n: "Gilbert Huph", isMain: false}, 
+    {n: "Kari McKeen", isMain: false}, {n: "Burmistrz Metroville", isMain: false}, 
+    {n: "Policjant z Metroville", isMain: false},
+    {n: "Chudy (Toy Story)", isMain: false}, {n: "Zygzak McQueen (Auta)", isMain: false}, 
+    {n: "Merida Waleczna", isMain: false}, {n: "Miguel (Coco)", isMain: false}, 
+    {n: "Sulley (Potwory i Spółka)", isMain: false}
+]
+    };
+
+    let selectedMode = null;
 
         function selectMode(element, mode) {
-            document.querySelectorAll('.btn-diff').forEach(btn => {
-                btn.classList.remove('clicked');
-            });
+            document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
             element.classList.add('clicked');
             selectedMode = mode;
         }
 
         function continueGame() {
             if(!selectedMode) {
-                alert("Wybierz najpierw poziom trudności!");
+                alert("Wybierz poziom!");
                 return;
             }
-            alert("Rozpoczynamy grę w trybie: " + selectedMode);
+
+            // 2. Logika filtrowania
+            let gamePool = [];
+            const container = document.getElementById('game-container');
+            
+            // Usuwamy stary filtr przy każdym kliknięciu
+            container.classList.remove('hard-mode');
+
+            if (selectedMode === 'easy') {
+                gamePool = characters.filter(char => char.isMain === true);
+                console.log("Tryb Easy: Postacie główne", gamePool);
+            } 
+            else if (selectedMode === 'medium') {
+                gamePool = characters; // Wszystkie
+                console.log("Tryb Medium: Wszystkie postacie", gamePool);
+            } 
+            else if (selectedMode === 'hard') {
+                gamePool = characters; // Wszystkie
+                container.classList.add('hard-mode'); // Dodajemy efekt odwrócenia
+                console.log("Tryb Hard: Wszystkie postacie + odwrócenie kolorów");
+            }
+
+            alert("Rozpoczęto w trybie " + selectedMode + ". Liczba postaci w puli: " + gamePool.length);
         }
     </script>
 </body>
