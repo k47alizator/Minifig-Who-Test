@@ -751,75 +751,68 @@
 ]
     };
 const allCharacters = Object.entries(characters).flatMap(([cat, list]) => 
-            list.map(char => ({ ...char, category: cat }))
-        );
+        list.map(char => ({ ...char, category: cat }))
+    );
 
-        let selectedMode = null;
-        let currentAnswer = null; // Tu będziemy trzymać wylosowaną postać
-        let lives = 3;
+    let selectedMode = null;
+    let currentAnswer = null;
+    let lives = 3;
 
-        // Funkcja wyboru poziomu
-        function selectMode(element, mode) {
-            document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
-            element.classList.add('clicked');
-            selectedMode = mode;
+    // Funkcje menu
+    function selectMode(element, mode) {
+        document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
+        element.classList.add('clicked');
+        selectedMode = mode;
+    }
+
+    function toggleMenu() {
+        const menu = document.getElementById('category-menu');
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function selectCategory(cat) {
+        document.getElementById('guess-input').value = cat;
+        toggleMenu();
+    }
+
+    // Funkcje gry
+    function continueGame() {
+        if(!selectedMode) { alert("Wybierz poziom!"); return; }
+
+        document.querySelector('.menu-box').style.display = 'none';
+        document.querySelector('h1').style.display = 'none';
+        document.getElementById('game-board').style.display = 'flex';
+        
+        document.getElementById('stat-mode').innerText = selectedMode;
+        
+        showRandomCharacter();
+    }
+
+    function showRandomCharacter() {
+        const pool = (selectedMode === 'easy') 
+                     ? allCharacters.filter(c => c.isMain === true) 
+                     : allCharacters;
+        
+        currentAnswer = pool[Math.floor(Math.random() * pool.length)];
+        
+        const cleanName = currentAnswer.n.toLowerCase().replace(/[()]/g, '').replace(/\s+/g, '_');
+        const imgElement = document.getElementById('minifig-image');
+        
+        imgElement.src = `img/${cleanName}.webp`;
+        imgElement.style.filter = "blur(80px)";
+    }
+
+    function checkGuess() {
+        const userGuess = document.getElementById('guess-input').value;
+        if (userGuess === currentAnswer.category) {
+            alert("Brawo! To był " + currentAnswer.category);
+        } else {
+            lives--;
+            document.getElementById('stat-lives').innerText = lives;
+            alert("Źle! Zostało żyć: " + lives);
+            if(lives <= 0) alert("Koniec gry!");
         }
-
-        // Funkcja startu gry
-        function continueGame() {
-            if(!selectedMode) { alert("Wybierz poziom!"); return; }
-
-            document.querySelector('.menu-box').style.display = 'none';
-            document.querySelector('h1').style.display = 'none';
-            document.getElementById('game-board').style.display = 'flex';
-            
-            document.getElementById('stat-mode').innerText = selectedMode;
-            
-            showRandomCharacter();
-        }
-
-        // Funkcja losująca
-        function showRandomCharacter() {
-            const pool = (selectedMode === 'easy') 
-                         ? allCharacters.filter(c => c.isMain === true) 
-                         : allCharacters;
-            
-            currentAnswer = pool[Math.floor(Math.random() * pool.length)];
-            
-            const cleanName = currentAnswer.n.toLowerCase().replace(/\s+/g, '_');
-            const imgElement = document.getElementById('minifig-image');
-            
-            imgElement.src = `img/${cleanName}.webp`;
-            imgElement.style.filter = "blur(80px)"; // Ustawienie blur
-            
-            console.log("Wylosowano:", currentAnswer.n, "z kategorii:", currentAnswer.category);
-        }
-
-        // Sprawdzanie odpowiedzi
-        function checkGuess() {
-            const userGuess = document.getElementById('guess-input').value;
-            
-            if (userGuess === currentAnswer.category) {
-                alert("Brawo! To był " + currentAnswer.category);
-                // Tu dodasz logikę: losuj kolejną postać
-            } else {
-                lives--;
-                document.getElementById('stat-lives').innerText = lives;
-                alert("Źle! Zostało żyć: " + lives);
-                if(lives <= 0) alert("Koniec gry!");
-            }
-        }
-
-        // Obsługa menu wyboru
-        function toggleMenu() {
-            document.getElementById('category-menu').style.display = 
-                (document.getElementById('category-menu').style.display === 'block') ? 'none' : 'block';
-        }
-
-        function selectCategory(cat) {
-            document.getElementById('guess-input').value = cat;
-            toggleMenu();
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
