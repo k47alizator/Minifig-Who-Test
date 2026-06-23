@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: 'Fredoka', sans-serif;
-            /* Pamiętaj o %20 zamiast spacji w nazwie pliku tła */
             background: linear-gradient(rgba(10, 15, 25, 0.75), rgba(10, 15, 25, 0.75)), url('img/tlo%20gry%202.webp');
             background-size: cover;
             background-position: center;
@@ -18,12 +17,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Wyśrodkowanie w pionie */
+            justify-content: center;
             overflow-x: hidden;
+            padding-bottom: 60px; /* Dodajemy miejsce na stopkę, żeby nie zasłaniała gry */
         }
 
-        /* Kontener menu (Lobby) */
-        #menu {
+        /* Lobby i Gra */
+        #menu, #game-box {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: 40px;
@@ -35,46 +35,26 @@
             max-width: 500px;
         }
 
-        h1 { margin-bottom: 30px; font-size: 3em; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            background: #00a8e8;
-            color: white;
-            cursor: pointer;
-            font-size: 20px;
-            font-family: 'Fredoka', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        button:hover {
-            background: #0077be;
-            transform: scale(1.05);
-        }
-
-        /* Ekran gry */
-        #game-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
+        /* Stopka (Footer) - tutaj jest Twój tekst */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            font-size: 10px; /* Mały tekst, żeby nie odwracał uwagi */
             text-align: center;
-            width: 80%;
-            max-width: 600px;
-            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 1000;
         }
 
-        img { width: 300px; height: 300px; border-radius: 15px; border: 4px solid #ffffff; object-fit: cover; }
+        h1 { margin-bottom: 30px; font-size: 3em; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .btn-group { display: flex; flex-direction: column; gap: 15px; }
+        button { padding: 15px 30px; border: none; border-radius: 50px; background: #00a8e8; color: white; cursor: pointer; font-size: 20px; font-family: 'Fredoka', sans-serif; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        button:hover { background: #0077be; transform: scale(1.05); }
         .hidden { display: none; }
+        img { width: 300px; height: 300px; border-radius: 15px; border: 4px solid #ffffff; object-fit: cover; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
     </style>
 </head>
@@ -94,7 +74,10 @@
         <div id="buttons" class="btn-grid"></div>
     </div>
 
-<script>
+    <footer>
+        Niniejsza strona jest projektem fanowskim o charakterze niekomercyjnym. Gra nie jest w żaden sposób powiązana, wspierana ani sponsorowana przez Grupę LEGO. Wszystkie znaki towarowe, nazwy oraz wizerunki postaci należą do ich prawowitych właścicieli.
+    </footer>
+    <script>
 // 1. Twoje dane w poprawnym formacie (pamiętaj, aby na końcu każdej sekcji mieć przecinek)
 const rawData = {
     "LEGO STAR WARS": [
