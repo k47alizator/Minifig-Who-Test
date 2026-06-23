@@ -3,156 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Frozen Who</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --steel-blue: #385c80;
-            --ice-blue: #d1e8ff;
-        }
-
-        body {
-            font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        @keyframes slowFloat {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
-
-        h1 { font-size: 5rem; margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase; }
-        
-        .frozen { 
-            font-family: 'Mountains of Christmas', cursive;
-            background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
-            margin-right: 15px;
-            display: inline-block; 
-            animation: slowFloat 4s ease-in-out infinite;
-        }
-
-        .who { color: var(--ice-blue); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: 700; }
-
-        .menu-box {
-            background: rgba(56, 92, 128, 0.2);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 30px;
-            border: 2px solid var(--ice-blue);
-            width: 350px;
-            text-align: center;
-        }
-
-        .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; font-size: 1.8rem; }
-        .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-
-        .btn-diff {
-            padding: 12px; border: 2px solid var(--ice-blue); border-radius: 10px;
-            background: var(--ice-blue); color: var(--steel-blue);
-            font-family: 'Fredoka', sans-serif; font-size: 18px; font-weight: 700;
-            cursor: pointer; transition: all 0.3s ease;
-        }
-
-        .btn-diff:hover { background: #a9c5e0; transform: scale(1.02); }
-        .btn-diff.clicked { background: var(--steel-blue) !important; color: var(--ice-blue) !important; border-color: var(--ice-blue); }
-
-        .continue-btn {
-            width: 100%; padding: 12px; background: transparent; color: var(--ice-blue);
-            border: 2px solid var(--ice-blue); border-radius: 10px;
-            font-weight: 700; font-size: 18px; cursor: pointer; transition: 0.3s;
-        }
-        .continue-btn:hover { background: var(--ice-blue); color: var(--steel-blue); }
-
-        .discord-corner {
-            position: fixed; top: 20px; right: 20px; width: 60px; height: 60px;
-            background: var(--steel-blue); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 2000; border: 2px solid var(--ice-blue);
-        }
-        .discord-corner:hover { background: var(--ice-blue); }
-        .discord-corner img { width: 60%; }
-
-        footer { position: fixed; bottom: 20px; font-size: 12px; color: var(--ice-blue); opacity: 0.5; }
-
-        /* Styl dla gry */
-        #game-container { display: none; text-align: center; }
-        /* --- NOWE STYLE GRY --- */
-#game-board {
-    display: none; /* Ukryte na start, pokaże się po kliknięciu */
-    flex-direction: row;
-    gap: 40px;
-    width: 80%;
-    max-width: 900px;
-    background: rgba(56, 92, 128, 0.3);
-    padding: 30px;
-    border-radius: 20px;
-}
-.left-side { flex: 1; text-align: center; }
-.right-side { flex: 1; display: flex; flex-direction: column; gap: 20px; }
-#minifig-image { max-width: 100%; filter: blur(80px); transition: filter 0.5s; }
-.stats-box { font-size: 1.2rem; color: var(--ice-blue); }
-#guess-input { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--ice-blue); background: white; cursor: pointer; }
-#category-menu { display: none; background: white; color: #333; padding: 10px; border-radius: 10px; margin-top: 5px; cursor: pointer; }
+        body { background: #0a0f19; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .menu-box { background: rgba(56, 92, 128, 0.2); padding: 40px; border-radius: 30px; border: 2px solid #d1e8ff; text-align: center; }
+        .btn-diff { padding: 12px; margin: 5px; cursor: pointer; background: #d1e8ff; border: none; border-radius: 5px; }
+        .btn-diff.clicked { background: #385c80; color: white; }
+        #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.3); padding: 30px; border-radius: 20px; }
+        #minifig-image { max-width: 300px; filter: blur(80px); transition: filter 0.5s; }
+        #category-menu { display: none; background: white; color: #333; padding: 10px; border-radius: 10px; cursor: pointer; margin-top: 5px; }
+        #guess-input { width: 100%; padding: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')">
-        <img src="img/Discord.webp" alt="Discord">
-    </div>
-
-    <h1>
-        <span class="frozen">Frozen</span> 
-        <span class="who">Who</span>
-    </h1>
+    <h1 id="title">FROZEN WHO</h1>
 
     <div class="menu-box">
         <h2>Poziom trudności</h2>
-        <div class="diff-buttons">
-            <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
-            <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
-            <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
-        </div>
-        <button class="continue-btn" onclick="continueGame()">Kontynuuj</button>
+        <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
+        <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
+        <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
+        <br><br>
+        <button onclick="continueGame()">Kontynuuj</button>
     </div>
 
-    <div id="game-container">
-        <h2 style="color:white">Rozgrywka rozpoczęta!</h2>
-    </div>
-<div id="game-board">
-    <div class="left-side">
-        <img id="minifig-image" src="" alt="Postać">
-    </div>
-    <div class="right-side">
-        <div class="stats-box">
-            <p>Poziom: <span id="stat-mode">-</span></p>
-            <p>Szanse: <span id="stat-lives">3</span> ❤️</p>
+    <div id="game-board">
+        <div class="left-side">
+            <img id="minifig-image" src="" alt="Postać">
         </div>
-        <div class="input-group">
+        <div class="right-side">
+            <p>Poziom: <span id="stat-mode">-</span></p>
             <input type="text" id="guess-input" placeholder="Wybierz serię..." readonly onclick="toggleMenu()">
             <div id="category-menu">
                 <div onclick="selectCategory('LEGO STAR WARS')">LEGO STAR WARS</div>
             </div>
-            <button class="continue-btn" style="margin-top: 10px;" onclick="checkGuess()">ZGADUJ!</button>
+            <button onclick="checkGuess()">ZGADUJ!</button>
         </div>
     </div>
-</div>
-    <footer>
-        Niniejsza strona jest projektem fanowskim. Gra nie jest powiązana z Grupą LEGO.
-    </footer>
 
     <script>
         const characters = {
@@ -751,68 +638,53 @@
 ]
     };
 const allCharacters = Object.entries(characters).flatMap(([cat, list]) => 
-        list.map(char => ({ ...char, category: cat }))
-    );
+            list.map(char => ({ ...char, category: cat }))
+        );
 
-    let selectedMode = null;
-    let currentAnswer = null;
-    let lives = 3;
+        let selectedMode = null;
+        let currentAnswer = null;
 
-    // Funkcje menu
-    function selectMode(element, mode) {
-        document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
-        element.classList.add('clicked');
-        selectedMode = mode;
-    }
-
-    function toggleMenu() {
-        const menu = document.getElementById('category-menu');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function selectCategory(cat) {
-        document.getElementById('guess-input').value = cat;
-        toggleMenu();
-    }
-
-    // Funkcje gry
-    function continueGame() {
-        if(!selectedMode) { alert("Wybierz poziom!"); return; }
-
-        document.querySelector('.menu-box').style.display = 'none';
-        document.querySelector('h1').style.display = 'none';
-        document.getElementById('game-board').style.display = 'flex';
-        
-        document.getElementById('stat-mode').innerText = selectedMode;
-        
-        showRandomCharacter();
-    }
-
-    function showRandomCharacter() {
-        const pool = (selectedMode === 'easy') 
-                     ? allCharacters.filter(c => c.isMain === true) 
-                     : allCharacters;
-        
-        currentAnswer = pool[Math.floor(Math.random() * pool.length)];
-        
-        const cleanName = currentAnswer.n.toLowerCase().replace(/[()]/g, '').replace(/\s+/g, '_');
-        const imgElement = document.getElementById('minifig-image');
-        
-        imgElement.src = `img/${cleanName}.webp`;
-        imgElement.style.filter = "blur(80px)";
-    }
-
-    function checkGuess() {
-        const userGuess = document.getElementById('guess-input').value;
-        if (userGuess === currentAnswer.category) {
-            alert("Brawo! To był " + currentAnswer.category);
-        } else {
-            lives--;
-            document.getElementById('stat-lives').innerText = lives;
-            alert("Źle! Zostało żyć: " + lives);
-            if(lives <= 0) alert("Koniec gry!");
+        function selectMode(element, mode) {
+            document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
+            element.classList.add('clicked');
+            selectedMode = mode;
         }
-    }
-</script>
+
+        function toggleMenu() {
+            const menu = document.getElementById('category-menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function selectCategory(cat) {
+            document.getElementById('guess-input').value = cat;
+            toggleMenu();
+        }
+
+        function continueGame() {
+            if(!selectedMode) { alert("Wybierz poziom!"); return; }
+            document.querySelector('.menu-box').style.display = 'none';
+            document.getElementById('title').style.display = 'none';
+            document.getElementById('game-board').style.display = 'flex';
+            document.getElementById('stat-mode').innerText = selectedMode;
+            
+            showRandomCharacter();
+        }
+
+        function showRandomCharacter() {
+            const pool = (selectedMode === 'easy') ? allCharacters.filter(c => c.isMain === true) : allCharacters;
+            currentAnswer = pool[Math.floor(Math.random() * pool.length)];
+            const imgElement = document.getElementById('minifig-image');
+            imgElement.src = `img/${currentAnswer.n.toLowerCase().replace(/\s+/g, '_')}.webp`;
+        }
+
+        function checkGuess() {
+            const userGuess = document.getElementById('guess-input').value;
+            if (userGuess === currentAnswer.category) {
+                alert("Brawo!");
+            } else {
+                alert("Źle!");
+            }
+        }
+    </script>
 </body>
 </html>
