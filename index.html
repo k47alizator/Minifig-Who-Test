@@ -11,7 +11,6 @@
         }
 
         body {
-            /* Powrót do Fredoki */
             font-family: 'Fredoka', sans-serif;
             background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp');
             background-size: cover;
@@ -26,10 +25,10 @@
             color: white;
         }
 
-        /* BARDZO SUBTELNA ANIMACJA */
+        /* ANIMACJA - teraz będzie działać na pewno */
         @keyframes slowFloat {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); } /* Zmniejszony zakres ruchu */
+            50% { transform: translateY(-8px); }
             100% { transform: translateY(0px); }
         }
 
@@ -40,7 +39,6 @@
             text-transform: uppercase;
         }
         
-        /* Animacja tylko dla Frozen */
         .frozen { 
             font-family: 'Mountains of Christmas', cursive;
             background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%);
@@ -48,8 +46,9 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
             margin-right: 15px;
-            display: inline-block;
-            animation: slowFloat 8s ease-in-out infinite; /* Wydłużony czas (8s) dla subtelności */
+            /* KLUCZOWE: display: inline-block musi być ustawione */
+            display: inline-block; 
+            animation: slowFloat 4s ease-in-out infinite;
         }
 
         .who { 
@@ -71,7 +70,6 @@
 
         .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; font-size: 1.8rem; }
 
-        /* PRZYCISKI */
         .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
 
         .btn-diff {
@@ -111,7 +109,6 @@
         
         .continue-btn:hover { background: var(--ice-blue); color: var(--steel-blue); }
 
-        /* DISCORD */
         .discord-corner {
             position: fixed; top: 20px; right: 20px; width: 60px; height: 60px;
             background: var(--steel-blue); border-radius: 50%;
