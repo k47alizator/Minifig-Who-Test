@@ -170,65 +170,81 @@ const rawData = {
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
         ],
 };
-
-// 2. Automatyczne przetworzenie danych na format potrzebny grze
 const data = Object.entries(rawData).flatMap(([gameName, characters]) => 
-    characters.map(char => ({
-        n: char.n,
-        game: gameName,
-        isMain: true,
-        img: "https://via.placeholder.com/150" // Tutaj wstawisz docelowo linki do zdjęć
-    }))
-);
+        characters.map(char => ({
+            n: char.n,
+            game: gameName,
+            isMain: true
+        }))
+    );
+    const allGames = Object.keys(rawData);
 
-// 3. Lista gier dla przycisków
-const allGames = Object.keys(rawData);
+    // 3. FIREBASE KONFIGURACJA
+    const firebaseConfig = {
+        apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
+        authDomain: "minifig-who-test.firebaseapp.com",
+        databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "minifig-who-test",
+        storageBucket: "minifig-who-test.firebasestorage.app",
+        messagingSenderId: "315026622753",
+        appId: "1:315026622753:web:952f2a67e9360d3f0d1660"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const fireDb = firebase.database();
 
-// 4. Logika gry
-let currentQ = 0;
-let questions = [];
-
-function startGame(mode) {
-    document.getElementById('menu').classList.add('hidden');
-    document.getElementById('game-box').classList.remove('hidden');
-    
-    questions = (mode === 'easy') ? data.filter(q => q.isMain) : data;
-    questions.sort(() => Math.random() - 0.5); 
-    loadQuestion();
-}
-
-function loadQuestion() {
-    const q = questions[currentQ];
-    document.getElementById('char-name').innerText = q.n;
-    document.getElementById('char-img').src = q.img;
-    
-    const btnDiv = document.getElementById('buttons');
-    btnDiv.innerHTML = '';
-    
-    let options = [q.game];
-    while(options.length < 4) {
-        let randomGame = allGames[Math.floor(Math.random() * allGames.length)];
-        if(!options.includes(randomGame)) options.push(randomGame);
+    // 4. FUNKCJA DO ZDJĘĆ
+    function getImageUrl(game, name) {
+        const baseUrl = "https://raw.githubusercontent.com/k47alizator/Minifig-Who-Test/main/img/";
+        return `${baseUrl}${encodeURIComponent(game)}/${encodeURIComponent(name)}.webp`;
     }
-    options.sort(() => Math.random() - 0.5);
 
-    options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.innerText = opt;
-        btn.onclick = () => checkAnswer(opt, q.game);
-        btnDiv.appendChild(btn);
-    });
-}
+    // 5. LOGIKA GRY
+    let currentQ = 0;
+    let questions = [];
 
-function checkAnswer(selected, correct) {
-    if(selected === correct) {
-        alert("Dobrze!");
-        currentQ++;
-        if(currentQ < questions.length) loadQuestion();
-    } else {
-        alert("Błąd! Poprawna odpowiedź to: " + correct);
+    function startGame(mode) {
+        document.getElementById('menu').classList.add('hidden');
+        document.getElementById('game-box').classList.remove('hidden');
+        
+        questions = (mode === 'easy') ? data.filter(q => q.isMain) : data;
+        questions.sort(() => Math.random() - 0.5); 
+        currentQ = 0;
+        loadQuestion();
     }
-}
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('char-name').innerText = q.n;
+        document.getElementById('char-img').src = getImageUrl(q.game, q.n);
+        
+        const btnDiv = document.getElementById('buttons');
+        btnDiv.innerHTML = '';
+        
+        let options = [q.game];
+        while(options.length < 4) {
+            let randomGame = allGames[Math.floor(Math.random() * allGames.length)];
+            if(!options.includes(randomGame)) options.push(randomGame);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt, q.game);
+            btnDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected, correct) {
+        if(selected === correct) {
+            alert("Dobrze!");
+            currentQ++;
+            if(currentQ < questions.length) loadQuestion();
+            else alert("Koniec gry!");
+        } else {
+            alert("Błąd! Poprawna odpowiedź to: " + correct);
+        }
+    }
 </script>
 </body>
 </html>
