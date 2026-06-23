@@ -765,14 +765,23 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
     const pool = (selectedMode === 'easy') 
         ? allCharacters.filter(c => c.isMain === true) 
         : allCharacters;
-        
+                
     currentAnswer = pool[Math.floor(Math.random() * pool.length)];
     
-    // Tworzymy ścieżkę: img/ + nazwa_folderu + / + nazwa_pliku.webp
-    // Używamy encodeURIComponent, żeby poradzić sobie ze spacjami w nazwach plików
+   
+    const folderName = currentAnswer.category
+                        .replace("LEGO ", "") // usuwa słowo "LEGO " jeśli istnieje
+                        .toLowerCase()
+                        .replace(/\s+/g, '-');
+    
     const imgElement = document.getElementById('minifig-image');
-    imgElement.src = `img/${currentAnswer.folder}/${encodeURIComponent(currentAnswer.n)}.webp`;
+    
+    // Buduje ścieżkę: img/city-undercover/Nazwa Postaci.webp
+    imgElement.src = `img/${folderName}/${currentAnswer.n}.webp`;
     imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`;
+    
+    // Debugowanie (otwórz F12 -> Console, żeby zobaczyć czy ścieżka jest dobra)
+    console.log("Szukam pliku pod adresem:", imgElement.src);
 }
 
         function checkGuess() {
