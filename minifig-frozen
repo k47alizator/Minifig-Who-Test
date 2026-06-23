@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Minifig Frozen</title>
+    <style>
+        body { background: #2c2f33; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
+        #game-box { background: #36393f; padding: 30px; border-radius: 20px; text-align: center; margin-top: 50px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        img { width: 300px; height: 300px; border-radius: 15px; border: 5px solid #5865F2; margin-bottom: 20px; }
+        .btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { padding: 15px; border: none; border-radius: 10px; background: #5865F2; color: white; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        button:hover { background: #4752C4; }
+        a { color: #5865F2; text-decoration: none; margin-bottom: 20px; display: block; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html">⬅ Powrót do Lobby</a>
+
+    <div id="game-box">
+        <img id="char-img" src="https://via.placeholder.com/300" alt="Postać">
+        <div id="buttons" class="btn-container">
+            <!-- Przyciski wygeneruje JavaScript -->
+        </div>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const questions = [
+            { img: "LINK_DO_ZDJECIA_ELSY", correct: "Elsa", options: ["Elsa", "Anna", "Olaf", "Kristoff"] },
+            { img: "LINK_DO_ZDJECIA_ANNY", correct: "Anna", options: ["Elsa", "Anna", "Sven", "Hans"] }
+        ];
+
+        let currentQ = 0;
+
+        function loadQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('char-img').src = q.img;
+            const btnDiv = document.getElementById('buttons');
+            btnDiv.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                btnDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans) {
+            if(ans === questions[currentQ].correct) {
+                document.getElementById('result').innerText = "Brawo! To " + ans;
+                setTimeout(() => {
+                    currentQ++;
+                    if(currentQ < questions.length) loadQuestion();
+                    else document.getElementById('game-box').innerHTML = "<h1>Koniec gry!</h1>";
+                }, 1000);
+            } else {
+                document.getElementById('result').innerText = "Spróbuj jeszcze raz!";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
