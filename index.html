@@ -21,7 +21,41 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Wyśrodkowanie w pionie */
+            justify-content: center;
+            color: white;
+        }
+
+        /* PRZYCISK DISCORD */
+        .discord-corner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--steel-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2000;
+            transition: 0.3s;
+            border: 2px solid var(--ice-blue);
+        }
+
+        .discord-corner:hover {
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 0 20px var(--ice-blue);
+            background: var(--ice-blue);
+        }
+
+        .discord-corner img {
+            width: 60%;
+            transition: 0.3s;
+        }
+
+        .discord-corner:hover img {
+            filter: invert(1);
         }
 
         /* LOGO */
@@ -46,7 +80,7 @@
             padding: 20px;
             border: 2px solid var(--ice-blue);
             border-radius: 15px;
-            background: transparent; /* Przezroczyste, by było elegancko */
+            background: transparent;
             color: var(--ice-blue);
             font-family: 'Fredoka', sans-serif;
             font-size: 24px;
@@ -61,6 +95,7 @@
             box-shadow: 0 0 20px var(--ice-blue);
         }
 
+        /* STOPKA */
         footer {
             position: fixed;
             bottom: 20px;
@@ -73,6 +108,10 @@
     </style>
 </head>
 <body>
+
+    <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')" title="Dołącz na Discord">
+        <img src="img/Discord.webp" alt="Discord" onerror="this.src='https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
+    </div>
 
     <h1>
         <span class="frozen">Frozen</span> 
