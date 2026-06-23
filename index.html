@@ -2,21 +2,56 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Minifig Guess - Zgadnij Grę</title>
+    <title>Minifig Guess</title>
     <style>
-        body { background: #2c2f33; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
-        #menu, #game-box { background: #36393f; padding: 30px; border-radius: 20px; text-align: center; margin-top: 50px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 80%; max-width: 600px; }
-        img { width: 300px; height: 300px; border-radius: 15px; border: 5px solid #5865F2; margin-bottom: 20px; object-fit: cover; }
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            /* Ciemny gradient + Twoje tło */
+            background: linear-gradient(rgba(10, 15, 25, 0.75), rgba(10, 15, 25, 0.75)), url('img/tlo2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        #menu, #game-box { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            padding: 30px; 
+            border-radius: 20px; 
+            text-align: center; 
+            margin-top: 50px; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+            width: 80%; 
+            max-width: 600px; 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        img { 
+            width: 300px; 
+            height: 300px; 
+            border-radius: 15px; 
+            border: 4px solid #ffffff; 
+            margin-bottom: 20px; 
+            object-fit: cover; 
+        }
+
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        button { padding: 15px; border: none; border-radius: 10px; background: #5865F2; color: white; cursor: pointer; font-size: 16px; transition: 0.2s; }
-        button:hover { background: #4752C4; }
+        button { padding: 15px; border: none; border-radius: 10px; background: #00a8e8; color: white; cursor: pointer; font-size: 18px; font-family: 'Fredoka', sans-serif; transition: 0.2s; }
+        button:hover { background: #0077be; transform: scale(1.02); }
         .hidden { display: none; }
-        h2 { margin: 10px 0; }
+        h1, h2 { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
-
-    <a href="index.html" style="color: white; margin-top: 20px; text-decoration: none;">⬅ Powrót do Lobby</a>
 
     <div id="menu">
         <h1>Wybierz poziom:</h1>
@@ -28,8 +63,8 @@
         <h2 id="char-name">Nazwa Postaci</h2>
         <img id="char-img" src="" alt="Postać">
         <div id="buttons" class="btn-grid"></div>
-        <p id="result"></p>
     </div>
+
 <script>
 // 1. Twoje dane w poprawnym formacie (pamiętaj, aby na końcu każdej sekcji mieć przecinek)
 const rawData = {
@@ -168,60 +203,50 @@ const rawData = {
             {n:"Pan Iniemamocny (Złota Era)"}, {n:"Elastyna (Złota Era)"}, {n:"Lucius Best (Cywil)"}, {n:"Tony Rydinger"}, {n:"Bernie Kropp"}, {n:"Gilbert Huph"}, {n:"Kari McKeen"}, {n:"Burmistrz Metroville"}, {n:"Policjant z Metroville"},
             {n:"Apogeum"}, {n:"Blazestone"}, {n:"Fylaks"}, {n:"Macroburst"}, {n:"Thunderhead"}, {n:"Universal Man"},
             {n:"Chudy (Toy Story)"}, {n:"Zygzak McQueen (Auta)"}, {n:"Merida Waleczna"}, {n:"Miguel (Coco)"}, {n:"Sulley (Potwory i Spółka)"}
-        ],
+        ]
 };
 const data = Object.entries(rawData).flatMap(([gameName, characters]) => 
-        characters.map(char => ({
-            n: char.n,
-            game: gameName,
-            isMain: true
-        }))
+        characters.map(char => ({ n: char.n, game: gameName, isMain: true }))
     );
     const allGames = Object.keys(rawData);
 
-    // 3. FIREBASE KONFIGURACJA
-    const firebaseConfig = {
-        apiKey: "AIzaSyBFb-VqoY9MXzMB3X3igmMgSXQh3_2NXR0",
-        authDomain: "minifig-who-test.firebaseapp.com",
-        databaseURL: "https://minifig-who-test-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "minifig-who-test",
-        storageBucket: "minifig-who-test.firebasestorage.app",
-        messagingSenderId: "315026622753",
-        appId: "1:315026622753:web:952f2a67e9360d3f0d1660"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const fireDb = firebase.database();
+    // 3. LOGIKA GRY
+    let currentQ = 0;
+    let questions = [];
 
-    // 4. FUNKCJA DO ZDJĘĆ
     function getImageUrl(game, name) {
         const baseUrl = "https://raw.githubusercontent.com/k47alizator/Minifig-Who-Test/main/img/";
         return `${baseUrl}${encodeURIComponent(game)}/${encodeURIComponent(name)}.webp`;
     }
 
-    // 5. LOGIKA GRY
-    let currentQ = 0;
-    let questions = [];
-
     function startGame(mode) {
         document.getElementById('menu').classList.add('hidden');
         document.getElementById('game-box').classList.remove('hidden');
-        
         questions = (mode === 'easy') ? data.filter(q => q.isMain) : data;
-        questions.sort(() => Math.random() - 0.5); 
+        questions.sort(() => Math.random() - 0.5);
         currentQ = 0;
         loadQuestion();
     }
 
     function loadQuestion() {
+        if(currentQ >= questions.length) {
+            alert("Gratulacje! Koniec gry.");
+            location.reload();
+            return;
+        }
+        
         const q = questions[currentQ];
         document.getElementById('char-name').innerText = q.n;
-        document.getElementById('char-img').src = getImageUrl(q.game, q.n);
+        
+        const imgEl = document.getElementById('char-img');
+        imgEl.src = getImageUrl(q.game, q.n);
+        imgEl.onerror = () => { imgEl.src = "https://via.placeholder.com/300?text=Brak+zdjęcia"; };
         
         const btnDiv = document.getElementById('buttons');
         btnDiv.innerHTML = '';
         
         let options = [q.game];
-        while(options.length < 4) {
+        while(options.length < 4 && options.length < allGames.length) {
             let randomGame = allGames[Math.floor(Math.random() * allGames.length)];
             if(!options.includes(randomGame)) options.push(randomGame);
         }
@@ -230,20 +255,16 @@ const data = Object.entries(rawData).flatMap(([gameName, characters]) =>
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt, q.game);
+            btn.onclick = () => {
+                if(opt === q.game) {
+                    currentQ++;
+                    loadQuestion();
+                } else {
+                    alert("Źle! Poprawna odpowiedź to: " + q.game);
+                }
+            };
             btnDiv.appendChild(btn);
         });
-    }
-
-    function checkAnswer(selected, correct) {
-        if(selected === correct) {
-            alert("Dobrze!");
-            currentQ++;
-            if(currentQ < questions.length) loadQuestion();
-            else alert("Koniec gry!");
-        } else {
-            alert("Błąd! Poprawna odpowiedź to: " + correct);
-        }
     }
 </script>
 </body>
