@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Frozen Who</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@400;600&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --steel-blue: #385c80;
@@ -11,7 +11,8 @@
         }
 
         body {
-            font-family: 'Fredoka', sans-serif;
+            /* Zastosowanie fontu Grenze Gotisch dla całej strony */
+            font-family: 'Grenze Gotisch', serif;
             background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp');
             background-size: cover;
             background-position: center;
@@ -37,11 +38,25 @@
             margin-bottom: 50px; 
             letter-spacing: 2px; 
             text-transform: uppercase;
-            animation: float 4s ease-in-out infinite; /* Tu dodana animacja */
+            animation: float 4s ease-in-out infinite;
         }
         
-        .frozen { color: var(--ice-blue); text-shadow: 0 0 10px rgba(209, 232, 255, 0.5); }
-        .who { color: #5a8cc0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        /* Lodowy styl dla FROZEN */
+        .frozen { 
+            font-family: 'Mountains of Christmas', cursive;
+            background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
+            margin-right: 15px;
+        }
+
+        /* Gothic styl dla WHO */
+        .who { 
+            color: var(--ice-blue); 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+            font-weight: 600;
+        }
 
         /* MENU BOX */
         .menu-box {
@@ -54,20 +69,20 @@
             text-align: center;
         }
 
-        .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; }
+        .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; font-size: 2rem; }
 
         /* PRZYCISKI */
         .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
 
         .btn-diff {
-            padding: 15px;
+            padding: 12px;
             border: 2px solid var(--ice-blue);
             border-radius: 10px;
             background: var(--ice-blue);
             color: var(--steel-blue);
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: bold;
+            font-family: 'Grenze Gotisch', serif;
+            font-size: 22px; /* Lekko większy, bo Gothic bywa drobny */
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -82,15 +97,16 @@
 
         .continue-btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: transparent;
             color: var(--ice-blue);
             border: 2px solid var(--ice-blue);
             border-radius: 10px;
-            font-weight: bold;
-            font-size: 20px;
+            font-weight: 600;
+            font-size: 22px;
             cursor: pointer;
             transition: 0.3s;
+            font-family: 'Grenze Gotisch', serif;
         }
         
         .continue-btn:hover { background: var(--ice-blue); color: var(--steel-blue); }
@@ -106,7 +122,7 @@
         .discord-corner:hover img { filter: invert(1); }
         .discord-corner img { width: 60%; transition: 0.3s; }
 
-        footer { position: fixed; bottom: 20px; font-size: 11px; color: var(--ice-blue); opacity: 0.5; }
+        footer { position: fixed; bottom: 20px; font-size: 14px; color: var(--ice-blue); opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -124,36 +140,3 @@
         <h2>Poziom trudności</h2>
         
         <div class="diff-buttons">
-            <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
-            <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
-            <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
-        </div>
-
-        <button class="continue-btn" onclick="continueGame()">Kontynuuj</button>
-    </div>
-
-    <footer>
-        Niniejsza strona jest projektem fanowskim. Gra nie jest powiązana z Grupą LEGO.
-    </footer>
-
-    <script>
-        let selectedMode = null;
-
-        function selectMode(element, mode) {
-            document.querySelectorAll('.btn-diff').forEach(btn => {
-                btn.classList.remove('clicked');
-            });
-            element.classList.add('clicked');
-            selectedMode = mode;
-        }
-
-        function continueGame() {
-            if(!selectedMode) {
-                alert("Wybierz najpierw poziom trudności!");
-                return;
-            }
-            alert("Rozpoczynamy grę w trybie: " + selectedMode);
-        }
-    </script>
-</body>
-</html>
