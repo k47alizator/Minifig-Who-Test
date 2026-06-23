@@ -25,12 +25,25 @@
             color: white;
         }
 
-        /* LOGO */
-        h1 { font-size: 5rem; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+        /* ANIMACJA LOGO */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        h1 { 
+            font-size: 5rem; 
+            margin-bottom: 50px; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+            animation: float 4s ease-in-out infinite; /* Tu dodana animacja */
+        }
+        
         .frozen { color: var(--ice-blue); text-shadow: 0 0 10px rgba(209, 232, 255, 0.5); }
         .who { color: #5a8cc0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-        /* MENU */
+        /* MENU BOX */
         .menu-box {
             background: rgba(56, 92, 128, 0.2);
             backdrop-filter: blur(15px);
@@ -43,7 +56,7 @@
 
         .menu-box h2 { color: var(--ice-blue); margin-bottom: 25px; }
 
-        /* PRZYCISKI POZIOMÓW */
+        /* PRZYCISKI */
         .diff-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
 
         .btn-diff {
@@ -59,21 +72,14 @@
             transition: all 0.3s ease;
         }
 
-        /* REAKCJA NA NAJECHANIE (Hover) */
-        .btn-diff:hover {
-            background: #a9c5e0; /* Nieco ciemniejszy błękit przy najechaniu */
-            transform: scale(1.02);
-        }
+        .btn-diff:hover { background: #a9c5e0; transform: scale(1.02); }
 
-        /* KLASA AKTYWNA (Kliknięty) */
         .btn-diff.clicked {
             background: var(--steel-blue) !important;
             color: var(--ice-blue) !important;
             border-color: var(--ice-blue);
-            transform: scale(0.98);
         }
 
-        /* PRZYCISK KONTYNUUJ */
         .continue-btn {
             width: 100%;
             padding: 15px;
@@ -134,15 +140,10 @@
         let selectedMode = null;
 
         function selectMode(element, mode) {
-            // Usuwamy klasę 'clicked' ze wszystkich przycisków
             document.querySelectorAll('.btn-diff').forEach(btn => {
                 btn.classList.remove('clicked');
             });
-            
-            // Dodajemy klasę 'clicked' tylko do tego, który kliknąłeś
             element.classList.add('clicked');
-            
-            // Zapisujemy tryb
             selectedMode = mode;
         }
 
