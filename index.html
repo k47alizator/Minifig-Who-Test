@@ -6,33 +6,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --steel-blue: #385c80; --ice-blue: #d1e8ff; }
-        body { font-family: 'Fredoka', sans-serif; background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp'); background-size: cover; background-position: center; background-attachment: fixed; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         
+        /* Twój oryginalny wygląd tła i czcionek */
+        body { font-family: 'Fredoka', sans-serif; background: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), url('img/tlo%20gry%202.webp'); background-size: cover; background-position: center; background-attachment: fixed; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        
+        /* Animacja i wygląd tytułu Frozen Who */
         @keyframes slowFloat { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        h1 { font-size: 5rem; margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: 5rem; margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase; text-align: center; z-index: 10; }
         .frozen { font-family: 'Mountains of Christmas', cursive; background: linear-gradient(180deg, #FFFFFF 0%, #AEEEEE 50%, #70A1FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5)); margin-right: 15px; display: inline-block; animation: slowFloat 4s ease-in-out infinite; }
         .who { color: var(--ice-blue); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: 700; }
 
-        .menu-box { background: rgba(56, 92, 128, 0.2); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); width: 350px; text-align: center; }
-        .btn-diff { padding: 12px; margin: 5px; cursor: pointer; border: 2px solid var(--ice-blue); border-radius: 10px; background: var(--ice-blue); color: var(--steel-blue); font-weight: 700; transition: 0.3s; width: 100%; }
-        .btn-diff.clicked { background: var(--steel-blue) !important; color: var(--ice-blue) !important; }
+        /* Główne Menu */
+        .menu-box { background: rgba(56, 92, 128, 0.2); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); width: 350px; text-align: center; margin-bottom: 20px; z-index: 10; }
+        .btn-diff { padding: 15px; margin: 8px 0; cursor: pointer; border: 2px solid var(--ice-blue); border-radius: 10px; background: var(--ice-blue); color: var(--steel-blue); font-weight: 700; font-size: 1.1rem; font-family: 'Fredoka', sans-serif; transition: 0.3s; width: 100%; box-sizing: border-box; }
+        .btn-diff.clicked { background: var(--steel-blue) !important; color: white !important; }
+        .btn-diff:hover { background: white; }
         
-        /* Game Board Styles */
-        #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.3); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); }
-        #minifig-image { max-width: 250px; filter: blur(80px); transition: 0.5s; border-radius: 15px; border: 3px solid var(--ice-blue); }
-        .input-group { position: relative; margin-top: 20px; }
-        #guess-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid var(--ice-blue); background: transparent; color: white; cursor: pointer; }
-        #category-menu { display: none; position: absolute; background: var(--steel-blue); color: white; padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; border: 1px solid var(--ice-blue); z-index: 100; }
-        .stat-text { color: var(--ice-blue); font-size: 1.2rem; margin: 10px 0; }
+        /* Nowa plansza gry dopasowana do Twojego stylu */
+        #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.4); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); max-width: 800px; width: 90%; z-index: 10; }
+        .left-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .right-side { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
+        #minifig-image { max-width: 100%; max-height: 350px; filter: blur(80px); transition: filter 0.5s; border-radius: 15px; border: 3px solid var(--ice-blue); }
         
-        .discord-corner { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: var(--steel-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--ice-blue); }
-        footer { position: fixed; bottom: 20px; font-size: 12px; color: var(--ice-blue); opacity: 0.5; }
+        /* Pola tekstowe i menu wyboru na planszy */
+        .input-group { position: relative; width: 100%; }
+        #guess-input { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--ice-blue); background: white; color: var(--steel-blue); cursor: pointer; font-family: 'Fredoka', sans-serif; font-weight: bold; font-size: 1.1rem; box-sizing: border-box; outline: none; }
+        #guess-input::placeholder { color: #888; }
+        #category-menu { display: none; position: absolute; background: white; color: var(--steel-blue); border-radius: 10px; width: 100%; cursor: pointer; border: 2px solid var(--ice-blue); z-index: 100; margin-top: 5px; max-height: 200px; overflow-y: auto; box-sizing: border-box; font-weight: bold; }
+        .menu-item { padding: 12px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .menu-item:hover { background: var(--ice-blue); }
+        .menu-item:last-child { border-bottom: none; }
+        
+        .stat-text { color: white; font-size: 1.3rem; margin: 0; font-weight: bold; }
+        .stat-text span { color: var(--ice-blue); }
+        
+        /* Ikonka Discorda */
+        .discord-corner { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: rgba(56, 92, 128, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--ice-blue); backdrop-filter: blur(5px); transition: 0.3s; z-index: 1000; }
+        .discord-corner:hover { transform: scale(1.1); background: var(--steel-blue); }
+        .discord-corner img { width: 60%; }
+        
+        footer { position: fixed; bottom: 20px; font-size: 12px; color: var(--ice-blue); opacity: 0.5; text-align: center; width: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
     <div class="discord-corner" onclick="window.open('https://discord.gg/FeBT9tVEsY', '_blank')">
-        <img src="img/Discord.webp" alt="Discord" style="width: 60%;">
+        <img src="img/Discord.webp" alt="Discord">
     </div>
 
     <h1 id="main-title">
@@ -41,12 +60,13 @@
     </h1>
 
     <div class="menu-box" id="menu">
-        <h2>Poziom trudności</h2>
+        <h2 style="margin-top: 0;">Poziom trudności</h2>
         <button class="btn-diff" onclick="selectMode(this, 'easy')">Easy</button>
         <button class="btn-diff" onclick="selectMode(this, 'medium')">Medium</button>
         <button class="btn-diff" onclick="selectMode(this, 'hard')">Hard</button>
-        <br><br>
-        <button class="btn-diff" onclick="continueGame()">Kontynuuj</button>
+        <div style="margin-top: 20px;">
+            <button class="btn-diff" style="background: transparent; color: var(--ice-blue);" onclick="continueGame()">Kontynuuj</button>
+        </div>
     </div>
 
     <div id="game-board">
@@ -55,20 +75,23 @@
         </div>
         <div class="right-side">
             <p class="stat-text">Poziom: <span id="stat-mode">-</span></p>
-            <p class="stat-text">Szanse: ❤️❤️❤️</p>
+            <p class="stat-text">Szanse: <span id="stat-lives">❤️❤️❤️</span></p>
+            
             <div class="input-group">
                 <input type="text" id="guess-input" placeholder="Wybierz serię..." readonly onclick="toggleMenu()">
                 <div id="category-menu">
-                    <div onclick="selectCategory('LEGO STAR WARS')">LEGO STAR WARS</div>
+                    <div class="menu-item" onclick="selectCategory('LEGO STAR WARS')">LEGO STAR WARS</div>
                 </div>
             </div>
-            <button class="btn-diff" onclick="checkGuess()" style="margin-top:20px;">ZGADUJ!</button>
+            
+            <button class="btn-diff" onclick="checkGuess()" style="margin-top: 10px;">ZGADUJ!</button>
         </div>
     </div>
 
     <footer>Niniejsza strona jest projektem fanowskim. Gra nie jest powiązana z Grupą LEGO.</footer>
 
     <script>
+        // BAZA DANYCH
         const characters = {
            "LEGO STAR WARS": [
     {n: "Luke Skywalker (z Tatooine)", isMain: true}, {n: "Luke Skywalker (Pilot X-Wing)", isMain: true}, 
@@ -672,7 +695,7 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         let currentAnswer = null;
 
         function selectMode(element, mode) {
-            document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
+            document.querySelectorAll('.menu-box .btn-diff').forEach(btn => btn.classList.remove('clicked'));
             element.classList.add('clicked');
             selectedMode = mode;
         }
@@ -688,26 +711,47 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         }
 
         function continueGame() {
-            if(!selectedMode) { alert("Wybierz poziom!"); return; }
+            if(!selectedMode) { alert("Wybierz poziom trudności!"); return; }
+            
+            // Ukrywanie menu, pokazywanie planszy
             document.getElementById('menu').style.display = 'none';
             document.getElementById('main-title').style.display = 'none';
             document.getElementById('game-board').style.display = 'flex';
-            document.getElementById('stat-mode').innerText = selectedMode;
+            
+            document.getElementById('stat-mode').innerText = selectedMode.toUpperCase();
             
             showRandomCharacter();
         }
 
         function showRandomCharacter() {
-            const pool = (selectedMode === 'easy') ? allCharacters.filter(c => c.isMain === true) : allCharacters;
+            const pool = (selectedMode === 'easy') 
+                ? allCharacters.filter(c => c.isMain === true) 
+                : allCharacters;
+                
             currentAnswer = pool[Math.floor(Math.random() * pool.length)];
+            
+            // Formatowanie nazwy pliku obrazka
+            const cleanName = currentAnswer.n.toLowerCase()
+                                .replace(/[()]/g, '') 
+                                .replace(/\s+/g, '_');
+                                
             const imgElement = document.getElementById('minifig-image');
-            imgElement.src = `img/${currentAnswer.n.toLowerCase().replace(/\s+/g, '_')}.webp`;
+            imgElement.src = `img/${cleanName}.webp`;
+            imgElement.style.filter = "blur(80px)"; // Zawsze mocny blur na start nowej postaci
         }
 
         function checkGuess() {
             const userGuess = document.getElementById('guess-input').value;
+            
+            if (!userGuess) {
+                alert("Najpierw wybierz serię z listy!");
+                return;
+            }
+
             if (userGuess === currentAnswer.category) {
-                alert("Brawo! To był " + currentAnswer.category);
+                alert("Brawo! Zgadłeś!");
+                document.getElementById('guess-input').value = ""; // Czyszczenie wyboru
+                showRandomCharacter(); // Losowanie kolejnej postaci
             } else {
                 alert("Źle! Próbuj dalej.");
             }
