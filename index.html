@@ -16,14 +16,12 @@
 
         .menu-box { background: rgba(56, 92, 128, 0.2); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); width: 350px; text-align: center; margin-bottom: 20px; z-index: 10; }
         
-        /* Przyciski z poprawnym animowanym powiększeniem */
         .btn-diff { padding: 15px; margin: 8px 0; cursor: pointer; border: 2px solid var(--ice-blue); border-radius: 10px; background: var(--ice-blue); color: var(--steel-blue); font-weight: 700; font-size: 1.1rem; font-family: 'Fredoka', sans-serif; transition: 0.3s; width: 100%; box-sizing: border-box; }
         .btn-diff.clicked { background: var(--steel-blue) !important; color: white !important; }
         .btn-diff:hover { background: white; transform: scale(1.05); box-shadow: 0px 0px 15px rgba(209, 232, 255, 0.5); }
         
         #game-board { display: none; flex-direction: row; gap: 40px; background: rgba(56, 92, 128, 0.4); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 2px solid var(--ice-blue); max-width: 900px; width: 90%; z-index: 10; }
         
-        /* Nowy Osobny Kwadrat dla Postaci */
         .left-side { flex: 1; display: flex; align-items: center; justify-content: center; }
         #image-container { width: 320px; height: 320px; background: rgba(10, 15, 25, 0.6); border-radius: 20px; border: 4px solid var(--ice-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         #minifig-image { width: 90%; height: 90%; object-fit: contain; transition: filter 0.5s; }
@@ -39,6 +37,9 @@
         .stat-text { color: white; font-size: 1.3rem; margin: 0; font-weight: bold; }
         .stat-text span { color: var(--ice-blue); }
         
+        /* Miejsce na Twój komunikat zamiast wyskakującego okienka */
+        #game-message { min-height: 25px; font-weight: bold; font-size: 1.2rem; text-align: center; margin: 5px 0; text-shadow: 0px 0px 10px rgba(0,0,0,0.8); }
+
         .discord-corner { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: rgba(56, 92, 128, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--ice-blue); backdrop-filter: blur(5px); transition: 0.3s; z-index: 1000; }
         .discord-corner:hover { transform: scale(1.1); background: var(--steel-blue); }
         .discord-corner img { width: 60%; }
@@ -79,11 +80,12 @@
             
             <div class="input-group">
                 <input type="text" id="guess-input" placeholder="Wybierz serię..." readonly onclick="toggleMenu()">
-                <div id="category-menu">
-                    </div>
+                <div id="category-menu"></div>
             </div>
             
-            <button class="btn-diff" onclick="checkGuess()" style="margin-top: 10px;">ZGADUJ!</button>
+            <div id="game-message"></div>
+            
+            <button class="btn-diff" onclick="checkGuess()">ZGADUJ!</button>
         </div>
     </div>
 
@@ -692,10 +694,10 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
 
         let selectedMode = null;
         let currentAnswer = null;
-        
-        // Zmienne gry
         let lives = 5;
-        const blurLevels = [80, 60, 40, 20, 5]; // Twój rozkład w pikselach
+        
+        // Zoptymalizowane poziomy rozmycia (piksele). 35 to już bardzo mocne rozmycie!
+        const blurLevels = [35, 25, 15, 8, 3]; 
         let currentAttempt = 0;
 
         function selectMode(element, mode) {
@@ -714,17 +716,30 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             toggleMenu();
         }
 
-        // Nowa funkcja: Automatycznie tworzy listę rozwijaną na podstawie bazy
         function generateCategories() {
             const menu = document.getElementById('category-menu');
-            menu.innerHTML = ''; // Czyścimy przed dodaniem
+            menu.innerHTML = ''; 
             Object.keys(characters).forEach(categoryName => {
                 menu.innerHTML += `<div class="menu-item" onclick="selectCategory('${categoryName}')">${categoryName}</div>`;
             });
         }
 
+        function displayMessage(text, isError = false) {
+            const msgBox = document.getElementById('game-message');
+            msgBox.innerText = text;
+            msgBox.style.color = isError ? "#ff6b6b" : "var(--ice-blue)"; // Czerwony dla błędu, niebieski dla sukcesu
+        }
+
         function continueGame() {
-            if(!selectedMode) { alert("Wybierz poziom trudności!"); return; }
+            if(!selectedMode) { 
+                displayMessage("Wybierz poziom trudności przed kontynuacją!", true);
+                // Przenosimy komunikat tymczasowo pod przyciski, jeśli użytkownik nie wszedł do gry
+                const menu = document.getElementById('menu');
+                if(!document.getElementById('temp-msg')) {
+                    menu.innerHTML += `<p id="temp-msg" style="color:#ff6b6b; font-weight:bold; margin-top:10px;">Wybierz poziom!</p>`;
+                }
+                return; 
+            }
             
             document.getElementById('menu').style.display = 'none';
             document.getElementById('main-title').style.display = 'none';
@@ -732,8 +747,8 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             
             document.getElementById('stat-mode').innerText = selectedMode.toUpperCase();
             
-            generateCategories(); // Generowanie listy serii
-            showRandomCharacter(); // Start pierwszej rundy
+            generateCategories(); 
+            showRandomCharacter(); 
         }
 
         function updateLivesDisplay() {
@@ -741,11 +756,11 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         }
 
         function showRandomCharacter() {
-            // Resetowanie szans i licznika dla nowej postaci
             lives = 5;
             currentAttempt = 0;
             updateLivesDisplay();
-            document.getElementById('guess-input').value = ""; // Czyści input
+            document.getElementById('guess-input').value = ""; 
+            displayMessage(""); // Czyszczenie komunikatu
 
             const pool = (selectedMode === 'easy') 
                 ? allCharacters.filter(c => c.isMain === true) 
@@ -759,8 +774,6 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
                                 
             const imgElement = document.getElementById('minifig-image');
             imgElement.src = `img/${cleanName}.webp`;
-            
-            // Nakładanie pierwszego poziomu rozmycia (80px)
             imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`; 
         }
 
@@ -768,31 +781,36 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             const userGuess = document.getElementById('guess-input').value;
             
             if (!userGuess) {
-                alert("Najpierw wybierz serię z listy!");
+                displayMessage("Najpierw wybierz serię z listy!", true);
                 return;
             }
 
             if (userGuess === currentAnswer.category) {
-                document.getElementById('minifig-image').style.filter = "blur(0px)";
+                document.getElementById('minifig-image').style.filter = "blur(0px)"; // Odkrywamy postać
+                displayMessage("Brawo! Zgadłeś z " + lives + " szansami na koncie!");
+                
+                // Czekamy 2 sekundy, żebyś mógł nacieszyć oczy ostrą postacią, i losujemy nową
                 setTimeout(() => {
-                    alert("Brawo! Odgadłeś z " + lives + " szansami na koncie!");
                     showRandomCharacter();
-                }, 300); // Małe opóźnienie, byś zobaczył postać bez blura
+                }, 2000);
+
             } else {
-                // Odjęcie życia i zmniejszenie blura
                 lives--;
                 currentAttempt++;
                 
                 if (lives > 0) {
                     updateLivesDisplay();
                     document.getElementById('minifig-image').style.filter = `blur(${blurLevels[currentAttempt]}px)`;
+                    displayMessage("Źle! Próbuj dalej.", true);
                 } else {
                     updateLivesDisplay();
-                    document.getElementById('minifig-image').style.filter = "blur(0px)";
+                    document.getElementById('minifig-image').style.filter = "blur(0px)"; // Pokazujemy po przegranej
+                    displayMessage("Koniec szans! To było: " + currentAnswer.category, true);
+                    
+                    // Po przegranej czekamy 3 sekundy na przeładowanie
                     setTimeout(() => {
-                        alert("Koniec szans! To było: " + currentAnswer.category);
                         showRandomCharacter();
-                    }, 300);
+                    }, 3000);
                 }
             }
         }
