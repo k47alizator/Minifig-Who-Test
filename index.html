@@ -12,38 +12,30 @@
 
         body {
             font-family: 'Fredoka', sans-serif;
-            /* Ciemniejszy overlay (0.85 zamiast 0.75) daje lepszy klimat */
-            background: linear-gradient(rgba(10, 15, 25, 0.85), rgba(10, 15, 25, 0.85)), url('img/tlo%20gry%202.webp');
+            background: linear-gradient(rgba(10, 15, 25, 0.9), rgba(10, 15, 25, 0.9)), url('img/tlo%20gry%202.webp');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: var(--ice-blue);
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            justify-content: center; /* Wyśrodkowanie w pionie */
         }
 
+        /* LOGO */
         h1 {
-            font-size: 4rem;
-            margin-bottom: 40px;
-            text-shadow: 0 0 20px rgba(209, 232, 255, 0.3);
+            font-size: 5rem;
+            margin-bottom: 50px;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
+        .frozen { color: var(--ice-blue); text-shadow: 0 0 10px rgba(209, 232, 255, 0.5); }
+        .who { color: #5a8cc0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-        /* Dekoracja lodowa */
-        h1::before, h1::after { content: '❄'; margin: 0 15px; opacity: 0.6; }
-
+        /* MENU Z PRZYCISKAMI */
         .menu-box {
-            background: rgba(56, 92, 128, 0.2);
-            backdrop-filter: blur(15px);
-            padding: 50px;
-            border-radius: 30px;
-            border: 1px solid rgba(209, 232, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -54,10 +46,10 @@
             padding: 20px;
             border: 2px solid var(--ice-blue);
             border-radius: 15px;
-            background: var(--steel-blue);
+            background: transparent; /* Przezroczyste, by było elegancko */
             color: var(--ice-blue);
             font-family: 'Fredoka', sans-serif;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -75,17 +67,21 @@
             font-size: 11px;
             color: var(--ice-blue);
             opacity: 0.5;
-            max-width: 80%;
+            text-align: center;
+            width: 90%;
         }
     </style>
 </head>
 <body>
 
-    <h1>Frozen Who</h1>
+    <h1>
+        <span class="frozen">Frozen</span> 
+        <span class="who">Who</span>
+    </h1>
 
     <div class="menu-box">
-        <button onclick="startGame('easy')">Tryb Easy</button>
-        <button onclick="startGame('hard')">Tryb Hard</button>
+        <button onclick="startGame('easy')">Easy</button>
+        <button onclick="startGame('hard')">Hard</button>
     </div>
 
     <footer>
