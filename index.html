@@ -689,140 +689,109 @@
 ]
     };
 const allCharacters = Object.entries(characters).flatMap(([cat, list]) => 
-            list.map(char => ({ ...char, category: cat }))
-        );
+    list.map(char => ({ ...char, category: cat }))
+);
 
-        let selectedMode = null;
-        let currentAnswer = null;
-        let lives = 5;
-        let blockGuesses = false; // Blokada klikania podczas animacji przejścia
-        
-        // Twoje idealne progi blura przekonwertowane na realne piksele ze zdjęcia
-        const blurLevels = [35, 22, 12, 5, 1]; 
-        let currentAttempt = 0;
+// LISTA FILTRÓW DLA TRYBU HARD
+const hardFilters = [
+    "grayscale(100%)", 
+    "sepia(100%)",     
+    "invert(100%)",    
+    "hue-rotate(90deg) saturate(200%)", 
+    "brightness(50%) contrast(200%)"    
+];
 
-        function selectMode(element, mode) {
-            document.querySelectorAll('.menu-box .btn-diff').forEach(btn => btn.classList.remove('clicked'));
-            element.classList.add('clicked');
-            selectedMode = mode;
-            document.getElementById('menu-err-msg').innerText = "";
-        }
+let selectedMode = null;
+let currentAnswer = null;
+let currentFilter = ""; // Przechowuje wylosowany filtr dla danej postaci
+let lives = 5;
+let blockGuesses = false;
 
-        function toggleMenu() {
-            if (blockGuesses) return;
-            const menu = document.getElementById('category-menu');
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        }
+// Progi rozmycia
+const blurLevels = [35, 22, 12, 5, 1]; 
+let currentAttempt = 0;
 
-        function selectCategory(cat) {
-            document.getElementById('guess-input').value = cat;
-            toggleMenu();
-        }
+function selectMode(element, mode) {
+    document.querySelectorAll('.btn-diff').forEach(btn => btn.classList.remove('clicked'));
+    element.classList.add('clicked');
+    selectedMode = mode;
+    
+    // Zmiana stylu dla Hard Mode
+    if (mode === 'hard') document.body.classList.add('hard-mode');
+    else document.body.classList.remove('hard-mode');
+    
+    document.getElementById('menu-err-msg').innerText = "";
+}
 
-        // Automatyczne generowanie listy serii z bazy
-        function generateCategories() {
-            const menu = document.getElementById('category-menu');
-            menu.innerHTML = ''; 
-            Object.keys(characters).forEach(categoryName => {
-                menu.innerHTML += `<div class="menu-item" onclick="selectCategory('${categoryName}')">${categoryName}</div>`;
-            });
-        }
-
-        function displayMessage(text, isError = false) {
-            const msgBox = document.getElementById('game-message');
-            msgBox.innerText = text;
-            msgBox.style.color = isError ? "#ff6b6b" : "#4dabf7";
-        }
-
-        function continueGame() {
-            if(!selectedMode) { 
-                document.getElementById('menu-err-msg').innerText = "Wybierz poziom przed rozpoczęciem!";
-                return; 
-            }
-            
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('main-title').style.display = 'none';
-            document.getElementById('game-board').style.display = 'flex';
-            
-            document.getElementById('stat-mode').innerText = selectedMode.toUpperCase();
-            
-            generateCategories(); 
-            showRandomCharacter(); 
-        }
-
-        function updateLivesDisplay() {
-            document.getElementById('stat-lives').innerText = '❤️'.repeat(lives) + '🖤'.repeat(5 - lives);
-        }
-
-        function showRandomCharacter() {
+function showRandomCharacter() {
     lives = 5;
     currentAttempt = 0;
     blockGuesses = false;
-    updateLivesDisplay();
+    document.getElementById('stat-lives').innerText = '❤️'.repeat(5);
     document.getElementById('guess-input').value = ""; 
     displayMessage(""); 
+    
+    // Losowanie filtra tylko dla trybu Hard
+    currentFilter = (selectedMode === 'hard') 
+        ? hardFilters[Math.floor(Math.random() * hardFilters.length)] 
+        : "";
 
-    const pool = (selectedMode === 'easy') 
-        ? allCharacters.filter(c => c.isMain === true) 
-        : allCharacters;
-                
+    const pool = (selectedMode === 'easy') ? allCharacters.filter(c => c.isMain === true) : allCharacters;
     currentAnswer = pool[Math.floor(Math.random() * pool.length)];
     
-   
-    const folderName = currentAnswer.category
-                        .replace("LEGO ", "") // usuwa słowo "LEGO " jeśli istnieje
-                        .toLowerCase()
-                        .replace(/\s+/g, '-');
+    // Logika folderów
+    let folderName = currentAnswer.category.replace("LEGO ", "").toLowerCase().replace(/\s+/g, '-');
     
     const imgElement = document.getElementById('minifig-image');
-    
-    // Buduje ścieżkę: img/city-undercover/Nazwa Postaci.webp
     imgElement.src = `img/${folderName}/${currentAnswer.n}.webp`;
-    imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`;
     
-    // Debugowanie (otwórz F12 -> Console, żeby zobaczyć czy ścieżka jest dobra)
-    console.log("Szukam pliku pod adresem:", imgElement.src);
+    // Zastosowanie rozmycia + wylosowanego filtra
+    imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px) ${currentFilter}`;
 }
 
-        function checkGuess() {
-            if (blockGuesses) return;
-            
-            const userGuess = document.getElementById('guess-input').value;
-            
-            if (!userGuess) {
-                displayMessage("Najpierw wybierz serię z listy!", true);
-                return;
-            }
+function checkGuess() {
+    if (blockGuesses) return;
+    const userGuess = document.getElementById('guess-input').value;
+    
+    if (!userGuess) {
+        displayMessage("Najpierw wybierz serię!", true);
+        return;
+    }
 
-            if (userGuess === currentAnswer.category) {
-                blockGuesses = true;
-                document.getElementById('minifig-image').style.filter = "blur(0px)"; 
-                displayMessage("Brawo! Doskonała odpowiedź! 🎉");
-                
-                setTimeout(() => {
-                    showRandomCharacter();
-                }, 2200);
-
-            } else {
-                lives--;
-                currentAttempt++;
-                
-                if (lives > 0) {
-                    updateLivesDisplay();
-                    document.getElementById('minifig-image').style.filter = `blur(${blurLevels[currentAttempt]}px)`;
-                    displayMessage("Niestety to nie ta seria. Spróbuj ponownie!", true);
-                } else {
-                    blockGuesses = true;
-                    updateLivesDisplay();
-                    document.getElementById('minifig-image').style.filter = "blur(0px)"; 
-                    displayMessage("Koniec szans! Prawidłowa seria to: " + currentAnswer.category, true);
-                    
-                    setTimeout(() => {
-                        showRandomCharacter();
-                    }, 3000);
-                }
-            }
+    if (userGuess === currentAnswer.category) {
+        blockGuesses = true;
+        document.getElementById('minifig-image').style.filter = "blur(0px)"; 
+        displayMessage("Brawo!");
+        setTimeout(showRandomCharacter, 2000);
+    } else {
+        lives--;
+        currentAttempt++;
+        if (lives > 0) {
+            document.getElementById('stat-lives').innerText = '❤️'.repeat(lives);
+            // Aktualizujemy tylko blur, ZACHOWUJĄC wylosowany filtr
+            document.getElementById('minifig-image').style.filter = `blur(${blurLevels[currentAttempt]}px) ${currentFilter}`;
+            displayMessage("Źle!", true);
+        } else {
+            blockGuesses = true;
+            document.getElementById('minifig-image').style.filter = "blur(0px)"; 
+            displayMessage("Koniec! To było: " + currentAnswer.category, true);
+            setTimeout(showRandomCharacter, 3000);
         }
+    }
+}
+
+// Funkcje pomocnicze
+function continueGame() {
+    if(!selectedMode) { document.getElementById('menu-err-msg').innerText = "Wybierz poziom!"; return; }
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('main-title').style.display = 'none';
+    document.getElementById('game-board').style.display = 'flex';
+    showRandomCharacter();
+}
+
+function toggleMenu() { document.getElementById('category-menu').style.display = 'block'; }
+function selectCategory(cat) { document.getElementById('guess-input').value = cat; document.getElementById('category-menu').style.display = 'none'; }
+function displayMessage(text, isError = false) { document.getElementById('game-message').innerText = text; }
     </script>
 </body>
 </html>
