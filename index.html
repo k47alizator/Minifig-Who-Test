@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gierkownia - Lobby</title>
+    <style>
+        body { 
+            background-color: #2c2f33; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+        }
+
+        h1 { margin-bottom: 50px; font-size: 2.5rem; }
+
+        .lobby-grid { 
+            display: flex; 
+            gap: 30px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+
+        .game-card { 
+            width: 250px; 
+            height: 250px; 
+            background-color: #36393f; 
+            border: 3px solid #5865F2; 
+            border-radius: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            color: white; 
+            transition: transform 0.3s ease, background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .game-card:hover { 
+            transform: scale(1.05); 
+            background-color: #4752C4; 
+        }
+
+        .game-card img { 
+            width: 120px; 
+            height: 120px; 
+            border-radius: 10px; 
+            margin-bottom: 15px; 
+            object-fit: cover;
+        }
+
+        .game-card span { font-weight: bold; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <h1>Wybierz grę</h1>
+
+    <div class="lobby-grid">
+        <!-- GRA 1 -->
+        <a href="gra1.html" class="game-card">
+            <img src="logo_minifig.png" alt="Minifig Who">
+            <span>Minifig Who</span>
+        </a>
+
+        <!-- GRA 2 -->
+        <a href="gra2.html" class="game-card">
+            <img src="logo_gra2.png" alt="Druga Gra">
+            <span>Nowa Gra</span>
+        </a>
+    </div>
+
+</body>
+</html>
