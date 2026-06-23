@@ -695,18 +695,21 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         let selectedMode = null;
         let currentAnswer = null;
         let lives = 5;
+        let blockGuesses = false; // Blokada klikania podczas animacji przejścia
         
-        // Zoptymalizowane poziomy rozmycia (piksele). 35 to już bardzo mocne rozmycie!
-        const blurLevels = [35, 25, 15, 8, 3]; 
+        // Twoje idealne progi blura przekonwertowane na realne piksele ze zdjęcia
+        const blurLevels = [35, 22, 12, 5, 1]; 
         let currentAttempt = 0;
 
         function selectMode(element, mode) {
             document.querySelectorAll('.menu-box .btn-diff').forEach(btn => btn.classList.remove('clicked'));
             element.classList.add('clicked');
             selectedMode = mode;
+            document.getElementById('menu-err-msg').innerText = "";
         }
 
         function toggleMenu() {
+            if (blockGuesses) return;
             const menu = document.getElementById('category-menu');
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
@@ -716,6 +719,7 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             toggleMenu();
         }
 
+        // Automatyczne generowanie listy serii z bazy
         function generateCategories() {
             const menu = document.getElementById('category-menu');
             menu.innerHTML = ''; 
@@ -727,17 +731,12 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         function displayMessage(text, isError = false) {
             const msgBox = document.getElementById('game-message');
             msgBox.innerText = text;
-            msgBox.style.color = isError ? "#ff6b6b" : "var(--ice-blue)"; // Czerwony dla błędu, niebieski dla sukcesu
+            msgBox.style.color = isError ? "#ff6b6b" : "#4dabf7";
         }
 
         function continueGame() {
             if(!selectedMode) { 
-                displayMessage("Wybierz poziom trudności przed kontynuacją!", true);
-                // Przenosimy komunikat tymczasowo pod przyciski, jeśli użytkownik nie wszedł do gry
-                const menu = document.getElementById('menu');
-                if(!document.getElementById('temp-msg')) {
-                    menu.innerHTML += `<p id="temp-msg" style="color:#ff6b6b; font-weight:bold; margin-top:10px;">Wybierz poziom!</p>`;
-                }
+                document.getElementById('menu-err-msg').innerText = "Wybierz poziom przed rozpoczęciem!";
                 return; 
             }
             
@@ -752,15 +751,16 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         }
 
         function updateLivesDisplay() {
-            document.getElementById('stat-lives').innerText = '❤️'.repeat(lives);
+            document.getElementById('stat-lives').innerText = '❤️'.repeat(lives) + '🖤'.repeat(5 - lives);
         }
 
         function showRandomCharacter() {
             lives = 5;
             currentAttempt = 0;
+            blockGuesses = false;
             updateLivesDisplay();
             document.getElementById('guess-input').value = ""; 
-            displayMessage(""); // Czyszczenie komunikatu
+            displayMessage(""); 
 
             const pool = (selectedMode === 'easy') 
                 ? allCharacters.filter(c => c.isMain === true) 
@@ -778,6 +778,8 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         }
 
         function checkGuess() {
+            if (blockGuesses) return;
+            
             const userGuess = document.getElementById('guess-input').value;
             
             if (!userGuess) {
@@ -786,13 +788,13 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
             }
 
             if (userGuess === currentAnswer.category) {
-                document.getElementById('minifig-image').style.filter = "blur(0px)"; // Odkrywamy postać
-                displayMessage("Brawo! Zgadłeś z " + lives + " szansami na koncie!");
+                blockGuesses = true;
+                document.getElementById('minifig-image').style.filter = "blur(0px)"; 
+                displayMessage("Brawo! Doskonała odpowiedź! 🎉");
                 
-                // Czekamy 2 sekundy, żebyś mógł nacieszyć oczy ostrą postacią, i losujemy nową
                 setTimeout(() => {
                     showRandomCharacter();
-                }, 2000);
+                }, 2200);
 
             } else {
                 lives--;
@@ -801,13 +803,13 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
                 if (lives > 0) {
                     updateLivesDisplay();
                     document.getElementById('minifig-image').style.filter = `blur(${blurLevels[currentAttempt]}px)`;
-                    displayMessage("Źle! Próbuj dalej.", true);
+                    displayMessage("Niestety to nie ta seria. Spróbuj ponownie!", true);
                 } else {
+                    blockGuesses = true;
                     updateLivesDisplay();
-                    document.getElementById('minifig-image').style.filter = "blur(0px)"; // Pokazujemy po przegranej
-                    displayMessage("Koniec szans! To było: " + currentAnswer.category, true);
+                    document.getElementById('minifig-image').style.filter = "blur(0px)"; 
+                    displayMessage("Koniec szans! Prawidłowa seria to: " + currentAnswer.category, true);
                     
-                    // Po przegranej czekamy 3 sekundy na przeładowanie
                     setTimeout(() => {
                         showRandomCharacter();
                     }, 3000);
