@@ -755,27 +755,25 @@ const allCharacters = Object.entries(characters).flatMap(([cat, list]) =>
         }
 
         function showRandomCharacter() {
-            lives = 5;
-            currentAttempt = 0;
-            blockGuesses = false;
-            updateLivesDisplay();
-            document.getElementById('guess-input').value = ""; 
-            displayMessage(""); 
+    lives = 5;
+    currentAttempt = 0;
+    blockGuesses = false;
+    updateLivesDisplay();
+    document.getElementById('guess-input').value = ""; 
+    displayMessage(""); 
 
-            const pool = (selectedMode === 'easy') 
-                ? allCharacters.filter(c => c.isMain === true) 
-                : allCharacters;
-                
-            currentAnswer = pool[Math.floor(Math.random() * pool.length)];
-            
-            const cleanName = currentAnswer.n.toLowerCase()
-                                .replace(/[()]/g, '') 
-                                .replace(/\s+/g, '_');
-                                
-            const imgElement = document.getElementById('minifig-image');
-            imgElement.src = `img/${cleanName}.webp`;
-            imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`; 
-        }
+    const pool = (selectedMode === 'easy') 
+        ? allCharacters.filter(c => c.isMain === true) 
+        : allCharacters;
+        
+    currentAnswer = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Tworzymy ścieżkę: img/ + nazwa_folderu + / + nazwa_pliku.webp
+    // Używamy encodeURIComponent, żeby poradzić sobie ze spacjami w nazwach plików
+    const imgElement = document.getElementById('minifig-image');
+    imgElement.src = `img/${currentAnswer.folder}/${encodeURIComponent(currentAnswer.n)}.webp`;
+    imgElement.style.filter = `blur(${blurLevels[currentAttempt]}px)`;
+}
 
         function checkGuess() {
             if (blockGuesses) return;
